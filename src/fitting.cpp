@@ -8,7 +8,9 @@
 
 #include <cmath>
 
+#include "TFile.h"
 #include "RooRealVar.h"
+#include "RooFitResult.h"
 #include "RooFormulaVar.h"
 #include "RooDataSet.h"
 #include "RooGaussian.h"
@@ -62,7 +64,7 @@ void fitting(void) {
     // PDFs parameters for peak 2
     RooRealVar mu2("mu2","", peaks[2], peaks[2]-width, peaks[2]+width);
     RooRealVar sigma2("sigma2","", 3.5);
-    RooRealVar alpha2("alpha2","number of events in peak 2", areaStart, 0, 150);
+    RooRealVar alpha2("alpha2","number of events in peak 2", areaStart, 0, 200);
     RooGaussian peak2("peak2","peak distribution",tof,mu2,sigma2);
     // PDFs parameters for peak 3
     RooRealVar mu3("mu3","", peaks[3], peaks[3]-width, peaks[3]+width);
@@ -82,7 +84,7 @@ void fitting(void) {
     // PDFs parameters for peak 6
     RooRealVar mu6("mu6","", peaks[6], peaks[6]-width, peaks[6]+width);
     RooRealVar sigma6("sigma6","", 3.5);
-    RooRealVar alpha6("alpha6","number of events in peak 3",areaStart, 0, 275);
+    RooRealVar alpha6("alpha6","number of events in peak 3",areaStart, 0, 300);
     RooGaussian peak6("peak6","peak distribution",tof,mu6,sigma6);
     // PDFs parameters for peak 7
     RooRealVar mu7("mu7","", peaks[7], peaks[7]-width, peaks[7]+width);
@@ -161,8 +163,8 @@ void fitting(void) {
 
     /////////////////////////////////
     RooAddPdf model("model","model", peakList, areaList);
-    model.fitTo(*data);
-    
+    RooFitResult* fitResult = model.fitTo(*data, NumCPU(3), Save());
+
     //Do the plots
     RooPlot* frame = tof.frame();
     frame = tof.frame(200);
