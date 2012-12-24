@@ -12,7 +12,7 @@ SO_INSTALL_PATH = lib/
 #Set some of the compile options
 CXX = g++
 CXXFLAGS = -fPIC -g -std=c++11 -Wall $(CINCLUDEDIRS)
-LDLIBS = -ldl -lpthread
+LDLIBS = -ldl -lpthread -lPhysConstants
 CINCLUDEDIRS = -Iinclude
 c++SrcSuf = cpp
 
