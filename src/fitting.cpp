@@ -181,5 +181,5 @@ void fitting(void) {
     c->cd();
     c->SetFillColor(kWhite);
     frame->Draw();
-    c->SaveAs("pics/image-gauss.eps");
+    c->SaveAs("pics/working.eps");
 }
