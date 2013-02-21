@@ -33,7 +33,7 @@ void fitting(void) {
     double numPoints = 110;
     double fitMax = numPoints;
     RooRealVar tof("tof","tof",0,numPoints);
-    RooDataSet *data = RooDataSet::read("data/tofs.dat", RooArgList(tof));
+    RooDataSet *data = RooDataSet::read("data/tof-banana.dat", RooArgList(tof));
 
     double peaks[]={18.333, 22.3378, 26.111, 31.111, 34.222, 40.444, 45.778, 
                     49.778, 56, 60.444, 66.222, 70.667, 77.333, 84.889,
@@ -128,7 +128,7 @@ void fitting(void) {
     RooFitResult* fitResult = model.fitTo(*data, NumCPU(3), Save(), 
                                           Range(0., fitMax));
 
-    ofstream resultsParam("results-pars.dat");
+    ofstream resultsParam("results-full.dat");
     fitResult->printMultiline(resultsParam, 0, false, "");
     resultsParam.close();
     
