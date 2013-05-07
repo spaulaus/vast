@@ -23,23 +23,27 @@ using namespace RooFit;
 
 void fitting(void);
 
+string fileName="../data/roofit/077cu-ban4-lower/077cu-ban4-lower-tof.dat";
+string epsName = "../pics/roofit/077cu-ban4-lower-tof.eps";
+string resultsFile = "results/077cu-ban4-lower/tof-result.dat";
+
 int main(int argc, char* argv[]) {
-    string fileName="data/tofs.dat";
     fitting();
 }
 
 void fitting(void) {
     //Read in the data and set the variable to fit.
-    double numPoints = 110;
+    double numPoints = 120;
     double fitMax = numPoints;
     RooRealVar tof("tof","tof",0,numPoints);
-    RooDataSet *data = RooDataSet::read("data/tof-banana.dat", RooArgList(tof));
+    RooDataSet *data = RooDataSet::read(fileName.c_str(), 
+                                        RooArgList(tof));
 
-    double peaks[]={18.333, 22.3378, 26.111, 31.111, 34.222, 40.444, 45.778, 
-                    49.778, 56, 60.444, 66.222, 70.667, 77.333, 84.889,
-                    92.889, 102.222, 111.111, 120, 127};
+    double peaks[]={18.333, 22.3378, 26.111, 31.111, 34.222, 40.444, 43, 45.778, 
+                    49.778, 56, 60.444, 64.222, 70.667, 77.333, 84.889, 87,
+                    92.889, 95, 102.222, 108, 111.111, 115, 118, 120};
     double areaStart = 100;
-    double resolution0 = 3.945;
+    double resolution0 = 3.375;
     double resolution1 = 5.805;
     double wiggle = 3;
 
@@ -118,17 +122,42 @@ void fitting(void) {
     RooRealVar mu16("mu16","", peaks[16], peaks[16]-wiggle, peaks[16]+wiggle);
     RooGaussModel core16("core16", "Gaussian for resolution", tof, mu16, sigma1);
 
-    RooArgList prodList(core0,core1,core2, core3, core4, core5, core6, core7, core8);
-    prodList.add(RooArgList(core9, core10, core11, core12, core13, core14, core15, core16));
-    RooArgList areaList(alpha0,alpha1,alpha2, alpha3, alpha4, alpha5, alpha6, alpha7, alpha8);
-    areaList.add(RooArgList(alpha9, alpha10, alpha11, alpha12, alpha13, alpha14, alpha15, alpha16));
+    RooRealVar alpha17("alpha17","number of events in peak 0", areaStart, 0, 5000);
+    RooRealVar mu17("mu17","", peaks[17], peaks[17]-wiggle, peaks[17]+wiggle);
+    RooGaussModel core17("core17", "Gaussian for resolution", tof, mu17, sigma1);
 
+    RooRealVar alpha18("alpha18","number of events in peak 0", areaStart, 0, 5000);
+    RooRealVar mu18("mu18","", peaks[18], peaks[18]-wiggle, peaks[18]+wiggle);
+    RooGaussModel core18("core18", "Gaussian for resolution", tof, mu18, sigma1);
+
+    RooRealVar alpha19("alpha19","number of events in peak 0", areaStart, 0, 5000);
+    RooRealVar mu19("mu19","", peaks[19], peaks[19]-wiggle, peaks[19]+wiggle);
+    RooGaussModel core19("core19", "Gaussian for resolution", tof, mu19, sigma1);
+
+    RooRealVar alpha20("alpha20","number of events in peak 0", areaStart, 0, 5000);
+    RooRealVar mu20("mu20","", peaks[20], peaks[20]-wiggle, peaks[20]+wiggle);
+    RooGaussModel core20("core20", "Gaussian for resolution", tof, mu20, sigma1);
+
+    RooRealVar alpha21("alpha21","number of events in peak 0", areaStart, 0, 5000);
+    RooRealVar mu21("mu21","", peaks[21], peaks[21]-wiggle, peaks[21]+wiggle);
+    RooGaussModel core21("core21", "Gaussian for resolution", tof, mu21, sigma1);
+
+    RooArgList prodList(core0,core1,core2,core3,core4,core5,core6,core7,core8);
+    prodList.add(RooArgList(core9,core10,core11,core12,
+                            core13,core14,core15,core16,core17));
+    prodList.add(RooArgList(core18,core19,core20,core21));
+    RooArgList areaList(alpha0,alpha1,alpha2,alpha3,alpha4,
+                        alpha5,alpha6,alpha7,alpha8);
+    areaList.add(RooArgList(alpha9,alpha10,alpha11,alpha12,
+                            alpha13,alpha14,alpha15,alpha16,alpha17));
+    areaList.add(RooArgList(alpha18,alpha19,alpha20,alpha21));
+    
     // /////////////////////////////////
     RooAddPdf model("model","model", prodList, areaList);
     RooFitResult* fitResult = model.fitTo(*data, NumCPU(3), Save(), 
                                           Range(0., fitMax));
 
-    ofstream resultsParam("results-full.dat");
+    ofstream resultsParam(resultsFile.c_str());
     fitResult->printMultiline(resultsParam, 0, false, "");
     resultsParam.close();
     
@@ -142,44 +171,44 @@ void fitting(void) {
     data->plotOn(frame,Name("data"));
     
     model.plotOn(frame,Name("model"));
-    model.plotOn(frame,RooFit::Components("core0"),RooFit::LineColor(kGreen), 
-                 RooFit::LineStyle(kDashed));
-    model.plotOn(frame,RooFit::Components("core1"),RooFit::LineColor(kRed), 
-                 RooFit::LineStyle(kDashed));
-    model.plotOn(frame,RooFit::Components("core2"),RooFit::LineColor(kYellow), 
-                 RooFit::LineStyle(kDashed));
-    model.plotOn(frame,RooFit::Components("core3"),RooFit::LineColor(kViolet), 
-                 RooFit::LineStyle(kDashed));
-    model.plotOn(frame,RooFit::Components("core4"),RooFit::LineColor(kOrange), 
-                 RooFit::LineStyle(kDashed));
-    model.plotOn(frame,RooFit::Components("core5"),RooFit::LineColor(kPink), 
-                 RooFit::LineStyle(kDashed));
-    model.plotOn(frame,RooFit::Components("core6"),RooFit::LineColor(kGreen), 
-                 RooFit::LineStyle(kDashed));
-    model.plotOn(frame,RooFit::Components("core7"),RooFit::LineColor(kRed), 
-                 RooFit::LineStyle(kDashed));
-    model.plotOn(frame,RooFit::Components("core8"),RooFit::LineColor(kYellow), 
-                 RooFit::LineStyle(kDashed));
-    model.plotOn(frame,RooFit::Components("core9"),RooFit::LineColor(kViolet), 
-                 RooFit::LineStyle(kDashed));
-    model.plotOn(frame,RooFit::Components("core10"),RooFit::LineColor(kOrange), 
-                 RooFit::LineStyle(kDashed));
-    model.plotOn(frame,RooFit::Components("core11"),RooFit::LineColor(kPink), 
-                 RooFit::LineStyle(kDashed));
-    model.plotOn(frame,RooFit::Components("core12"),RooFit::LineColor(kGreen), 
-                 RooFit::LineStyle(kDashed));
-    model.plotOn(frame,RooFit::Components("core13"),RooFit::LineColor(kRed), 
-                 RooFit::LineStyle(kDashed));
-    model.plotOn(frame,RooFit::Components("core14"),RooFit::LineColor(kYellow), 
-                 RooFit::LineStyle(kDashed));
-    model.plotOn(frame,RooFit::Components("core15"),RooFit::LineColor(kViolet), 
-                 RooFit::LineStyle(kDashed));
-    model.plotOn(frame,RooFit::Components("core16"),RooFit::LineColor(kOrange), 
-                 RooFit::LineStyle(kDashed));
+    // model.plotOn(frame,RooFit::Components("core0"),RooFit::LineColor(kGreen), 
+    //              RooFit::LineStyle(kDashed));
+    // model.plotOn(frame,RooFit::Components("core1"),RooFit::LineColor(kRed), 
+    //              RooFit::LineStyle(kDashed));
+    // model.plotOn(frame,RooFit::Components("core2"),RooFit::LineColor(kYellow), 
+    //              RooFit::LineStyle(kDashed));
+    // model.plotOn(frame,RooFit::Components("core3"),RooFit::LineColor(kViolet), 
+    //              RooFit::LineStyle(kDashed));
+    // model.plotOn(frame,RooFit::Components("core4"),RooFit::LineColor(kOrange), 
+    //              RooFit::LineStyle(kDashed));
+    // model.plotOn(frame,RooFit::Components("core5"),RooFit::LineColor(kPink), 
+    //              RooFit::LineStyle(kDashed));
+    // model.plotOn(frame,RooFit::Components("core6"),RooFit::LineColor(kGreen), 
+    //              RooFit::LineStyle(kDashed));
+    // model.plotOn(frame,RooFit::Components("core7"),RooFit::LineColor(kRed), 
+    //              RooFit::LineStyle(kDashed));
+    // model.plotOn(frame,RooFit::Components("core8"),RooFit::LineColor(kYellow), 
+    //              RooFit::LineStyle(kDashed));
+    // model.plotOn(frame,RooFit::Components("core9"),RooFit::LineColor(kViolet), 
+    //              RooFit::LineStyle(kDashed));
+    // model.plotOn(frame,RooFit::Components("core10"),RooFit::LineColor(kOrange), 
+    //              RooFit::LineStyle(kDashed));
+    // model.plotOn(frame,RooFit::Components("core11"),RooFit::LineColor(kPink), 
+    //              RooFit::LineStyle(kDashed));
+    // model.plotOn(frame,RooFit::Components("core12"),RooFit::LineColor(kGreen), 
+    //              RooFit::LineStyle(kDashed));
+    // model.plotOn(frame,RooFit::Components("core13"),RooFit::LineColor(kRed), 
+    //              RooFit::LineStyle(kDashed));
+    // model.plotOn(frame,RooFit::Components("core14"),RooFit::LineColor(kYellow), 
+    //              RooFit::LineStyle(kDashed));
+    // model.plotOn(frame,RooFit::Components("core15"),RooFit::LineColor(kViolet), 
+    //              RooFit::LineStyle(kDashed));
+    // model.plotOn(frame,RooFit::Components("core16"),RooFit::LineColor(kOrange), 
+    //              RooFit::LineStyle(kDashed));
     
     TCanvas* c = new TCanvas("c","",0,0,700,500);
     c->cd();
     c->SetFillColor(kWhite);
     frame->Draw();
-    c->SaveAs("../pics/roofit/working.eps");
+    c->SaveAs(epsName.c_str());
 }
