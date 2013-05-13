@@ -23,11 +23,18 @@ using namespace RooFit;
 
 void fitting(void);
 
-string fileName="../data/roofit/077cu-ban4-lower/077cu-ban4-lower-tof.dat";
-string epsName = "../pics/roofit/077cu-ban4-lower-tof.eps";
-string resultsFile = "results/077cu-ban4-lower/tof-result.dat";
+string dirName = "077cu-ban4-betaCut/";
+string fileName = "077cu-ban4-betaCut-tof";
+
+string dataName="../data/roofit/"+dirName+fileName+".dat";
+string resultsFile = "results/"+dirName+fileName+".fit";
+string epsName = "../pics/roofit/"+dirName+fileName+".eps";
+
+//string epsName = "../pics/roofit/working.eps";
+//string resultsFile = "results/working.dat";
 
 int main(int argc, char* argv[]) {
+    //cout << dataName << endl << resultsFile << endl << epsName << endl;
     fitting();
 }
 
@@ -36,7 +43,7 @@ void fitting(void) {
     double numPoints = 120;
     double fitMax = numPoints;
     RooRealVar tof("tof","tof",0,numPoints);
-    RooDataSet *data = RooDataSet::read(fileName.c_str(), 
+    RooDataSet *data = RooDataSet::read(dataName.c_str(), 
                                         RooArgList(tof));
 
     double peaks[]={18.333, 22.3378, 26.111, 31.111, 34.222, 40.444, 43, 45.778, 
