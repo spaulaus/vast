@@ -24,8 +24,8 @@ using namespace RooFit;
 
 void fitting(void);
 
-string dirName = "077cu-ban4-betaCut/";
-string fileName = "077cu-ban4-betaCut-tof";
+string dirName = "077cu-ban4-lower/";
+string fileName = "077cu-ban4-lower-tof-02Plus";
 
 string dataName="../data/roofit/"+dirName+fileName+".dat";
 string resultsFile = "results/"+dirName+fileName+".fit";
