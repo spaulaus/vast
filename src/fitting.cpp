@@ -2,6 +2,7 @@
 #include <iomanip>
 
 #include <cmath>
+#include <cstdio>
 
 #include "TFile.h"
 #include "RooRealVar.h"
@@ -34,7 +35,11 @@ string epsName = "../pics/roofit/"+dirName+fileName+".eps";
 //string resultsFile = "results/working.dat";
 
 int main(int argc, char* argv[]) {
-    //cout << dataName << endl << resultsFile << endl << epsName << endl;
+    ifstream test(dataName.c_str());
+    if(test.fail()) {
+        cout << "Holy fuck!!! We couldn't open the data file to read in the sexy data!!" << endl << endl;
+        exit(2);
+    }
     fitting();
 }
 

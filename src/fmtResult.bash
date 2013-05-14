@@ -1,6 +1,12 @@
 #!/bin/bash
 
-file=$1
+if [ -z $1 ]
+then
+    echo "I am missing the name of a file to work on"
+    exit
+else
+    file=$1
+fi
 
 awk '/./' $file > $file.temp
 
