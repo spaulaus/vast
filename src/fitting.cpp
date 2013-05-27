@@ -69,7 +69,7 @@ void fitting(void) {
     //---------- Pdfs ----------
     RooRealVar yield0("yield0","number of events in peak 0", areaStart, 0, 2000);
     RooRealVar mu0("mu0","", peaks[0], peaks[0]-wiggle0, peaks[0]+wiggle0);
-    RooGaussModel core0("core0", "Gaussian for resolution", tof, mu0, sigma0);
+    RooGaussian core0("core0", "Gaussian for resolution", tof, mu0, sigma0);
 
     RooRealVar nu0("nu0", "", peaks[0]+10, peaks[0]-wiggle1, peaks[0]+wiggle1);
     RooRealVar g0("g0", "", 1.0, -30.0, 30.0);
