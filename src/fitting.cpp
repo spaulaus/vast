@@ -5,6 +5,7 @@
 #include <cstdio>
 
 #include "TFile.h"
+#include "RooBreitWigner.h"
 #include "RooRealVar.h"
 #include "RooFitResult.h"
 #include "RooFormulaVar.h"
@@ -15,6 +16,7 @@
 #include "RooDecay.h"
 #include "RooProdPdf.h"
 #include "RooAddPdf.h"
+#include "RooNumConvPdf.h"
 #include "TCanvas.h"
 #include "TAxis.h"
 #include "RooPlot.h"
@@ -45,38 +47,39 @@ int main(int argc, char* argv[]) {
 
 void fitting(void) {
     //Read in the data and set the variable to fit.
-    double maxTof = 68;
+    double maxTof = 120;
     double fitMax = maxTof;
     RooRealVar tof("tof","tof",0,maxTof);
     RooDataSet *data = RooDataSet::read(dataName.c_str(), 
                                         RooArgList(tof));
 
-    double peaks[]={63.659, 22.3378, 26.111, 31.111, 34.222, 40.444, 43, 45.778, 
-                    49.778, 56, 60.444, 64.222, 70.667, 77.333, 84.889, 87,
-                    92.889, 95, 102.222, 108, 111.111, 115, 118, 120};
-    double areaStart = 100;
+    double peaks[]={60.};
+    double areaStart = 100.;
     double resolution0 = 3.375;
     double resolution1 = 5.805;
-    double wiggle = 3;
+    double wiggle0 = 3.;
+    double wiggle1 = 10.;
 
     //---------- Constants ----------
     RooRealVar sigma0("sigma0", "sigma for the gaussians", 
                       resolution0/(2*sqrt(2*log(2))));
     RooRealVar sigma1("sigma1", "sigma for the gaussians", 
-                      resolution1/(2*sqrt(2*log(2))));
+                      resolution1/(2*sqrt(2*log(2))), -10., 10.);
 
     //---------- Pdfs ----------
-    RooRealVar alpha0("alpha0","number of events in peak 0", areaStart, 0, 2000);
-    RooRealVar mu0("mu0","", peaks[0], peaks[0]-wiggle, peaks[0]+wiggle);
+    RooRealVar yield0("yield0","number of events in peak 0", areaStart, 0, 2000);
+    RooRealVar mu0("mu0","", peaks[0], peaks[0]-wiggle0, peaks[0]+wiggle0);
     RooGaussModel core0("core0", "Gaussian for resolution", tof, mu0, sigma0);
 
-    RooArgList prodList(core0);
-    RooArgList areaList(alpha0);
-    
-    // /////////////////////////////////
-    RooAddPdf model("model","model", prodList, areaList);
+    RooRealVar nu0("nu0", "", peaks[0]+10, peaks[0]-wiggle1, peaks[0]+wiggle1);
+    RooRealVar g0("g0", "", 1.0, -30.0, 30.0);
+    RooBreitWigner scat0("scat0", "Breit-Wigner for scattered stuff", tof, nu0, g0);
+                  
+    ///////////////////////////////////
+    RooNumConvPdf model("model","model", tof, core0, scat0);
+    model.setConvolutionWindow(mu0, sigma0, 5);
     RooFitResult* fitResult = model.fitTo(*data, NumCPU(3), Save(), 
-                                          Range(0., fitMax));
+                                          Range(50., fitMax));
 
     ofstream resultsParam(resultsFile.c_str());
     fitResult->printMultiline(resultsParam, 0, false, "");
