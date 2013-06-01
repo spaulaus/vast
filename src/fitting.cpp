@@ -17,6 +17,8 @@
 #include "RooProdPdf.h"
 #include "RooAddPdf.h"
 #include "RooNumConvPdf.h"
+#include "RooCBShape.h"
+#include "RooGenericPdf.h"
 #include "TCanvas.h"
 #include "TAxis.h"
 #include "RooPlot.h"
@@ -27,7 +29,7 @@ using namespace RooFit;
 void fitting(void);
 
 string dirName = "tofSim/";
-string fileName = "0300keV";
+string fileName = "1000keV";
 
 string dataName="../data/roofit/"+dirName+fileName+".dat";
 string resultsFile = "results/"+dirName+fileName+".fit";
@@ -53,7 +55,7 @@ void fitting(void) {
     RooDataSet *data = RooDataSet::read(dataName.c_str(), 
                                         RooArgList(tof));
 
-    double peaks[]={30.};
+    double peaks[]={60.};
     double areaStart = 100.;
     double resolution0 = 3.375;
     double resolution1 = 5.805;
@@ -64,20 +66,17 @@ void fitting(void) {
     RooRealVar sigma0("sigma0", "sigma for the gaussians", 
                       resolution0/(2*sqrt(2*log(2))));
     RooRealVar sigma1("sigma1", "sigma for the gaussians", 
-                      resolution1/(2*sqrt(2*log(2))), 0., 10.);
+                      resolution1/(2*sqrt(2*log(2))), 0., 100.);
 
     //---------- Pdfs ----------
-    RooRealVar yield0("yield0","number of events in peak 0", areaStart, 0, 2000);
-    RooRealVar mu0("mu0","", peaks[0], peaks[0]-wiggle0, peaks[0]+wiggle0);
-    RooGaussian core0("core0", "Gaussian for resolution", tof, mu0, sigma1);
-
-    RooRealVar nu0("nu0", "", peaks[0]+10, peaks[0], peaks[0]+1000.);
-    RooRealVar g0("g0", "", 1.0, 0, 4.);
-    RooBreitWigner scat0("scat0", "Breit-Wigner for scattered stuff", tof, nu0, g0);
+    RooRealVar mu0("mu0","", peaks[0], peaks[0]-wiggle1, peaks[0]+wiggle1);
+    RooRealVar alpha("alpha", "", -1.0, -100., 0.);
+    RooRealVar n("n", "", 1., -100., 200.);
+    RooCBShape model("model", "", tof, mu0, sigma1, alpha, n);
                   
     ///////////////////////////////////
-    RooNumConvPdf model("model","model", tof, core0, scat0);
-    model.setConvolutionWindow(mu0, sigma0, 5);
+    //RooNumConvPdf model("model","model", tof, core0, gp);
+                     //model.setConvolutionWindow(mu0, sigma0, 5);
     RooFitResult* fitResult = model.fitTo(*data, NumCPU(3), Save(), 
                                           Range(50., fitMax));
 
