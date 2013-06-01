@@ -53,7 +53,7 @@ void fitting(void) {
     RooDataSet *data = RooDataSet::read(dataName.c_str(), 
                                         RooArgList(tof));
 
-    double peaks[]={60.};
+    double peaks[]={30.};
     double areaStart = 100.;
     double resolution0 = 3.375;
     double resolution1 = 5.805;
@@ -64,15 +64,15 @@ void fitting(void) {
     RooRealVar sigma0("sigma0", "sigma for the gaussians", 
                       resolution0/(2*sqrt(2*log(2))));
     RooRealVar sigma1("sigma1", "sigma for the gaussians", 
-                      resolution1/(2*sqrt(2*log(2))), -10., 10.);
+                      resolution1/(2*sqrt(2*log(2))), 0., 10.);
 
     //---------- Pdfs ----------
     RooRealVar yield0("yield0","number of events in peak 0", areaStart, 0, 2000);
     RooRealVar mu0("mu0","", peaks[0], peaks[0]-wiggle0, peaks[0]+wiggle0);
-    RooGaussian core0("core0", "Gaussian for resolution", tof, mu0, sigma0);
+    RooGaussian core0("core0", "Gaussian for resolution", tof, mu0, sigma1);
 
-    RooRealVar nu0("nu0", "", peaks[0]+10, peaks[0]-wiggle1, peaks[0]+wiggle1);
-    RooRealVar g0("g0", "", 1.0, -30.0, 30.0);
+    RooRealVar nu0("nu0", "", peaks[0]+10, peaks[0], peaks[0]+1000.);
+    RooRealVar g0("g0", "", 1.0, 0, 4.);
     RooBreitWigner scat0("scat0", "Breit-Wigner for scattered stuff", tof, nu0, g0);
                   
     ///////////////////////////////////
