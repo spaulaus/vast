@@ -78,6 +78,7 @@ void fitting(void) {
     fitResult->printMultiline(resultsParam, 0, false, "");
     resultsParam.close();
     
+
     //Do the plots
     RooPlot* frame = tof.frame();
     frame = tof.frame(high);
