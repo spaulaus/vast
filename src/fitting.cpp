@@ -26,8 +26,8 @@ string dirName = "tofSim/";
 string fileName = "all";
 
 string dataName="../data/roofit/"+dirName+fileName+".dat";
-// string epsName = "../pics/roofit/"+dirName+fileName+".eps";
-// string resultsFile = "results/"+dirName+fileName+".fit";
+//string epsName = "../pics/roofit/"+dirName+fileName+".eps";
+//string resultsFile = "results/"+dirName+fileName+".fit";
 
 string epsName = "../pics/roofit/working.eps";
 string resultsFile = "results/working.dat";
@@ -63,7 +63,7 @@ void fitting(void) {
     RooRealVar n0("n0", "", 1., 0., 5.);
     RooCBShape cb0("cb0", "", tof, mu0, sigma0, alpha0, n0);
 
-    RooRealVar yield1("yield0", "", 3.e3, 0., 1.e7);
+    RooRealVar yield1("yield1", "", 3.e3, 0., 1.e7);
     RooRealVar mu1("mu1","", peaks[1], peaks[1]-wiggle0, peaks[1]+wiggle0);
     RooFormulaVar sigma1("sigma1", "0.0264412*mu1+0.0432495", mu1);
     RooRealVar alpha1("alpha1", "", -1.0, -10., 0.);
