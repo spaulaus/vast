@@ -23,7 +23,7 @@ using namespace RooFit;
 void fitting(void);
 
 string dirName = "tofSim/";
-string fileName = "0300keV";
+string fileName = "all";
 
 string dataName="../data/roofit/"+dirName+fileName+".dat";
 // string epsName = "../pics/roofit/"+dirName+fileName+".eps";
@@ -50,22 +50,36 @@ void fitting(void) {
                                         RooArgList(tof));
 
     //Set the information for the peaks
-    double peaks[]={60.};
+    double peaks[]={15.,35.,60.};
     double wiggle0 = 10.;
     //Set the information for the sigmas.
     //double res0 = 3.375 / (2*sqrt(2*log(2)));
     double res1 = 5.805 / (2*sqrt(2*log(2)));
 
     RooRealVar yield0("yield0", "", 3.e3, 0., 1.e7);
-    RooFormulaVar sigma("sigma", "0.0264412*mu0+0.0432495", mu0);
     RooRealVar mu0("mu0","", peaks[0], peaks[0]-wiggle0, peaks[0]+wiggle0);
-    RooRealVar alpha0("alpha", "", -1.0, -10., 0.);
+    RooFormulaVar sigma0("sigma0", "0.0264412*mu0+0.0432495", mu0);
+    RooRealVar alpha0("alpha0", "", -1.0, -10., 0.);
     RooRealVar n0("n0", "", 1., 0., 5.);
+    RooCBShape cb0("cb0", "", tof, mu0, sigma0, alpha0, n0);
 
-    RooCBShape cb0("cb0", "", tof, mu0, sigma, alpha0, n0);
+    RooRealVar yield1("yield0", "", 3.e3, 0., 1.e7);
+    RooRealVar mu1("mu1","", peaks[1], peaks[1]-wiggle0, peaks[1]+wiggle0);
+    RooFormulaVar sigma1("sigma1", "0.0264412*mu1+0.0432495", mu1);
+    RooRealVar alpha1("alpha1", "", -1.0, -10., 0.);
+    RooRealVar n1("n1", "", 1., 0., 5.);
+    RooCBShape cb1("cb1", "", tof, mu1, sigma1, alpha1, n1);
 
-    RooArgList cbs(cb0);
-    RooArgList yields(yield0);
+    RooRealVar yield2("yield2", "", 3.e3, 0., 1.e7);
+    RooRealVar mu2("mu2","", peaks[2], peaks[2]-wiggle0, peaks[2]+wiggle0);
+    RooFormulaVar sigma2("sigma2", "0.0264412*mu2+0.0432495", mu2);
+    RooRealVar alpha2("alpha2", "", -1.0, -10., 0.);
+    RooRealVar n2("n2", "", 1., 0., 5.);
+    RooCBShape cb2("cb2", "", tof, mu2, sigma2, alpha2, n2);
+
+
+    RooArgList cbs(cb0,cb1,cb2);
+    RooArgList yields(yield0,yield1,yield2);
 
     RooAddPdf model("model", "", cbs, yields);
 
