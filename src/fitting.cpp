@@ -57,12 +57,10 @@ void fitting(void) {
     double res1 = 5.805 / (2*sqrt(2*log(2)));
 
     RooRealVar yield0("yield0", "", 3.e3, 0., 1.e7);
-    RooRealVar sigma0("sigma0", "", res1, 0., 10.);
+    RooFormulaVar sigma("sigma", "0.0264412*mu0+0.0432495", mu0);
     RooRealVar mu0("mu0","", peaks[0], peaks[0]-wiggle0, peaks[0]+wiggle0);
     RooRealVar alpha0("alpha", "", -1.0, -10., 0.);
     RooRealVar n0("n0", "", 1., 0., 5.);
-
-    RooFormulaVar sigma("sigma", "0.0264412*mu0+0.0432495", mu0);
 
     RooCBShape cb0("cb0", "", tof, mu0, sigma, alpha0, n0);
 
@@ -78,7 +76,6 @@ void fitting(void) {
     fitResult->printMultiline(resultsParam, 0, false, "");
     resultsParam.close();
     
-
     //Do the plots
     RooPlot* frame = tof.frame();
     frame = tof.frame(high);
