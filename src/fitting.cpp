@@ -59,21 +59,21 @@ void fitting(void) {
     RooRealVar yield0("yield0", "", 3.e3, 0., 1.e7);
     RooRealVar mu0("mu0","", peaks[0], peaks[0]-wiggle0, peaks[0]+wiggle0);
     RooFormulaVar sigma0("sigma0", "0.0264412*mu0+0.0432495", mu0);
-    RooRealVar alpha0("alpha0", "", -1.0, -10., 0.);
+    RooFormulaVar alpha0("alpha0", "-9.53022/mu0-0.35706", mu0);
     RooRealVar n0("n0", "", 1., 0., 5.);
     RooCBShape cb0("cb0", "", tof, mu0, sigma0, alpha0, n0);
 
     RooRealVar yield1("yield1", "", 3.e3, 0., 1.e7);
     RooRealVar mu1("mu1","", peaks[1], peaks[1]-wiggle0, peaks[1]+wiggle0);
     RooFormulaVar sigma1("sigma1", "0.0264412*mu1+0.0432495", mu1);
-    RooRealVar alpha1("alpha1", "", -1.0, -10., 0.);
+    RooFormulaVar alpha1("alpha1", "-9.53022/mu1-0.35706", mu1);
     RooRealVar n1("n1", "", 1., 0., 5.);
     RooCBShape cb1("cb1", "", tof, mu1, sigma1, alpha1, n1);
 
     RooRealVar yield2("yield2", "", 3.e3, 0., 1.e7);
     RooRealVar mu2("mu2","", peaks[2], peaks[2]-wiggle0, peaks[2]+wiggle0);
     RooFormulaVar sigma2("sigma2", "0.0264412*mu2+0.0432495", mu2);
-    RooRealVar alpha2("alpha2", "", -1.0, -10., 0.);
+    RooFormulaVar alpha2("alpha2", "-9.53022/mu2-0.35706", mu2);
     RooRealVar n2("n2", "", 1., 0., 5.);
     RooCBShape cb2("cb2", "", tof, mu2, sigma2, alpha2, n2);
 
