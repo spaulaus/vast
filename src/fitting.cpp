@@ -50,13 +50,13 @@ void fitting(void) {
                                         RooArgList(tof));
 
     //Set the information for the peaks
-    double peaks[]={25.1, 30.6, 39.57, 44.68, 55.32, 
-                    64.25, 76.6, 91.48, 103.404, 134.04};
+    double peaks[]={24.1, 30.574, 37.6, 45.68, 52.32, 
+                    66.25, 76.6, 92.48, 106.404, 138.04};
     double wiggle0 = 15.;
     
     //Set the information for the sigmas.
     //RooRealVar res("res", "", 3.375 / (2*sqrt(2*log(2))));
-    RooRealVar res("res", "", 7.805 / (2*sqrt(2*log(2))));
+    RooRealVar res("res", "", 5.805 / (2*sqrt(2*log(2))));
 
     double nStart = 1.0, nLow = 0., nHigh = 50.;
     double yStart = 3.e3, yLow = 0., yHigh = 1.e7;
