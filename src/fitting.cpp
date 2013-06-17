@@ -194,9 +194,7 @@ void fitting(void) {
         cout << endl << endl << "The fit converged successfully." << endl;
 
     if(fitResult->statusCodeHistory(1) != 0)
-        cout << endl << endl << "Hesse FAILED to calculate things properly." 
-             << endl << endl;
+        cout << "Hesse FAILED to calculate things properly." << endl << endl;
     else
-        cout << endl << endl << "HESSE successfully calculated things." 
-             << endl << endl;
+        cout << "HESSE successfully calculated things." << endl << endl;
 }
