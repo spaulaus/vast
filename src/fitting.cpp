@@ -61,7 +61,7 @@ void fitting(void) {
     double nStart = 1.0, nLow = 0., nHigh = 50.;
     double yStart = 3.e3, yLow = 0., yHigh = 1.e7;
 
-    RooRealVar yield0("yield0", "", yStart-500, yLow, yHigh);
+    RooRealVar yield0("yield0", "", yStart, yLow, yHigh);
     RooRealVar mu0("mu0","", peaks[0]);
     RooFormulaVar sigma0("sigma0", "res*(0.0264412*mu0+0.0432495)",RooArgList(res,mu0));
     RooFormulaVar alpha0("alpha0", "-9.53022/mu0-0.35706", mu0);
@@ -189,7 +189,14 @@ void fitting(void) {
     c->SaveAs(epsName.c_str());
     
     if(fitResult->statusCodeHistory(0) != 0)
-        cout << endl << endl << "Oh, Jesus, the fit did not converge." << endl << endl;
+        cout << endl << endl << "Oh, Jesus, the fit did not converge." << endl;
     else
-        cout << endl << endl << "The fit converged successfully." << endl << endl;
+        cout << endl << endl << "The fit converged successfully." << endl;
+
+    if(fitResult->statusCodeHistory(1) != 0)
+        cout << endl << endl << "Hesse FAILED to calculate things properly." 
+             << endl << endl;
+    else
+        cout << endl << endl << "HESSE successfully calculated things." 
+             << endl << endl;
 }
