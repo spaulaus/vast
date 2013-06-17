@@ -50,7 +50,8 @@ void fitting(void) {
                                         RooArgList(tof));
 
     //Set the information for the peaks
-    double peaks[]={25.,31.,41.,47.,55.,67.,80.,93.,108.,138.};
+    double peaks[]={25.1, 30.6, 39.57, 44.68, 55.32, 
+                    64.25, 76.6, 91.48, 103.404, 134.04};
     double wiggle0 = 15.;
     
     //Set the information for the sigmas.
@@ -152,11 +153,10 @@ void fitting(void) {
     
     //Do the plots
     RooPlot* frame = tof.frame();
-    frame = tof.frame(high*0.5);
+    frame = tof.frame(high*0.25);
     frame->SetTitle("Time-of-Flight Spectrum");
     frame->SetXTitle("Time-of-Flight (2 ns)");
     frame->SetYTitle("Events/ 2 ns");
-    frame->SetMaximum(high);
     frame->GetYaxis()->SetTitleOffset(1.2);
     
     data->plotOn(frame,Name("data"));
