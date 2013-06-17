@@ -52,7 +52,7 @@ void fitting(void) {
     //Set the information for the peaks
     double peaks[]={24.1, 30.574, 37.6, 45.68, 52.32, 
                     66.25, 76.6, 92.48, 106.404, 138.04};
-    double wiggle = 15.;
+    double wiggle = 10.;
     
     //Set the information for the sigmas.
     //RooRealVar res("res", "", 3.375 / (2*sqrt(2*log(2))));
@@ -187,4 +187,5 @@ void fitting(void) {
     c->cd();
     frame->Draw();
     c->SaveAs(epsName.c_str());
+
 }
