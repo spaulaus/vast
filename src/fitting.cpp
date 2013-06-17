@@ -29,8 +29,8 @@ string dataName="../data/roofit/"+dirName+fileName+".dat";
 //string epsName = "../pics/roofit/"+dirName+fileName+".eps";
 //string resultsFile = "results/"+dirName+fileName+".fit";
 
-string epsName = "../pics/roofit/working.eps";
-string resultsFile = "results/working.dat";
+string epsName = "../pics/roofit/yieldFree.eps";
+string resultsFile = "results/yieldFree.dat";
 
 int main(int argc, char* argv[]) {
     ifstream test(dataName.c_str());
