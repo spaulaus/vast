@@ -29,8 +29,8 @@ string dataName="../data/roofit/"+dirName+fileName+".dat";
 //string epsName = "../pics/roofit/"+dirName+fileName+".eps";
 //string resultsFile = "results/"+dirName+fileName+".fit";
 
-string epsName = "../pics/roofit/yieldFree.eps";
-string resultsFile = "results/yieldFree.dat";
+string epsName = "../pics/roofit/muFree.eps";
+string resultsFile = "results/muFree.dat";
 
 int main(int argc, char* argv[]) {
     ifstream test(dataName.c_str());
@@ -52,7 +52,7 @@ void fitting(void) {
     //Set the information for the peaks
     double peaks[]={24.1, 30.574, 37.6, 45.68, 52.32, 
                     66.25, 76.6, 92.48, 106.404, 138.04};
-    double wiggle0 = 15.;
+    double wiggle = 15.;
     
     //Set the information for the sigmas.
     //RooRealVar res("res", "", 3.375 / (2*sqrt(2*log(2))));
@@ -62,7 +62,7 @@ void fitting(void) {
     double yStart = 3.e3, yLow = 0., yHigh = 1.e7;
 
     RooRealVar yield0("yield0", "", yStart, yLow, yHigh);
-    RooRealVar mu0("mu0","", peaks[0]);
+    RooRealVar mu0("mu0","", peaks[0], peaks[0]-wiggle, peaks[0]+wiggle);
     RooFormulaVar sigma0("sigma0", "res*(0.0264412*mu0+0.0432495)",RooArgList(res,mu0));
     RooFormulaVar alpha0("alpha0", "-9.53022/mu0-0.35706", mu0);
     RooRealVar n0("n0", "", nStart, nLow, nHigh);
