@@ -51,8 +51,8 @@ void fitting(void) {
                                         RooArgList(tof));
 
     //Set the information for the peaks
-    double peaks[]={24.1, 26.2, 30.574, 37.6, 45.68, 52.32, 
-                    66.25, 76.6, 92.48, 106.404, 138.04};
+    double peaks[]={20.468, 38.306, 25.209, 31.149, 46.603, 55.006, 
+                    66.831, 79.785, 93.401, 108.52, 138.87};
     double wiggle = 15.;
     
     //Set the information for the sigmas.
