@@ -1,134 +1,202 @@
+#include <fstream>
 #include <iostream>
+#include <iomanip>
 
 #include <cmath>
+#include <cstdio>
 
-#include "TFile.h"
-#include "RooRealVar.h"
+#include "RooAddPdf.h"
+#include "RooCBShape.h"
+#include "RooDataSet.h"
 #include "RooFitResult.h"
 #include "RooFormulaVar.h"
-#include "RooDataSet.h"
-#include "RooExponential.h"
-#include "RooGaussian.h"
-#include "RooGaussModel.h"
-#include "RooDecay.h"
-#include "RooProdPdf.h"
-#include "RooAddPdf.h"
-#include "TCanvas.h"
-#include "TAxis.h"
 #include "RooPlot.h"
+#include "RooRealVar.h"
+
+#include "TAxis.h"
+#include "TCanvas.h"
+#include "TFile.h"
 
 using namespace std;
 using namespace RooFit;
 
 void fitting(void);
 
+string dirName = "077cu-ban4-lower/";
+string fileName = "077cu-ban4-lower-tof";
+
+string dataName="../data/roofit/"+dirName+fileName+".dat";
+//string epsName = "../pics/roofit/"+dirName+fileName+".eps";
+//string resultsFile = "results/"+dirName+fileName+".fit";
+
+string epsName = "../pics/roofit/muFree.eps";
+string resultsFile = "results/muFree.dat";
+
 int main(int argc, char* argv[]) {
-    string fileName="data/tofs.dat";
+    ifstream test(dataName.c_str());
+    if(test.fail()) {
+        cout << "Holy fuck!!! We couldn't open the data file to read in the sexy data!!" << endl << endl;
+        exit(1);
+    }
     fitting();
 }
 
 void fitting(void) {
     //Read in the data and set the variable to fit.
-    double numPoints = 40;
-    double fitMax = numPoints;
-    RooRealVar tof("tof","tof",0,numPoints);
-    RooDataSet *data = RooDataSet::read("data/tofs.dat", RooArgList(tof));
+    double low = 0.;
+    double high = 200.;
+    RooRealVar tof("tof","tof", low, high);
+    RooDataSet *data = RooDataSet::read(dataName.c_str(), 
+                                        RooArgList(tof));
 
-    double peaks[]={17.333, 21.333, 27.111, 31.111, 34.222, 40.444, 45.778, 
-                    49.778, 56, 60.444, 66.222, 70.667, 77.333, 84.889,
-                    92.889, 102.222, 111.111, 120, 127};
-    double wiggle=7.;
-    double areaStart = 100;
-    double resolution=3.945;
-
-    //---------- Constants ----------
-    RooRealVar sigma("sigma", "sigma for the gaussians", 
-                     resolution/(2*sqrt(2*log(2))));
-    //RooRealVar tau("tau", "decay constant for penetration", 0.0253);
-    RooRealVar tau("tau", "decay constant for penetration", 0.);
+    //Set the information for the peaks
+    double peaks[]={24.1, 26.2, 30.574, 37.6, 45.68, 52.32, 
+                    66.25, 76.6, 92.48, 106.404, 138.04};
+    double wiggle = 15.;
     
-    //---------- Pdfs ----------
-    RooRealVar alpha0("alpha0","number of events in peak 0", areaStart, 0, 5000);
+    //Set the information for the sigmas.
+    //RooRealVar res("res", "", 3.375 / (2*sqrt(2*log(2))));
+    RooRealVar res("res", "", 6.805 / (2*sqrt(2*log(2))));
+
+    double nStart = 1.0, nLow = 0., nHigh = 50.;
+    double yStart = 3.e3, yLow = 0., yHigh = 1.e7;
+
+    RooRealVar yield0("yield0", "", yStart, yLow, yHigh);
     RooRealVar mu0("mu0","", peaks[0], peaks[0]-wiggle, peaks[0]+wiggle);
-    //RooRealVar tau0("tau0", "decay constant for penetration", 0.0253, 0, 3);
-    RooGaussModel core0("core", "Gaussian for resolution", tof, mu0, sigma);
-    RooDecay vandle0("vandle0", "Penetration into bar", tof, 
-                     tau, core0, RooDecay::SingleSided);
-    //tau0, core0, RooDecay::SingleSided);
-     
-    RooRealVar alpha1("alpha1","number of events in peak 0", areaStart, 0, 5000);
+    RooFormulaVar sigma0("sigma0", "res*(0.0264412*mu0+0.0432495)",RooArgList(res,mu0));
+    RooFormulaVar alpha0("alpha0", "-9.53022/mu0-0.35706", mu0);
+    RooRealVar n0("n0", "", nStart, nLow, nHigh);
+    RooCBShape cb0("cb0", "", tof, mu0, sigma0, alpha0, n0);
+
+    RooRealVar yield1("yield1", "", yStart, yLow, yHigh);
     RooRealVar mu1("mu1","", peaks[1], peaks[1]-wiggle, peaks[1]+wiggle);
-    //RooRealVar tau1("tau1", "decay constant for penetration", 0.0253, 0, 3);
-    RooGaussModel core1("core1", "Gaussian for resolution", tof, mu1, sigma);
-    RooDecay vandle1("vandle1", "Penetration into bar", tof, 
-                     tau, core1, RooDecay::SingleSided);
-    //tau1, core1, RooDecay::SingleSided);
+    RooFormulaVar sigma1("sigma1", "res*(0.0264412*mu1+0.0432495)",RooArgList(res,mu1));
+    RooFormulaVar alpha1("alpha1", "-9.53022/mu1-0.35706", mu1);
+    RooRealVar n1("n1", "", nStart, nLow, nHigh);
+    RooCBShape cb1("cb1", "", tof, mu1, sigma1, alpha1, n1);
 
-    RooRealVar alpha2("alpha2","number of events in peak 0", areaStart, 0, 5000);
-    RooRealVar mu2("mu2","", peaks[2], peaks[2]-wiggle, peaks[2]+wiggle);
-    //RooRealVar tau2("tau2", "decay constant for penetration", 0.0253, 0, 3);
-    RooGaussModel core2("core2", "Gaussian for resolution", tof, mu2, sigma);
-    RooDecay vandle2("vandle2", "Penetration into bar", tof, 
-                     //tau2, core2, RooDecay::SingleSided);
-                     tau, core2, RooDecay::SingleSided);
+    RooRealVar yield2("yield2", "", yStart, yLow, yHigh);
+    RooRealVar mu2("mu2","", peaks[2], peaks[2]-wiggle,peaks[2]+wiggle);
+    RooFormulaVar sigma2("sigma2", "res*(0.0264412*mu2+0.0432495)",RooArgList(res,mu2));
+    RooFormulaVar alpha2("alpha2", "-9.53022/mu2-0.35706", mu2);
+    RooRealVar n2("n2", "", nStart, nLow, nHigh);
+    RooCBShape cb2("cb2", "", tof, mu2, sigma2, alpha2, n2);
 
-    RooRealVar alpha3("alpha3","number of events in peak 0", areaStart, 0, 5000);
+    RooRealVar yield3("yield3", "", yStart, yLow, yHigh);
     RooRealVar mu3("mu3","", peaks[3], peaks[3]-wiggle, peaks[3]+wiggle);
-    //RooRealVar tau3("tau3", "decay constant for penetration", 0.0253, 0, 3);
-    RooGaussModel core3("core3", "Gaussian for resolution", tof, mu3, sigma);
-    RooDecay vandle3("vandle3", "Penetration into bar", tof, 
-                     //                 tau3, core3, RooDecay::SingleSided);
-                 tau, core3, RooDecay::SingleSided);
+    RooFormulaVar sigma3("sigma3", "res*(0.0264412*mu3+0.0432495)",RooArgList(res,mu3));
+    RooFormulaVar alpha3("alpha3", "-9.53022/mu3-0.35706", mu3);
+    RooRealVar n3("n3", "", nStart, nLow, nHigh);
+    RooCBShape cb3("cb3", "", tof, mu3, sigma3, alpha3, n3);
 
-    RooRealVar alpha4("alpha4","number of events in peak 0", areaStart, 0, 5000);
+    RooRealVar yield4("yield4", "", yStart, yLow, yHigh);
     RooRealVar mu4("mu4","", peaks[4], peaks[4]-wiggle, peaks[4]+wiggle);
-    //RooRealVar tau4("tau4", "decay constant for penetration", 0.0253, 0, 3);
-    RooGaussModel core4("core4", "Gaussian for resolution", tof, mu4, sigma);
-    RooDecay vandle4("vandle4", "Penetration into bar", tof, 
-                     tau, core4, RooDecay::SingleSided);
-    //                 tau4, core4, RooDecay::SingleSided);
+    RooFormulaVar sigma4("sigma4", "res*(0.0264412*mu4+0.0432495)",RooArgList(res,mu4));
+    RooFormulaVar alpha4("alpha4", "-9.53022/mu4-0.35706", mu4);
+    RooRealVar n4("n4", "", nStart, nLow, nHigh);
+    RooCBShape cb4("cb4", "", tof, mu4, sigma4, alpha4, n4);
 
-    RooRealVar alpha5("alpha5","number of events in peak 0", areaStart, 0, 5000);
+    RooRealVar yield5("yield5", "", yStart, yLow, yHigh);
     RooRealVar mu5("mu5","", peaks[5], peaks[5]-wiggle, peaks[5]+wiggle);
-    //RooRealVar tau5("tau5", "decay constant for penetration", 0.0253, 0, 3);
-    RooGaussModel core5("core5", "Gaussian for resolution", tof, mu5, sigma);
-    RooDecay vandle5("vandle5", "Penetration into bar", tof, 
-                     tau, core5, RooDecay::SingleSided);
-    //                 tau5, core5, RooDecay::SingleSided);
+    RooFormulaVar sigma5("sigma5", "res*(0.0264412*mu5+0.0432495)",RooArgList(res,mu5));
+    RooFormulaVar alpha5("alpha5", "-9.53022/mu5-0.35706", mu5);
+    RooRealVar n5("n5", "", nStart, nLow, nHigh);
+    RooCBShape cb5("cb5", "", tof, mu5, sigma5, alpha5, n5);
 
-    RooArgList prodList(vandle0,vandle1,vandle2, vandle3, vandle4, vandle5);
-    RooArgList areaList(alpha0,alpha1,alpha2, alpha3, alpha4, alpha5);
+    RooRealVar yield6("yield6", "", yStart, yLow, yHigh);
+    RooRealVar mu6("mu6","", peaks[6], peaks[6]-wiggle, peaks[6]+wiggle);
+    RooFormulaVar sigma6("sigma6", "res*(0.0264412*mu6+0.0432495)",RooArgList(res,mu6));
+    RooFormulaVar alpha6("alpha6", "-9.53022/mu6-0.35706", mu6);
+    RooRealVar n6("n6", "", nStart, nLow, nHigh);
+    RooCBShape cb6("cb6", "", tof, mu6, sigma6, alpha6, n6);
 
-    // /////////////////////////////////
-    RooAddPdf model("model","model", prodList, areaList);
-    RooFitResult* fitResult = model.fitTo(*data, NumCPU(3), Save(), Range(0., fitMax));
+    RooRealVar yield7("yield7", "", yStart, yLow, yHigh);
+    RooRealVar mu7("mu7","", peaks[7], peaks[7]-wiggle, peaks[7]+wiggle);
+    RooFormulaVar sigma7("sigma7", "res*(0.0264412*mu7+0.0432495)",RooArgList(res,mu7));
+    RooFormulaVar alpha7("alpha7", "-9.53022/mu7-0.35706", mu7);
+    RooRealVar n7("n7", "", nStart, nLow, nHigh);
+    RooCBShape cb7("cb7", "", tof, mu7, sigma7, alpha7, n7);
 
+    RooRealVar yield8("yield8", "", yStart, yLow, yHigh);
+    RooRealVar mu8("mu8","", peaks[8], peaks[8]-wiggle, peaks[8]+wiggle);
+    RooFormulaVar sigma8("sigma8", "res*(0.0264412*mu8+0.0432495)",RooArgList(res,mu8));
+    RooFormulaVar alpha8("alpha8", "-9.53022/mu8-0.35706", mu8);
+    RooRealVar n8("n8", "", nStart, nLow, nHigh);
+    RooCBShape cb8("cb8", "", tof, mu8, sigma8, alpha8, n8);
+
+    RooRealVar yield9("yield9", "", yStart, yLow, yHigh);
+    RooRealVar mu9("mu9","", peaks[9], peaks[9]-wiggle, peaks[9]+wiggle);
+    RooFormulaVar sigma9("sigma9", "res*(0.0264412*mu9+0.0432495)",RooArgList(res,mu9));
+    RooFormulaVar alpha9("alpha9", "-9.53022/mu9-0.35706", mu9);
+    RooRealVar n9("n9", "", nStart, nLow, nHigh);
+    RooCBShape cb9("cb9", "", tof, mu9, sigma9, alpha9, n9);
+
+    RooRealVar yield10("yield10", "", yStart, yLow, yHigh);
+    RooRealVar mu10("mu10","", peaks[10], peaks[10]-wiggle, peaks[10]+wiggle);
+    RooFormulaVar sigma10("sigma10", "res*(0.0264412*mu10+0.0432495)",RooArgList(res,mu10));
+    RooFormulaVar alpha10("alpha10", "-9.53022/mu10-0.35706", mu10);
+    RooRealVar n10("n10", "", nStart, nLow, nHigh);
+    RooCBShape cb10("cb10", "", tof, mu10, sigma10, alpha10, n10);
+
+    RooArgList cbs(cb0,cb1,cb2,cb3,cb4,cb5,cb6,cb7,cb8);
+    cbs.add(RooArgList(cb9, cb10));
+    RooArgList yields(yield0,yield1,yield2,yield3,yield4,yield5,yield6,yield7,yield8);
+    yields.add(RooArgList(yield9,yield10));
+    RooAddPdf model("model", "", cbs, yields);
+
+    RooFitResult* fitResult = model.fitTo(*data, NumCPU(3), Save(), 
+                                          Range(low, high));
+
+    ofstream resultsParam(resultsFile.c_str());
+    fitResult->printMultiline(resultsParam, 0, false, "");
+    resultsParam.close();
+    
     //Do the plots
     RooPlot* frame = tof.frame();
-    frame = tof.frame(numPoints);
+    frame = tof.frame(high*0.5);
     frame->SetTitle("Time-of-Flight Spectrum");
-    frame->SetXTitle("Time-of-Flight (ns)");
-    frame->SetYTitle("Events/(ns)");
+    frame->SetXTitle("Time-of-Flight (2 ns)");
+    frame->SetYTitle("Events / 2 ns");
     frame->GetYaxis()->SetTitleOffset(1.2);
-    data->plotOn(frame,Name("data"));
     
+    data->plotOn(frame,Name("data"));
     model.plotOn(frame,Name("model"));
-    model.plotOn(frame,RooFit::Components("vandle0"),RooFit::LineColor(kGreen), 
-        RooFit::LineStyle(kDashed));
-    model.plotOn(frame,RooFit::Components("vandle1"),RooFit::LineColor(kRed), 
-        RooFit::LineStyle(kDashed));
-    model.plotOn(frame,RooFit::Components("vandle2"),RooFit::LineColor(kYellow), 
-        RooFit::LineStyle(kDashed));
-    model.plotOn(frame,RooFit::Components("vandle3"),RooFit::LineColor(kViolet), 
-        RooFit::LineStyle(kDashed));
-    model.plotOn(frame,RooFit::Components("vandle4"),RooFit::LineColor(kOrange), 
-        RooFit::LineStyle(kDashed));
-    model.plotOn(frame,RooFit::Components("vandle5"),RooFit::LineColor(kPink), 
-        RooFit::LineStyle(kDashed));
+
+    model.plotOn(frame,RooFit::Components("cb0"),RooFit::LineColor(kGreen), 
+                 RooFit::LineStyle(kDashed));
+    model.plotOn(frame,RooFit::Components("cb1"),RooFit::LineColor(kRed), 
+                 RooFit::LineStyle(kDashed));
+    model.plotOn(frame,RooFit::Components("cb2"),RooFit::LineColor(kYellow), 
+                 RooFit::LineStyle(kDashed));
+    model.plotOn(frame,RooFit::Components("cb3"),RooFit::LineColor(kViolet), 
+                 RooFit::LineStyle(kDashed));
+    model.plotOn(frame,RooFit::Components("cb4"),RooFit::LineColor(kOrange), 
+                 RooFit::LineStyle(kDashed));
+    model.plotOn(frame,RooFit::Components("cb5"),RooFit::LineColor(kPink), 
+                 RooFit::LineStyle(kDashed));
+    model.plotOn(frame,RooFit::Components("cb6"),RooFit::LineColor(kGreen), 
+                 RooFit::LineStyle(kDashed));
+    model.plotOn(frame,RooFit::Components("cb7"),RooFit::LineColor(kRed), 
+                 RooFit::LineStyle(kDashed));
+    model.plotOn(frame,RooFit::Components("cb8"),RooFit::LineColor(kYellow), 
+                 RooFit::LineStyle(kDashed));
+    model.plotOn(frame,RooFit::Components("cb9"),RooFit::LineColor(kViolet), 
+                 RooFit::LineStyle(kDashed));
+    model.plotOn(frame,RooFit::Components("cb10"),RooFit::LineColor(kOrange), 
+                 RooFit::LineStyle(kDashed));
     
     TCanvas* c = new TCanvas("c","",0,0,700,500);
     c->cd();
-    c->SetFillColor(kWhite);
     frame->Draw();
-    c->SaveAs("pics/image.eps");
+    c->SaveAs(epsName.c_str());
+    
+    if(fitResult->statusCodeHistory(0) != 0)
+        cout << endl << endl << "Oh, Jesus, the fit did not converge." << endl;
+    else
+        cout << endl << endl << "The fit converged successfully." << endl;
+
+    if(fitResult->statusCodeHistory(1) != 0)
+        cout << "Hesse FAILED to calculate things properly." << endl << endl;
+    else
+        cout << "HESSE successfully calculated things." << endl << endl;
 }

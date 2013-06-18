@@ -17,7 +17,7 @@ CINCLUDEDIRS = -Iinclude
 c++SrcSuf = cpp
 
 #Set the name of the program to be compiled
-PROGRAM = example
+PROGRAM = fitting
 VERSION = $(shell git describe --abbrev=0 --tags)
 
 #Define Objects
