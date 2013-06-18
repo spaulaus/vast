@@ -153,10 +153,10 @@ void fitting(void) {
     
     //Do the plots
     RooPlot* frame = tof.frame();
-    frame = tof.frame(high);
+    frame = tof.frame(high*0.5);
     frame->SetTitle("Time-of-Flight Spectrum");
-    frame->SetXTitle("Time-of-Flight (4 ns)");
-    frame->SetYTitle("Events / 4 ns");
+    frame->SetXTitle("Time-of-Flight (2 ns)");
+    frame->SetYTitle("Events / 2 ns");
     frame->GetYaxis()->SetTitleOffset(1.2);
     
     data->plotOn(frame,Name("data"));
