@@ -10,6 +10,7 @@
 #include "RooDataSet.h"
 #include "RooFitResult.h"
 #include "RooFormulaVar.h"
+#include "RooMCStudy.h"
 #include "RooPlot.h"
 #include "RooRealVar.h"
 
@@ -26,11 +27,11 @@ string dirName = "077cu-ban4-lower/";
 string fileName = "077cu-ban4-lower-tof";
 
 string dataName="../data/roofit/"+dirName+fileName+".dat";
-//string epsName = "../pics/roofit/"+dirName+fileName+".eps";
-//string resultsFile = "results/"+dirName+fileName+".fit";
+string epsName = "../pics/roofit/"+dirName+fileName+".eps";
+string resultsFile = "results/"+dirName+fileName+".fit";
 
-string epsName = "../pics/roofit/muFree.eps";
-string resultsFile = "results/muFree.dat";
+//string epsName = "../pics/roofit/working.eps";
+//string resultsFile = "results/working.dat";
 
 int main(int argc, char* argv[]) {
     ifstream test(dataName.c_str());
@@ -189,7 +190,65 @@ void fitting(void) {
     c->cd();
     frame->Draw();
     c->SaveAs(epsName.c_str());
+
+
+    // validation of the ML fitting technique (also called MC "Toy" Experiment)
+    // ---------------------------
+    // C r e a t e   m a n a g e r
+    // ---------------------------
     
+    // Instantiate RooMCStudy manager on model with x as observable and given choice of fit options
+    //
+    // The Silence() option kills all messages below the PROGRESS level, leaving only a single message
+    // per sample executed, and any error message that occur during fitting
+    //
+    // The Extended() option has two effects: 
+    //    1) The extended ML term is included in the likelihood and 
+    //    2) A poisson fluctuation is introduced on the number of generated events 
+    //
+    // The FitOptions() given here are passed to the fitting stage of each toy experiment.
+    // If Save() is specified, the fit result of each experiment is saved by the manager  
+    //
+    // A Binned() option is added in this example to bin the data between generation and fitting
+    // to speed up the study at the expense of some precision
+    
+    // RooMCStudy* mcstudy = new RooMCStudy(model,tof,Binned(kTRUE),Silence(),Extended(),
+    //                                      FitOptions(Save(kTRUE),PrintEvalErrors(0))) ;
+    
+    // // ---------------------------------------------
+    // // G e n e r a t e   a n d   f i t   e v e n t s
+    // // ---------------------------------------------
+    
+    // // Generate and fit 500 samples of Poisson(nExpected) events
+    // mcstudy->generateAndFit(50) ;
+    
+    // // ------------------------------------------------
+    // // E x p l o r e   r e s u l t s   o f   s t u d y 
+    // // ------------------------------------------------
+    
+    // // Make plots of the distributions of the nsig2 yield, the error on yield and the pull of yield
+    // RooPlot* frame1 = mcstudy->plotParam(yield0,Bins(40)) ;
+    // RooPlot* frame2 = mcstudy->plotError(yield0,Bins(40)) ;
+    // RooPlot* frame3 = mcstudy->plotPull(yield0,Bins(40),FitGauss(kTRUE)) ;
+    
+    // // Plot distribution of minimized likelihood
+    // RooPlot* frame4 = mcstudy->plotNLL(Bins(40)) ;
+    
+    // // Draw all plots on a canvas
+    // // gStyle->SetPalette(1) ;
+    // // gStyle->SetOptStat(0) ;
+    // TCanvas* cc = new TCanvas("cc","",500,900) ;
+    // cc->Divide(1,3) ;
+    // cc->cd(1) ; frame1->GetYaxis()->SetTitleOffset(1.4) ; frame1->Draw() ;
+    // cc->cd(2) ; frame2->GetYaxis()->SetTitleOffset(1.4) ; frame2->Draw() ;
+    // cc->cd(3) ; frame3->GetYaxis()->SetTitleOffset(1.4) ; frame3->Draw() ;
+    
+    // cc->SaveAs("working-study.eps");
+
+    // // Make RooMCStudy object available on command line after
+    // // macro finishes
+    // //gDirectory->Add(mcstudy);
+        
     if(fitResult->statusCodeHistory(0) != 0)
         cout << endl << endl << "Oh, Jesus, the fit did not converge." << endl;
     else
