@@ -10,7 +10,9 @@
 #include "RooDataSet.h"
 #include "RooFitResult.h"
 #include "RooFormulaVar.h"
+#include "RooGaussModel.h"
 #include "RooMCStudy.h"
+#include "RooNumConvPdf.h"
 #include "RooPlot.h"
 #include "RooRealVar.h"
 
@@ -27,11 +29,8 @@ string dirName = "077cu-ban4-lower/";
 string fileName = "077cu-ban4-lower-tof";
 
 string dataName="../data/roofit/"+dirName+fileName+".dat";
-string epsName = "../pics/roofit/"+dirName+fileName+".eps";
-string resultsFile = "results/"+dirName+fileName+".fit";
-
-//string epsName = "../pics/roofit/working.eps";
-//string resultsFile = "results/working.dat";
+string epsName = "../pics/roofit/working.eps";
+string resultsFile = "results/working.dat";
 
 int main(int argc, char* argv[]) {
     ifstream test(dataName.c_str());
@@ -56,18 +55,22 @@ void fitting(void) {
     double wiggle = 15.;
     
     //Set the information for the sigmas.
-    //RooRealVar res("res", "", 3.375 / (2*sqrt(2*log(2))));
     RooRealVar res("res", "", 6.805 / (2*sqrt(2*log(2))));
 
     double nStart = 1.0, nLow = 0., nHigh = 50.;
     double yStart = 3.e3, yLow = 0., yHigh = 1.e7;
-
+    
     RooRealVar yield00("yield00", "", yStart, yLow, yHigh);
     RooRealVar mu00("mu00","", peaks[0], peaks[0]-wiggle, peaks[0]+wiggle);
     RooFormulaVar sigma00("sigma00", "res*(0.0264412*mu00+0.0432495)",RooArgList(res,mu00));
     RooFormulaVar alpha00("alpha00", "-9.53022/mu00-0.35706", mu00);
     RooRealVar n00("n00", "", nStart, nLow, nHigh);
     RooCBShape cb00("cb00", "", tof, mu00, sigma00, alpha00, n00);
+
+    RooFormulaVar x00("x", "", "mu00", mu00);
+    RooGaussModel res00("res00", "", tof, x, res);
+    RooNumConvPdf pk00("pk00","",tof,cb00,res00);
+
 
     RooRealVar yield01("yield01", "", yStart, yLow, yHigh);
     RooRealVar mu01("mu01","", peaks[1], peaks[1]-wiggle, peaks[1]+wiggle);
