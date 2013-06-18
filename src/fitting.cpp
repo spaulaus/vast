@@ -153,11 +153,10 @@ void fitting(void) {
     
     //Do the plots
     RooPlot* frame = tof.frame();
-    frame = tof.frame(high*0.25);
+    frame = tof.frame(high);
     frame->SetTitle("Time-of-Flight Spectrum");
     frame->SetXTitle("Time-of-Flight (4 ns)");
     frame->SetYTitle("Events / 4 ns");
-    frame->SetMaximum(1000.);
     frame->GetYaxis()->SetTitleOffset(1.2);
     
     data->plotOn(frame,Name("data"));
@@ -182,6 +181,8 @@ void fitting(void) {
     model.plotOn(frame,RooFit::Components("cb8"),RooFit::LineColor(kYellow), 
                  RooFit::LineStyle(kDashed));
     model.plotOn(frame,RooFit::Components("cb9"),RooFit::LineColor(kViolet), 
+                 RooFit::LineStyle(kDashed));
+    model.plotOn(frame,RooFit::Components("cb10"),RooFit::LineColor(kOrange), 
                  RooFit::LineStyle(kDashed));
     
     TCanvas* c = new TCanvas("c","",0,0,700,500);
