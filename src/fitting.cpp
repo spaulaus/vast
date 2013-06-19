@@ -22,16 +22,17 @@ using namespace std;
 using namespace RooFit;
 
 void fitting(void);
+void plotting(void);
 
-string dirName = "077cu-ban4-lower/";
-string fileName = "077cu-ban4-lower-tof";
+string dirName = "077cu-ban4-lower-betaCut/";
+string fileName = "077cu-ban4-lower-betaCut-tof";
 
 string dataName="../data/roofit/"+dirName+fileName+".dat";
-string epsName = "../pics/roofit/"+dirName+fileName+".eps";
-string resultsFile = "results/"+dirName+fileName+".fit";
+//string epsName = "../pics/roofit/"+dirName+fileName+".eps";
+//string resultsFile = "results/"+dirName+fileName+".fit";
 
-//string epsName = "../pics/roofit/working.eps";
-//string resultsFile = "results/working.dat";
+string epsName = "../pics/roofit/working/working.eps";
+string resultsFile = "results/working.dat";
 
 int main(int argc, char* argv[]) {
     ifstream test(dataName.c_str());
@@ -39,7 +40,11 @@ int main(int argc, char* argv[]) {
         cout << "Holy fuck!!! We couldn't open the data file to read in the sexy data!!" << endl << endl;
         exit(1);
     }
-    fitting();
+
+    //if(argc == 1)
+        fitting();
+        //else
+        // plotting();
 }
 
 void fitting(void) {
