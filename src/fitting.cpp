@@ -56,11 +56,12 @@ void fitting(void) {
                     66.831, 79.785, 93.401, 108.52, 138.87};
     double wiggle = 15.;
     
-    //Set the information for the sigmas.
-    RooRealVar res("res", "", 4.00 / (2*sqrt(2*log(2))));
-
     double nStart = 1.0, nLow = 0., nHigh = 50.;
     double yStart = 3.e3, yLow = 0., yHigh = 1.e7;
+
+    //Set the information for the resolution model
+    RooRealVar res("res", "", 4.00 / (2*sqrt(2*log(2))));
+    RooRealVar x("x", "", 0.0);
     
     //---------- Peak Number 0 ----------
     RooRealVar yield00("yield00", "", yStart, yLow, yHigh);
@@ -70,8 +71,7 @@ void fitting(void) {
     RooRealVar n00("n00", "", nStart, nLow, nHigh);
     RooCBShape cb00("cb00", "", tof, mu00, sigma00, alpha00, n00);
 
-    RooFormulaVar x00("x00", "", "mu00", mu00);
-    RooGaussModel res00("res00", "", tof, x00, res);
+    RooGaussModel res00("res00", "", tof, x, res);
     RooFFTConvPdf pk00("pk00","",tof,cb00,res00);
 
     //---------- Peak Number 1 ----------
@@ -82,8 +82,7 @@ void fitting(void) {
     RooRealVar n01("n01", "", nStart, nLow, nHigh);
     RooCBShape cb01("cb01", "", tof, mu01, sigma01, alpha01, n01);
 
-    RooFormulaVar x01("x01", "", "mu01", mu01);
-    RooGaussModel res01("res01", "", tof, x01, res);
+    RooGaussModel res01("res01", "", tof, x, res);
     RooFFTConvPdf pk01("pk01","",tof,cb01,res01);
 
     //---------- Peak Number 2 ----------
@@ -94,8 +93,7 @@ void fitting(void) {
     RooRealVar n02("n02", "", nStart, nLow, nHigh);
     RooCBShape cb02("cb02", "", tof, mu02, sigma02, alpha02, n02);
     
-    RooFormulaVar x02("x02", "", "mu02", mu02);
-    RooGaussModel res02("res02", "", tof, x02, res);
+    RooGaussModel res02("res02", "", tof, x, res);
     RooFFTConvPdf pk02("pk02","",tof,cb02,res02);
 
     //---------- Peak Number 3 ----------
@@ -106,8 +104,7 @@ void fitting(void) {
     RooRealVar n03("n03", "", nStart, nLow, nHigh);
     RooCBShape cb03("cb03", "", tof, mu03, sigma03, alpha03, n03);
 
-    RooFormulaVar x03("x03", "", "mu03", mu03);
-    RooGaussModel res03("res03", "", tof, x03, res);
+    RooGaussModel res03("res03", "", tof, x, res);
     RooFFTConvPdf pk03("pk03","",tof,cb03,res03);
 
     //---------- Peak Number 4 ----------
@@ -118,8 +115,7 @@ void fitting(void) {
     RooRealVar n04("n04", "", nStart, nLow, nHigh);
     RooCBShape cb04("cb04", "", tof, mu04, sigma04, alpha04, n04);
 
-    RooFormulaVar x04("x04", "", "mu04", mu04);
-    RooGaussModel res04("res04", "", tof, x04, res);
+    RooGaussModel res04("res04", "", tof, x, res);
     RooFFTConvPdf pk04("pk04","",tof,cb04,res04);
 
     //---------- Peak Number 5 ----------
@@ -130,8 +126,7 @@ void fitting(void) {
     RooRealVar n05("n05", "", nStart, nLow, nHigh);
     RooCBShape cb05("cb05", "", tof, mu05, sigma05, alpha05, n05);
     
-    RooFormulaVar x05("x05", "", "mu05", mu05);
-    RooGaussModel res05("res05", "", tof, x05, res);
+    RooGaussModel res05("res05", "", tof, x, res);
     RooFFTConvPdf pk05("pk05","",tof,cb05,res05);
 
     //---------- Peak Number 6 ----------
@@ -142,8 +137,7 @@ void fitting(void) {
     RooRealVar n06("n06", "", nStart, nLow, nHigh);
     RooCBShape cb06("cb06", "", tof, mu06, sigma06, alpha06, n06);
 
-    RooFormulaVar x06("x06", "", "mu06", mu06);
-    RooGaussModel res06("res06", "", tof, x06, res);
+    RooGaussModel res06("res06", "", tof, x, res);
     RooFFTConvPdf pk06("pk06","",tof,cb06,res06);
 
     //---------- Peak Number 7 ----------
@@ -154,8 +148,7 @@ void fitting(void) {
     RooRealVar n07("n07", "", nStart, nLow, nHigh);
     RooCBShape cb07("cb07", "", tof, mu07, sigma07, alpha07, n07);
 
-    RooFormulaVar x07("x07", "", "mu07", mu07);
-    RooGaussModel res07("res07", "", tof, x07, res);
+    RooGaussModel res07("res07", "", tof, x, res);
     RooFFTConvPdf pk07("pk07","",tof,cb07,res07);
 
     //---------- Peak Number 8 ----------
@@ -166,8 +159,7 @@ void fitting(void) {
     RooRealVar n08("n08", "", nStart, nLow, nHigh);
     RooCBShape cb08("cb08", "", tof, mu08, sigma08, alpha08, n08);
     
-    RooFormulaVar x08("x08", "", "mu08", mu08);
-    RooGaussModel res08("res08", "", tof, x08, res);
+    RooGaussModel res08("res08", "", tof, x, res);
     RooFFTConvPdf pk08("pk08","",tof,cb08,res08);
 
     //---------- Peak Number 9 ----------
@@ -178,8 +170,7 @@ void fitting(void) {
     RooRealVar n09("n09", "", nStart, nLow, nHigh);
     RooCBShape cb09("cb09", "", tof, mu09, sigma09, alpha09, n09);
 
-    RooFormulaVar x09("x09", "", "mu09", mu09);
-    RooGaussModel res09("res09", "", tof, x09, res);
+    RooGaussModel res09("res09", "", tof, x, res);
     RooFFTConvPdf pk09("pk09","",tof,cb09,res09);
     
     //---------- Peak Number 10 ----------
@@ -190,8 +181,7 @@ void fitting(void) {
     RooRealVar n10("n10", "", nStart, nLow, nHigh);
     RooCBShape cb10("cb10", "", tof, mu10, sigma10, alpha10, n10);
     
-    RooFormulaVar x10("x10", "", "mu10", mu10);
-    RooGaussModel res10("res10", "", tof, x10, res);
+    RooGaussModel res10("res10", "", tof, x, res);
     RooFFTConvPdf pk10("pk10","",tof,cb10,res10);
     
     RooArgList pks(pk00,pk01,pk02,pk03,pk04,pk05,pk06,pk07,pk08);
