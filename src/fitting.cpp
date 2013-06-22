@@ -30,8 +30,8 @@ string dirName = "077cu-ban4-lower/";
 string fileName = "077cu-ban4-lower-tof";
 
 string dataName="../data/roofit/"+dirName+fileName+".dat";
-string epsName = "../pics/roofit/working.eps";
-string resultsFile = "results/working.dat";
+string epsName = "../pics/roofit/gaussRes-08ns.eps";
+string resultsFile = "results/gaussRes.dat";
 
 int main(int argc, char* argv[]) {
     ifstream test(dataName.c_str());
@@ -52,14 +52,14 @@ void fitting(void) {
                                         RooArgList(tof));
 
     //Set the information for the peaks
-    double peaks[]={20.468, 38.306, 25.209, 31.149, 46.603, 55.006, 
+    double peaks[]={20.468, 25.209, 38.306, 31.149, 46.603, 55.006, 
                     66.831, 79.785, 93.401, 108.52, 138.87};
     double wiggle = 15.;
     
     double yStart = 3.e3, yLow = 0., yHigh = 1.e7;
 
     //Set the information for the resolution model
-    RooRealVar res("res", "", 6.00 / (2*sqrt(2*log(2))));
+    RooRealVar res("res", "", 8.00 / (2*sqrt(2*log(2))));
     RooRealVar x("x", "", 0.0);
     
     //---------- Peak Number 0 ----------
