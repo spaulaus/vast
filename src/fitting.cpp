@@ -52,15 +52,16 @@ void fitting(void) {
                                         RooArgList(tof));
 
     //Set the information for the peaks
-    double peaks[]={25.209, 38.306, 31.149, 46.603, 55.006, 
-                    66.831, 79.785, 93.401, 108.52, 138.87};
-    double wiggle = 15.;
+    double peaks[]={20.0, 25.209, 38.306, 31.149, 46.603, 
+                    50.00, 55.006, 66.831, 70.00, 79.785, 
+                    85.00, 93.401, 108.52, 120., 155.0};
+    double wiggle = 200.;
     
     RooRealVar nScale("nScale", "", 1.0);
     double yStart = 3.e3, yLow = 0., yHigh = 1.e7;
 
     //Set the information for the resolution model
-    RooRealVar res("res", "", 8.00 / (2*sqrt(2*log(2))));
+    RooRealVar res("res", "", 4.00 / (2*sqrt(2*log(2))));
     RooRealVar x("x", "", 0.0);
     
     //---------- Peak Number 0 ----------
@@ -183,11 +184,55 @@ void fitting(void) {
     
     RooGaussModel res10("res10", "", tof, x, res);
     RooFFTConvPdf pk10("pk10","",tof,cb10,res10);
+
+    //---------- Peak Number 11 ----------
+    RooRealVar yield11("yield11", "", yStart, yLow, yHigh);
+    RooRealVar mu11("mu11","", peaks[11], peaks[11]-wiggle, peaks[11]+wiggle);
+    RooFormulaVar sigma11("sigma11", "(0.0264412131874119*mu11+0.0432494943386515)",mu11);
+    RooFormulaVar alpha11("alpha11", "-9.53022215447638/mu11-0.357060159281673", mu11);
+    RooFormulaVar n11("n11", "(-5.99204241877324/mu11+1.25859614260662)*nScale", RooArgList(mu11,nScale));
+    RooCBShape cb11("cb11", "", tof, mu11, sigma11, alpha11, n11);
     
+    RooGaussModel res11("res11", "", tof, x, res);
+    RooFFTConvPdf pk11("pk11","",tof,cb11,res11);
+
+    //---------- Peak Number 12 ----------
+    RooRealVar yield12("yield12", "", yStart, yLow, yHigh);
+    RooRealVar mu12("mu12","", peaks[12], peaks[12]-wiggle, peaks[12]+wiggle);
+    RooFormulaVar sigma12("sigma12", "(0.0264412131874119*mu12+0.0432494943386515)",mu12);
+    RooFormulaVar alpha12("alpha12", "-9.53022215447638/mu12-0.357060159281673", mu12);
+    RooFormulaVar n12("n12", "(-5.99204241877324/mu12+1.25859614260662)*nScale", RooArgList(mu12,nScale));
+    RooCBShape cb12("cb12", "", tof, mu12, sigma12, alpha12, n12);
+    
+    RooGaussModel res12("res12", "", tof, x, res);
+    RooFFTConvPdf pk12("pk12","",tof,cb12,res12);
+
+    //---------- Peak Number 13 ----------
+    RooRealVar yield13("yield13", "", yStart, yLow, yHigh);
+    RooRealVar mu13("mu13","", peaks[13], peaks[13]-wiggle, peaks[13]+wiggle);
+    RooFormulaVar sigma13("sigma13", "(0.0264412131874119*mu13+0.0432494943386515)",mu13);
+    RooFormulaVar alpha13("alpha13", "-9.53022215447638/mu13-0.357060159281673", mu13);
+    RooFormulaVar n13("n13", "(-5.99204241877324/mu13+1.25859614260662)*nScale", RooArgList(mu13,nScale));
+    RooCBShape cb13("cb13", "", tof, mu13, sigma13, alpha13, n13);
+    
+    RooGaussModel res13("res13", "", tof, x, res);
+    RooFFTConvPdf pk13("pk13","",tof,cb13,res13);
+
+    //---------- Peak Number 14 ----------
+    RooRealVar yield14("yield14", "", yStart, yLow, yHigh);
+    RooRealVar mu14("mu14","", peaks[14], peaks[14]-wiggle, peaks[14]+wiggle);
+    RooFormulaVar sigma14("sigma14", "(0.0264412131874119*mu14+0.0432494943386515)",mu14);
+    RooFormulaVar alpha14("alpha14", "-9.53022215447638/mu14-0.357060159281673", mu14);
+    RooFormulaVar n14("n14", "(-5.99204241877324/mu14+1.25859614260662)*nScale", RooArgList(mu14,nScale));
+    RooCBShape cb14("cb14", "", tof, mu14, sigma14, alpha14, n14);
+    
+    RooGaussModel res14("res14", "", tof, x, res);
+    RooFFTConvPdf pk14("pk14","",tof,cb14,res14);
+
     RooArgList pks(pk00,pk01,pk02,pk03,pk04,pk05,pk06,pk07,pk08);
-    pks.add(RooArgList(pk09));
+    pks.add(RooArgList(pk09,pk10,pk11,pk12,pk13,pk14));
     RooArgList yields(yield00,yield01,yield02,yield03,yield04,yield05,yield06,yield07,yield08);
-    yields.add(RooArgList(yield09));
+    yields.add(RooArgList(yield09,yield10,yield11,yield12,yield13,yield14));
     RooAddPdf model("model", "", pks, yields);
 
     RooFitResult* fitResult = model.fitTo(*data, NumCPU(3), Save(), 
@@ -228,8 +273,14 @@ void fitting(void) {
                  RooFit::LineStyle(kDashed));
     model.plotOn(frame,RooFit::Components("pk09"),RooFit::LineColor(kViolet), 
                  RooFit::LineStyle(kDashed));
-    // model.plotOn(frame,RooFit::Components("pk10"),RooFit::LineColor(kOrange), 
-    //              RooFit::LineStyle(kDashed));
+    model.plotOn(frame,RooFit::Components("pk11"),RooFit::LineColor(kOrange), 
+                 RooFit::LineStyle(kDashed));
+    model.plotOn(frame,RooFit::Components("pk12"),RooFit::LineColor(kPink), 
+                 RooFit::LineStyle(kDashed));
+    model.plotOn(frame,RooFit::Components("pk13"),RooFit::LineColor(kGreen), 
+                 RooFit::LineStyle(kDashed));
+    model.plotOn(frame,RooFit::Components("pk14"),RooFit::LineColor(kRed), 
+                 RooFit::LineStyle(kDashed));
     
     TCanvas* c = new TCanvas("c","",0,0,700,500);
     c->cd();
