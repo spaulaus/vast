@@ -50,15 +50,15 @@ void fitting(void) {
     double low = 0.;
     double high = 200.;
     RooRealVar tof("tof","tof", low, high);
-    tof.setBins(10000);
+    //tof.setBins(10000);
     RooDataSet *data = RooDataSet::read(dataName.c_str(), 
                                         RooArgList(tof));
 
     //Set the information for the peaks
-    double peaks[]={20.0, 25.209, 38.306, 31.149, 46.603, 
-                    50.00, 55.006, 66.831, 70.00, 79.785, 
-                    85.00, 93.401, 108.52, 120., 155.0};
-    double wiggle = 200.;
+    double peaks[]={24.952, 29.600, 34.429, 41.709, 49.210, 
+                    53.169, 63.332, 68.273, 76.978, 85.061, 
+                    95.991, 105.76, 121.79, 140.00};
+    double wiggle = 100.;
     
     RooRealVar nScale("nScale", "", 1.0);
     double yStart = 3.e3, yLow = 0., yHigh = 1.e7;
@@ -233,9 +233,9 @@ void fitting(void) {
     RooFFTConvPdf pk14("pk14","",tof,cb14,res14);
 
     RooArgList pks(pk00,pk01,pk02,pk03,pk04,pk05,pk06,pk07,pk08);
-    pks.add(RooArgList(pk09,pk10,pk11,pk12,pk13,pk14));
+    pks.add(RooArgList(pk09,pk10,pk11,pk12,pk13));
     RooArgList yields(yield00,yield01,yield02,yield03,yield04,yield05,yield06,yield07,yield08);
-    yields.add(RooArgList(yield09,yield10,yield11,yield12,yield13,yield14));
+    yields.add(RooArgList(yield09,yield10,yield11,yield12,yield13));
     RooAddPdf model("model", "", pks, yields);
 
     RooFitResult* fitResult = model.fitTo(*data, NumCPU(3), Save(), 
