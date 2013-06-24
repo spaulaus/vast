@@ -30,11 +30,11 @@ string dirName = "077cu-ban4-lower/";
 string fileName = "077cu-ban4-lower-tof";
 
 string dataName="../data/roofit/"+dirName+fileName+".dat";
-string epsName = "../pics/roofit/"+dirName+fileName+".eps";
-string resultsFile = "results/"+dirName+fileName+".fit";
+// string epsName = "../pics/roofit/"+dirName+fileName+".eps";
+// string resultsFile = "results/"+dirName+fileName+".fit";
 
-//string epsName = "../pics/roofit/working.eps";
-//string resultsFile = "results/working.dat";
+string epsName = "../pics/roofit/working.eps";
+string resultsFile = "results/working.dat";
 
 int main(int argc, char* argv[]) {
     ifstream test(dataName.c_str());
@@ -55,9 +55,9 @@ void fitting(void) {
                                         RooArgList(tof));
 
     //Set the information for the peaks
-    double peaks[]={24.952, 29.600, 34.429, 41.709, 49.210, 
-                    53.169, 63.332, 68.273, 76.978, 85.061, 
-                    95.991, 105.76, 121.79, 140.00};
+    double peaks[]={23.895, 30.181, 37.956, 44.078, 48.314,
+                    53.973, 59.620, 67.166, 76.657, 84.296, 
+                    93.422, 103.20, 110.74, 134.61};
     double wiggle = 100.;
     
     RooRealVar nScale("nScale", "", 1.0);
@@ -221,17 +221,6 @@ void fitting(void) {
     RooGaussModel res13("res13", "", tof, x, res);
     RooFFTConvPdf pk13("pk13","",tof,cb13,res13);
 
-    //---------- Peak Number 14 ----------
-    RooRealVar yield14("yield14", "", yStart, yLow, yHigh);
-    RooRealVar mu14("mu14","", peaks[14], peaks[14]-wiggle, peaks[14]+wiggle);
-    RooFormulaVar sigma14("sigma14", "(0.0264412131874119*mu14+0.0432494943386515)",mu14);
-    RooFormulaVar alpha14("alpha14", "-9.53022215447638/mu14-0.357060159281673", mu14);
-    RooFormulaVar n14("n14", "(-5.99204241877324/mu14+1.25859614260662)*nScale", RooArgList(mu14,nScale));
-    RooCBShape cb14("cb14", "", tof, mu14, sigma14, alpha14, n14);
-    
-    RooGaussModel res14("res14", "", tof, x, res);
-    RooFFTConvPdf pk14("pk14","",tof,cb14,res14);
-
     RooArgList pks(pk00,pk01,pk02,pk03,pk04,pk05,pk06,pk07,pk08);
     pks.add(RooArgList(pk09,pk10,pk11,pk12,pk13));
     RooArgList yields(yield00,yield01,yield02,yield03,yield04,yield05,yield06,yield07,yield08);
@@ -281,8 +270,6 @@ void fitting(void) {
     model.plotOn(frame,RooFit::Components("pk12"),RooFit::LineColor(kPink), 
                  RooFit::LineStyle(kDashed));
     model.plotOn(frame,RooFit::Components("pk13"),RooFit::LineColor(kGreen), 
-                 RooFit::LineStyle(kDashed));
-    model.plotOn(frame,RooFit::Components("pk14"),RooFit::LineColor(kRed), 
                  RooFit::LineStyle(kDashed));
     
     TCanvas* c = new TCanvas("c","",0,0,700,500);
