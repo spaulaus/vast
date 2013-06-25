@@ -12,7 +12,7 @@ class ModelBuilder {
 public:
     ModelBuilder(const RooRealVar &tof, const std::string &file, 
                  const int &wiggle, const int &detRes);
-    ~ModelBuilder();
+    ~ModelBuilder(){};
 
     RooAddPdf BuildModel(void);
 private:

@@ -31,19 +31,13 @@ void fitting(void);
 int main(int argc, char* argv[]) {
     ToFFitter fitter(0.,200.);
 
-
-    // string dirName = "077cu-ban4-lower/";
-    // string fileName = "077cu-ban4-lower-tof";
-    // fitter.LoadData(dirName, fileName);
-    // fitter.SetEpsName("../pics/roofit/working.eps");
-    // fitter.SetResultsFile("results/working.fit");
-
-    // RooArgList pks(pk00,pk01,pk02,pk03,pk04,pk05,pk06,pk07,pk08);
-    // pks.add(RooArgList(pk09,pk10,pk11,pk12,pk13));
-    // RooArgList yields(yield00,yield01,yield02,yield03,yield04,yield05,yield06,yield07,yield08);
-    // yields.add(RooArgList(yield09,yield10,yield11,yield12,yield13));
-
-    // fit.FitData(pks,yields);
+    string dirName = "077cu-ban4-lower/";
+    string fileName = "077cu-ban4-lower-tof";
+    fitter.LoadData(dirName, fileName);
+    fitter.SetEpsName("../pics/roofit/working.eps");
+    fitter.SetResultsFile("results/working.fit");
+    
+    //fit.FitData(pks,yields);
 }
 
 void fitting(void) {

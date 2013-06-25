@@ -27,19 +27,18 @@
 
 class ToFFitter {
 public:
-    ToFFitter();
     ToFFitter(const double &low, const double &high);
-    ~ToFFitter();
+    ~ToFFitter(){};
 
     void FitData(const RooArgList &peaks,
-                          const RooArgList &yields);
+                 const RooArgList &yields);
 
+    void LoadData(const std::string &dir, const std::string &file);
+        
     void SetEpsName(const std::string &name) {eps_ = name;};
     void SetNumPeaks(const int &num) {numPeaks_ = num;};
     void SetResultsFile(const std::string &name) {output_ = name;};
 private:
-    void LoadData(const std::string &dir, const std::string &file);
-        
     double low_, high_, wiggle_, detRes_;
     int numPeaks_;
     std::string eps_, output_, dataFile_;
