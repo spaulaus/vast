@@ -17,9 +17,10 @@ VERSION = $(shell git describe --abbrev=0 --tags)
 
 #Define Objects
 FITTINGO = fitting.o
+MCSTUDYO = mcStudy-yield.o
 
 #Make the object list and prefix the object directory
-OBJS = $(FITTINGO) $(FUNCO)
+OBJS = $(FITTINGO)
 OBJDIR = obj
 OBJS_W_DIR = $(addprefix $(OBJDIR)/,$(OBJS))
 
@@ -43,7 +44,10 @@ $(PROGRAM): $(OBJS_W_DIR)
 $(OBJDIR)/%.o: %.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-.PHONY: clean
+.PHONY: clean mc
 clean: 
 	@echo "Cleaning..."
 	@rm -f $(OBJDIR)/* $(PROGRAM) *~ src/*~ include/*~
+
+mc:
+	$(CXX) $(CXXFLAGS) $(LDLIBS) src/mcStudy-yield.cpp -o mcStudy
