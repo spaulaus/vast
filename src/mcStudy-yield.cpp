@@ -29,16 +29,16 @@ void MCStudy(const RooRealVar &data, const RooAddPdf &model, const RooArgList &s
 
 string dirName = "077cu-ban4-lower/";
 string fileName = "077cu-ban4-lower-tof";
+string mcStudyFldr = "../pics/roofit/"+dirName+"mcStudy/";
 
 string dataName="../data/roofit/"+dirName+fileName+".dat";
-//string epsName = "../pics/roofit/"+dirName+fileName+".eps";
-//string resultsFile = "results/"+dirName+fileName+".fit";
-//string mcStudyFldr = "../pics/roofit/"+dirName+"mcStudy/";
+string epsName = "../pics/roofit/"+dirName+fileName+"-mcStudy.eps";
+string resultsFile = "results/"+dirName+fileName+"-mcStudy.fit";
 
-string picFldr = "../pics/roofit/working/";
-string epsName = picFldr+"working.eps";
-string mcStudyFldr = picFldr+"mcStudy/";
-string resultsFile = "results/working.dat";
+// string picFldr = "../pics/roofit/working/";
+// string epsName = picFldr+"working.eps";
+// string mcStudyFldr = picFldr+"mcStudy/";
+// string resultsFile = "results/working.dat";
 
 int main(int argc, char* argv[]) {
     ifstream test(dataName.c_str());
@@ -58,11 +58,10 @@ void fitting(void) {
                                         RooArgList(tof));
 
     //Set the information for the peaks
-    double peaks[]={23.895, 30.181, 37.956, 44.078, 48.314,
-                    53.973, 59.620, 67.166, 76.657, 84.296, 
-                    93.422, 103.20, 110.74, 134.61};
-    double wiggle = 100.;
-    
+    double peaks[]={21.618, 25.913, 32.203, 39.220, 45.983,
+                    51.809, 57.904, 65.971, 72.315, 80.477, 
+                    90.189, 97.541, 107.96, 134.16};
+
     double yStart = 3.e3, yLow = 0., yHigh = 1.e8;
     
     //Set the information for the resolution model
