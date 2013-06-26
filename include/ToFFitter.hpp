@@ -43,8 +43,8 @@ private:
     int numPeaks_;
     std::string eps_, output_, dataFile_;
 
-    RooFitResult* result_;
-    RooDataSet *data_;
+    //RooFitResult* result_;
+    //RooDataSet* data_;
     RooRealVar tof_;
 }; //class ToFFitter
 #endif //ifndef __TOFFITTER_HPP__

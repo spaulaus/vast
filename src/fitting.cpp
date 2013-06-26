@@ -24,7 +24,6 @@
 #include "ToFFitter.hpp"
 
 using namespace std;
-using namespace RooFit;
 
 void fitting(void);
 

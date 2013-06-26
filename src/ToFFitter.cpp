@@ -7,12 +7,10 @@
 #include "ToFFitter.hpp"
 
 using namespace std;
-using namespace RooFit;
 
 ToFFitter::ToFFitter(const double &low, const double &high)  {
     low_ = low;
     high_ = high;
-    tof_.setRange(low,high);
 }
 
 void ToFFitter::LoadData(const std::string &dir, const std::string &file) {
@@ -26,13 +24,13 @@ void ToFFitter::LoadData(const std::string &dir, const std::string &file) {
         exit(1);
     }
 
-    data_ = RooDataSet::read(dataFile_.c_str(), RooArgList(tof_));
+    RooDataSet *data_ = RooDataSet::read(dataFile_.c_str(), RooArgList(tof_));
 }
 
 void ToFFitter::FitData(const RooArgList &peaks,
                         const RooArgList &yields) {
-    ModelBuilder builder(tof_, "peaks.in", wiggle_, detRes_);
-    RooAddPdf model = builder.BuildModel();
+    // ModelBuilder builder(tof_, "peaks.in", wiggle_, detRes_);
+    // RooAddPdf model = builder.BuildModel();
     
     // RooFitResult* fitResult = model.fitTo(*data_, NumCPU(3), Save(), 
     //                                       Range(low_, high_));
