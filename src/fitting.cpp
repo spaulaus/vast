@@ -13,7 +13,6 @@
 #include "RooFitResult.h"
 #include "RooFormulaVar.h"
 #include "RooGaussModel.h"
-#include "RooMCStudy.h"
 #include "RooNumConvPdf.h"
 #include "RooPlot.h"
 #include "RooRealVar.h"
@@ -257,32 +256,19 @@ void fitting(void) {
     data->plotOn(frame,Name("data"));
     model.plotOn(frame,Name("model"));
 
-    model.plotOn(frame,RooFit::Components("pk00"),RooFit::LineColor(kGreen), 
-                 RooFit::LineStyle(kDashed));
-    model.plotOn(frame,RooFit::Components("pk01"),RooFit::LineColor(kRed), 
-                 RooFit::LineStyle(kDashed));
-    model.plotOn(frame,RooFit::Components("pk02"),RooFit::LineColor(kYellow), 
-                 RooFit::LineStyle(kDashed));
-    model.plotOn(frame,RooFit::Components("pk03"),RooFit::LineColor(kViolet), 
-                 RooFit::LineStyle(kDashed));
-    model.plotOn(frame,RooFit::Components("pk04"),RooFit::LineColor(kOrange), 
-                 RooFit::LineStyle(kDashed));
-    model.plotOn(frame,RooFit::Components("pk05"),RooFit::LineColor(kPink), 
-                 RooFit::LineStyle(kDashed));
-    model.plotOn(frame,RooFit::Components("pk06"),RooFit::LineColor(kGreen), 
-                 RooFit::LineStyle(kDashed));
-    model.plotOn(frame,RooFit::Components("pk07"),RooFit::LineColor(kRed), 
-                 RooFit::LineStyle(kDashed));
-    model.plotOn(frame,RooFit::Components("pk08"),RooFit::LineColor(kYellow), 
-                 RooFit::LineStyle(kDashed));
-    model.plotOn(frame,RooFit::Components("pk09"),RooFit::LineColor(kViolet), 
-                 RooFit::LineStyle(kDashed));
-    model.plotOn(frame,RooFit::Components("pk11"),RooFit::LineColor(kOrange), 
-                 RooFit::LineStyle(kDashed));
-    model.plotOn(frame,RooFit::Components("pk12"),RooFit::LineColor(kPink), 
-                 RooFit::LineStyle(kDashed));
-    model.plotOn(frame,RooFit::Components("pk13"),RooFit::LineColor(kGreen), 
-                 RooFit::LineStyle(kDashed));
+    model.plotOn(frame,Components("pk00"),LineColor(kGreen), LineStyle(kDashed));
+    model.plotOn(frame,Components("pk01"),LineColor(kRed), LineStyle(kDashed));
+    model.plotOn(frame,Components("pk02"),LineColor(kYellow), LineStyle(kDashed));
+    model.plotOn(frame,Components("pk03"),LineColor(kViolet), LineStyle(kDashed));
+    model.plotOn(frame,Components("pk04"),LineColor(kOrange), LineStyle(kDashed));
+    model.plotOn(frame,Components("pk05"),LineColor(kPink), LineStyle(kDashed));
+    model.plotOn(frame,Components("pk06"),LineColor(kGreen), LineStyle(kDashed));
+    model.plotOn(frame,Components("pk07"),LineColor(kRed), LineStyle(kDashed));
+    model.plotOn(frame,Components("pk08"),LineColor(kYellow), LineStyle(kDashed));
+    model.plotOn(frame,Components("pk09"),LineColor(kViolet), LineStyle(kDashed));
+    model.plotOn(frame,Components("pk11"),LineColor(kOrange), LineStyle(kDashed));
+    model.plotOn(frame,Components("pk12"),LineColor(kPink), LineStyle(kDashed));
+    model.plotOn(frame,Components("pk13"),LineColor(kGreen), LineStyle(kDashed));
     
     TCanvas* c = new TCanvas("c","",0,0,700,500);
     c->cd();
