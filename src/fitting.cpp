@@ -1,6 +1,7 @@
 #include <fstream>
 #include <iostream>
 #include <iomanip>
+#include <sstream>
 
 #include <cmath>
 #include <cstdio>
@@ -25,6 +26,8 @@ using namespace std;
 using namespace RooFit;
 
 void fitting(void);
+void MCStudy(const RooRealVar &data, const RooAddPdf &model, 
+             const RooArgList &subjects);
 
 string dirName = "077cu-ban4-lower/";
 string fileName = "077cu-ban4-lower-tof";
@@ -50,7 +53,6 @@ void fitting(void) {
     double low = 0.;
     double high = 200.;
     RooRealVar tof("tof","tof", low, high);
-    //tof.setBins(10000);
     RooDataSet *data = RooDataSet::read(dataName.c_str(), 
                                         RooArgList(tof));
 
@@ -288,6 +290,8 @@ void fitting(void) {
     c->cd();
     frame->Draw();
     c->SaveAs(epsName.c_str());
+
+    MCStudy(data,model,yields);
        
     if(fitResult->statusCodeHistory(0) != 0)
         cout << endl << endl << "Oh, Jesus, the fit did not converge." << endl;
@@ -298,4 +302,61 @@ void fitting(void) {
         cout << "Hesse FAILED to calculate things properly." << endl << endl;
     else
         cout << "HESSE successfully calculated things." << endl << endl;
+}
+
+void MCStudy(const RooRealVar &data, const RooAddPdf &model, const RooArgList &subjects) {
+    // validation of the ML fitting technique (also called MC "Toy" Experiment)
+    // ---------------------------
+    // C r e a t e   m a n a g e r
+    // ---------------------------
+    
+    // Instantiate RooMCStudy manager on model with x as observable and given choice of fit options
+    //
+    // The Silence() option kills all messages below the PROGRESS level, leaving only a single message
+    // per sample executed, and any error message that occur during fitting
+    //
+    // The Extended() option has two effects: 
+    //    1) The extended ML term is included in the likelihood and 
+    //    2) A poisson fluctuation is introduced on the number of generated events 
+    //
+    // The FitOptions() given here are passed to the fitting stage of each toy experiment.
+    // If Save() is specified, the fit result of each experiment is saved by the manager  
+    //
+    // A Binned() option is added in this example to bin the data between generation and fitting
+    // to speed up the study at the expense of some precision
+    
+    RooMCStudy* mcstudy = new RooMCStudy(model,data,Binned(kTRUE),Silence(),Extended(),
+                                         FitOptions(Save(kTRUE),PrintEvalErrors(0))) ;
+    
+    // ---------------------------------------------
+    // G e n e r a t e   a n d   f i t   e v e n t s
+    // ---------------------------------------------
+    
+    // Generate and fit 1000 samples of Poisson(nExpected) events
+    mcstudy->generateAndFit(1000) ;
+    
+    // ------------------------------------------------
+    // E x p l o r e   r e s u l t s   o f   s t u d y 
+    // ------------------------------------------------
+    
+    // Plot distribution of minimized likelihood
+    RooPlot* frame1 = mcstudy->plotNLL(Bins(40)) ;
+
+    // Make plots of the distributions of the yield, the error on yield and the pull of yield
+    RooRealVar* subject = (RooRealVar*)subjects.at(0);
+    RooPlot* frame2 = mcstudy->plotParam(subject,Bins(40)) ;
+    RooPlot* frame3 = mcstudy->plotError(subject,Bins(40)) ;
+    RooPlot* frame4 = mcstudy->plotPull(subject,Bins(40),FitGauss(kTRUE)) ;
+    
+    TCanvas* cc = new TCanvas("cc","",500,500) ;
+    cc->Divide(2,2) ;
+    cc->cd(1) ; frame1->GetYaxis()->SetTitleOffset(1.4) ; frame1->Draw() ;
+    cc->cd(2) ; frame2->GetYaxis()->SetTitleOffset(1.4) ; frame2->Draw() ;
+    cc->cd(3) ; frame3->GetYaxis()->SetTitleOffset(1.4) ; frame3->Draw() ;
+    cc->cd(4) ; frame4->GetYaxis()->SetTitleOffset(1.4) ; frame4->Draw() ;
+
+    stringstream name;
+    //name << mcStudyFldr << "yield10.eps"
+    cc->SaveAs("working-study.eps");
+    
 }
