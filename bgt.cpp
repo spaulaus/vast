@@ -91,7 +91,7 @@ int main() {
     ReadData();
     
     double totN = 0, rawTotN = 0;
-    cout << "En+Sn(keV)     B(GT)     log(ft)" << endl;
+    cout << "#En+Sn(keV)     B(GT)     log(ft)" << endl;
     for(unsigned int i = 0; i < mu.size(); i++) {
         double en = CalcEnergy(mu[i]); //in keV
         double bgt = coeff/CalcF(en)/(t/CalcBr(area[i], en));
@@ -100,6 +100,6 @@ int main() {
         rawTotN += area[i];
         cout << en+sn << "     " << bgt << "    " << logft << endl;
     }
-    cout << "Pn is " << totN / numBeta / betaEff / omega 
+    cout << "#Pn is " << totN / numBeta / betaEff / omega 
          << "  Ntot = " << totN << "   Raw Ntot = " << rawTotN << endl;
 }
