@@ -49,4 +49,3 @@ plot file u 1:6 w points pt 7 ps 3 lc rgb prim3
 set ylabel offset 1,0 "Yield"
 set output "../../pics/roofit/tofSim/comp/yield-t.eps"
 plot file u 1:7 w points pt 7 ps 3 lc rgb prim3
-

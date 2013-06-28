@@ -8,41 +8,45 @@ else
     file=$1
 fi
 
-awk '/./' $file > $file.temp
+dir=`dirname $1`
+file=`basename $1 .fit`
+name="$dir/$file"
+
+awk '/./' $name.fit > $name.temp
 
 lc=0
 while read line
 do 
     if (( $lc <= 4 )) 
     then
-        echo "#" $line >> $file.out
+        echo "#" $line >> $name.out
     else
         set -- $line
-        if echo $1 | grep -q alpha
+        if echo $1 | grep -q yield
         then
-            pos=${1:5}
-            alpha[$pos]=$2
-            alphaErr[$pos]=$4
+            pos=`echo ${1:5} | bc`
+            yield[$pos]=$2
+            yieldErr[$pos]=$4
         elif echo $1 | grep -q mu
         then
-            pos=${1:2}
+            pos=`echo ${1:2} | bc`
             mu[$pos]=$2
             muErr[$pos]=$4
         fi
     fi
     let lc=$lc+1
-done < $file.temp
+done < $name.temp
 
-let num=${#alpha[@]}-1
+let num=${#yield[@]}-1
 for i in `seq 0 $num`
 do
-    echo -e "$i  ${mu[$i]} ${muErr[$i]} ${alpha[$i]} ${alphaErr[$i]}" >> $file.out
+    echo -e "$i  ${mu[$i]} ${muErr[$i]} ${yield[$i]} ${yieldErr[$i]}" >> $name.out
 done
 
 #substitute a line the stupid way
-awk '{if(NR == 4) print "# PkNum mu(ns) muErr(ns) Yield YieldErr PkDiff"; else print $0}' $file.out > $file.temp
+awk '{if(NR == 4) print "# PkNum mu(ns) muErr(ns) Yield YieldErr PkDiff"; else print $0}' $name.out > $name.temp
 
 #compute the difference in positions of the centroids for the peaks
-awk '{if(NR<6) print $0; else if ($1 == 0) print $0," ", 0.0; else print $0, " ", ($2-last); last=$2}' $file.temp > $file.out
+awk '{if(NR<6) print $0; else if ($1 == 0) print $0," ", 0.0; else print $0, " ", ($2-last); last=$2}' $name.temp > $name.out
 
-mv $file.out $file && rm $file.temp
+rm $name.temp
