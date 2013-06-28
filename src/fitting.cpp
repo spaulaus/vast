@@ -53,8 +53,10 @@ void fitting(void) {
     RooDataSet *data = RooDataSet::read(dataName.c_str(), 
                                         RooArgList(tof));
 
+    double binning = 0.5;
+
     //Set the information for the peaks
-    double peaks[]={23.895, 30.181, 37.956, 44.078, 48.314,
+    double peaks[]={30.181, 37.956, 44.078, 48.314,
                     53.973, 59.620, 67.166, 76.657, 84.296, 
                     93.422, 103.20, 110.74, 134.61};
     double wiggle = 100.;
@@ -62,7 +64,7 @@ void fitting(void) {
     double yStart = 3.e3, yLow = 0., yHigh = 1.e8;
     
     //Set the information for the resolution model
-    double detRes = 4.0;
+    double detRes = 4.04;
     RooRealVar res("res", "res for gauss model", detRes / (2*sqrt(2*log(2))));
     RooRealVar x("x", "mean for gauss model", 0.0);
 
@@ -220,22 +222,11 @@ void fitting(void) {
     
     RooGaussModel res12("res12", "", tof, x, res);
     RooFFTConvPdf pk12("pk12","",tof,cb12,res12);
-    
-    //---------- Peak Number 13 ----------
-    RooRealVar yield13("yield13", "", yStart, yLow, yHigh);
-    RooRealVar mu13("mu13","", peaks[13], peaks[13]-wiggle, peaks[13]+wiggle);
-    RooFormulaVar sigma13("sigma13", "sM*mu13+sB", RooArgList(sM,mu13,sB));
-    RooFormulaVar alpha13("alpha13", "aM/mu13+aB", RooArgList(aM,mu13,aB));
-    RooFormulaVar n13("n13", "nM/mu13+nB", RooArgList(nM,mu13,nB));
-    RooCBShape cb13("cb13", "", tof, mu13, sigma13, alpha13, n13);
-    
-    RooGaussModel res13("res13", "", tof, x, res);
-    RooFFTConvPdf pk13("pk13","",tof,cb13,res13);
-    
+        
     RooArgList pks(pk00,pk01,pk02,pk03,pk04,pk05,pk06,pk07,pk08);
-    pks.add(RooArgList(pk09,pk10,pk11,pk12,pk13));
+    pks.add(RooArgList(pk09,pk10,pk11,pk12));
     RooArgList yields(yield00,yield01,yield02,yield03,yield04,yield05,yield06,yield07,yield08);
-    yields.add(RooArgList(yield09,yield10,yield11,yield12,yield13));
+    yields.add(RooArgList(yield09,yield10,yield11,yield12));
     RooAddPdf model("model", "", pks, yields);
 
     RooFitResult* fitResult = model.fitTo(*data, NumCPU(3), Save(), 
@@ -247,7 +238,7 @@ void fitting(void) {
     
     //Do the plots
     RooPlot* frame = tof.frame();
-    frame = tof.frame(high*0.5);
+    frame = tof.frame(high*binning);
     frame->SetTitle("Time-of-Flight Spectrum");
     frame->SetXTitle("Time-of-Flight (2 ns)");
     frame->SetYTitle("Events / 2 ns");
@@ -268,7 +259,6 @@ void fitting(void) {
     model.plotOn(frame,Components("pk09"),LineColor(kViolet), LineStyle(kDashed));
     model.plotOn(frame,Components("pk11"),LineColor(kOrange), LineStyle(kDashed));
     model.plotOn(frame,Components("pk12"),LineColor(kPink), LineStyle(kDashed));
-    model.plotOn(frame,Components("pk13"),LineColor(kGreen), LineStyle(kDashed));
     
     TCanvas* c = new TCanvas("c","",0,0,700,500);
     c->cd();
