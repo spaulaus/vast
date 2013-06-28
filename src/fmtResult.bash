@@ -12,6 +12,8 @@ dir=`dirname $1`
 file=`basename $1 .fit`
 name="$dir/$file"
 
+rm $name.out
+
 awk '/./' $name.fit > $name.temp
 
 lc=0
