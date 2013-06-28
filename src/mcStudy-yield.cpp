@@ -58,14 +58,13 @@ void fitting(void) {
                                         RooArgList(tof));
 
     //Set the information for the peaks
-    double peaks[]={21.618, 25.913, 32.203, 39.220, 45.983,
-                    51.809, 57.904, 65.971, 72.315, 80.477, 
-                    90.189, 97.541, 107.96, 134.16};
-
+    double peaks[]={23.899, 30.199, 38.136, 44.920, 
+                    50.197, 56.889, 65.431, 71.600,
+                    80.235, 90.033, 97.432, 107.94, 134.14};
     double yStart = 3.e3, yLow = 0., yHigh = 1.e8;
     
     //Set the information for the resolution model
-    double detRes = 4.0;
+    double detRes = 4.04;
     RooRealVar res("res", "res for gauss model", detRes / (2*sqrt(2*log(2))));
     RooRealVar x("x", "mean for gauss model", 0.0);
 
@@ -224,21 +223,10 @@ void fitting(void) {
     RooGaussModel res12("res12", "", tof, x, res);
     RooFFTConvPdf pk12("pk12","",tof,cb12,res12);
     
-    //---------- Peak Number 13 ----------
-    RooRealVar yield13("yield13", "", yStart, yLow, yHigh);
-    RooRealVar mu13("mu13","", peaks[13]);
-    RooFormulaVar sigma13("sigma13", "sM*mu13+sB", RooArgList(sM,mu13,sB));
-    RooFormulaVar alpha13("alpha13", "aM/mu13+aB", RooArgList(aM,mu13,aB));
-    RooFormulaVar n13("n13", "nM/mu13+nB", RooArgList(nM,mu13,nB));
-    RooCBShape cb13("cb13", "", tof, mu13, sigma13, alpha13, n13);
-    
-    RooGaussModel res13("res13", "", tof, x, res);
-    RooFFTConvPdf pk13("pk13","",tof,cb13,res13);
-    
     RooArgList pks(pk00,pk01,pk02,pk03,pk04,pk05,pk06,pk07,pk08);
-    pks.add(RooArgList(pk09,pk10,pk11,pk12,pk13));
+    pks.add(RooArgList(pk09,pk10,pk11,pk12));
     RooArgList yields(yield00,yield01,yield02,yield03,yield04,yield05,yield06,yield07,yield08);
-    yields.add(RooArgList(yield09,yield10,yield11,yield12,yield13));
+    yields.add(RooArgList(yield09,yield10,yield11,yield12));
     RooAddPdf model("model", "", pks, yields);
 
     RooFitResult* fitResult = model.fitTo(*data, NumCPU(3), Save(), 
@@ -283,8 +271,6 @@ void fitting(void) {
                  RooFit::LineStyle(kDashed));
     model.plotOn(frame,RooFit::Components("pk12"),RooFit::LineColor(kPink), 
                  RooFit::LineStyle(kDashed));
-    model.plotOn(frame,RooFit::Components("pk13"),RooFit::LineColor(kGreen), 
-                 RooFit::LineStyle(kDashed));
     
     TCanvas* c = new TCanvas("c","",0,0,700,500);
     c->cd();
@@ -326,35 +312,35 @@ void MCStudy(const RooRealVar &data, const RooAddPdf &model, const RooArgList &s
     // to speed up the study at the expense of some precision
     
     RooMCStudy* mcstudy = new RooMCStudy(model,data,Binned(kTRUE),Silence(),Extended(),
-                                         FitOptions(Save(kTRUE),Range(0.,200.),PrintEvalErrors(0))) ;
+                                         FitOptions(Save(kTRUE),Range(0.,200.),PrintEvalErrors(0)));
     
     // ---------------------------------------------
     // G e n e r a t e   a n d   f i t   e v e n t s
     // ---------------------------------------------
     
     // Generate and fit 500 samples of Poisson(nExpected) events
-    mcstudy->generateAndFit(1000) ;
+    mcstudy->generateAndFit(1500);
     
     // ------------------------------------------------
     // E x p l o r e   r e s u l t s   o f   s t u d y 
     // ------------------------------------------------
     
-    for(int i = 0; i < 14; i++) {
+    for(int i = 0; i < 12; i++) {
         // Plot distribution of minimized likelihood
-        RooPlot* frame1 = mcstudy->plotNLL(Bins(40)) ;
+        RooPlot* frame1 = mcstudy->plotNLL(Bins(40));
         
         // Make plots of the distributions of the yield, the error on yield and the pull of yield
         RooRealVar subject = *((RooRealVar*)subjects.at(i));
-        RooPlot* frame2 = mcstudy->plotParam(subject,Bins(40)) ;
-        RooPlot* frame3 = mcstudy->plotError(subject,Bins(40)) ;
-        RooPlot* frame4 = mcstudy->plotPull(subject,Bins(40),FitGauss(kTRUE)) ;
+        RooPlot* frame2 = mcstudy->plotParam(subject,Bins(40));
+        RooPlot* frame3 = mcstudy->plotError(subject,Bins(40));
+        RooPlot* frame4 = mcstudy->plotPull(subject,Bins(40),FitGauss(kTRUE));
         
-        TCanvas* cc = new TCanvas("cc","",500,500) ;
-        cc->Divide(2,2) ;
-        cc->cd(1) ; frame1->GetYaxis()->SetTitleOffset(1.4) ; frame1->Draw() ;
-        cc->cd(2) ; frame2->GetYaxis()->SetTitleOffset(1.4) ; frame2->Draw() ;
-        cc->cd(3) ; frame3->GetYaxis()->SetTitleOffset(1.4) ; frame3->Draw() ;
-        cc->cd(4) ; frame4->GetYaxis()->SetTitleOffset(1.4) ; frame4->Draw() ;
+        TCanvas* cc = new TCanvas("cc","",500,500);
+        cc->Divide(2,2);
+        cc->cd(1); frame1->GetYaxis()->SetTitleOffset(1.4); frame1->Draw();
+        cc->cd(2); frame2->GetYaxis()->SetTitleOffset(1.4); frame2->Draw();
+        cc->cd(3); frame3->GetYaxis()->SetTitleOffset(1.4); frame3->Draw();
+        cc->cd(4); frame4->GetYaxis()->SetTitleOffset(1.4); frame4->Draw();
         
         stringstream name;
         if(i < 10)

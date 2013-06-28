@@ -56,9 +56,9 @@ void fitting(void) {
     double binning = 0.5;
 
     //Set the information for the peaks
-    double peaks[]={30.181, 37.956, 44.078, 48.314,
-                    53.973, 59.620, 67.166, 76.657, 84.296, 
-                    93.422, 103.20, 110.74, 134.61};
+    double peaks[]={23.899, 30.199, 38.136, 44.920, 
+                    50.197, 56.889, 65.431, 71.600,
+                    80.235, 90.033, 97.432, 107.94, 134.14};
     double wiggle = 100.;
     
     double yStart = 3.e3, yLow = 0., yHigh = 1.e8;
