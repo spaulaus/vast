@@ -38,21 +38,24 @@ void ReadData(void) {
 
 double CalcEff(const double &energy) {
     //Taken from cf1200VLG/000.fit - uses keV
-    double a,b,c,d,e,f,g,E1,E2;
-    a = 8.07991379590916;
-    b = -2.76506346801857;
-    c = 0.659153868962284;
-    d = 5.90882582548888;
-    e = -0.64468269369943;
-    f = -0.395030757008049;
-    g = 1.73807042912493;
-    E1= 150.0;
-    E2 = 1000.0;
-    double x = log(energy/E1);
-    double y = log(energy/E2);                     
+    // double a,b,c,d,e,f,g,E1,E2;
+    // a = 8.07991379590916;
+    // b = -2.76506346801857;
+    // c = 0.659153868962284;
+    // d = 5.90882582548888;
+    // e = -0.64468269369943;
+    // f = -0.395030757008049;
+    // g = 1.73807042912493;
+    // E1= 150.0;
+    // E2 = 1000.0;
+    // double x = log(energy/E1);
+    // double y = log(energy/E2);                     
     
-    return((exp(pow(pow(a+b*x+c*x*x,-g) + 
-                    pow(d+e*y+f*y*y,-g), -1/g)))/100);
+    // return((exp(pow(pow(a+b*x+c*x*x,-g) + 
+    //                 pow(d+e*y+f*y*y,-g), -1/g)))/100);
+
+    //From Sergey's eff_var_thresh
+    return(52349.3/(energy+572.064)+5.17822);
 }
 
 double CalcBr(const double &area, const double &energy) { 
