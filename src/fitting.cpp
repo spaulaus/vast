@@ -58,7 +58,7 @@ void fitting(void) {
     //Set the information for the peaks
     double peaks[]={23.899, 30.199, 38.136, 44.920, 
                     50.197, 56.889, 65.431, 71.600,
-                    80.235, 90.033, 97.432, 107.94, 134.14};
+                    80.235, 90.033, 97.432, 107.94, 120.0, 134.14};
     double wiggle = 100.;
     
     double yStart = 3.e3, yLow = 0., yHigh = 1.e8;
@@ -222,11 +222,22 @@ void fitting(void) {
     
     RooGaussModel res12("res12", "", tof, x, res);
     RooFFTConvPdf pk12("pk12","",tof,cb12,res12);
+
+    //---------- Peak Number 13 ----------
+    RooRealVar yield13("yield13", "", yStart, yLow, yHigh);
+    RooRealVar mu13("mu13","", peaks[13], peaks[13]-wiggle, peaks[13]+wiggle);
+    RooFormulaVar sigma13("sigma13", "sM*mu13+sB", RooArgList(sM,mu13,sB));
+    RooFormulaVar alpha13("alpha13", "aM/mu13+aB", RooArgList(aM,mu13,aB));
+    RooFormulaVar n13("n13", "nM/mu13+nB", RooArgList(nM,mu13,nB));
+    RooCBShape cb13("cb13", "", tof, mu13, sigma13, alpha13, n13);
+    
+    RooGaussModel res13("res13", "", tof, x, res);
+    RooFFTConvPdf pk13("pk13","",tof,cb13,res13);
         
     RooArgList pks(pk00,pk01,pk02,pk03,pk04,pk05,pk06,pk07,pk08);
-    pks.add(RooArgList(pk09,pk10,pk11,pk12));
+    pks.add(RooArgList(pk09,pk10,pk11,pk12,pk13));
     RooArgList yields(yield00,yield01,yield02,yield03,yield04,yield05,yield06,yield07,yield08);
-    yields.add(RooArgList(yield09,yield10,yield11,yield12));
+    yields.add(RooArgList(yield09,yield10,yield11,yield12,yield13));
     RooAddPdf model("model", "", pks, yields);
 
     RooFitResult* fitResult = model.fitTo(*data, NumCPU(3), Save(), 
@@ -239,7 +250,9 @@ void fitting(void) {
     //Do the plots
     RooPlot* frame = tof.frame();
     frame = tof.frame(high*binning);
-    frame->SetTitle("Time-of-Flight Spectrum");
+    frame->SetTitle("");
+    frame->SetAxisRange(0.,500.,"Y");
+    frame->SetAxisRange(0.,200.,"X");
     frame->SetXTitle("Time-of-Flight (2 ns)");
     frame->SetYTitle("Events / 2 ns");
     frame->GetYaxis()->SetTitleOffset(1.2);
@@ -249,16 +262,18 @@ void fitting(void) {
 
     model.plotOn(frame,Components("pk00"),LineColor(kGreen), LineStyle(kDashed));
     model.plotOn(frame,Components("pk01"),LineColor(kRed), LineStyle(kDashed));
-    model.plotOn(frame,Components("pk02"),LineColor(kYellow), LineStyle(kDashed));
+    model.plotOn(frame,Components("pk02"),LineColor(kBlue), LineStyle(kDashed));
     model.plotOn(frame,Components("pk03"),LineColor(kViolet), LineStyle(kDashed));
-    model.plotOn(frame,Components("pk04"),LineColor(kOrange), LineStyle(kDashed));
+    model.plotOn(frame,Components("pk04"),LineColor(kBlack), LineStyle(kDashed));
     model.plotOn(frame,Components("pk05"),LineColor(kPink), LineStyle(kDashed));
     model.plotOn(frame,Components("pk06"),LineColor(kGreen), LineStyle(kDashed));
     model.plotOn(frame,Components("pk07"),LineColor(kRed), LineStyle(kDashed));
-    model.plotOn(frame,Components("pk08"),LineColor(kYellow), LineStyle(kDashed));
+    model.plotOn(frame,Components("pk08"),LineColor(kBlue), LineStyle(kDashed));
     model.plotOn(frame,Components("pk09"),LineColor(kViolet), LineStyle(kDashed));
-    model.plotOn(frame,Components("pk11"),LineColor(kOrange), LineStyle(kDashed));
-    model.plotOn(frame,Components("pk12"),LineColor(kPink), LineStyle(kDashed));
+    model.plotOn(frame,Components("pk10"),LineColor(kBlack), LineStyle(kDashed));
+    model.plotOn(frame,Components("pk11"),LineColor(kPink), LineStyle(kDashed));
+    model.plotOn(frame,Components("pk12"),LineColor(kGreen), LineStyle(kDashed));
+    model.plotOn(frame,Components("pk13"),LineColor(kRed), LineStyle(kDashed));
     
     TCanvas* c = new TCanvas("c","",0,0,700,500);
     c->cd();
