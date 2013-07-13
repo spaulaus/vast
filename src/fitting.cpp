@@ -30,11 +30,11 @@ string dirName = "077cu-ban4-lower/";
 string fileName = "077cu-ban4-lower-tof";
 
 string dataName="../data/roofit/"+dirName+fileName+".dat";
-string epsName = "../pics/roofit/"+dirName+fileName+".eps";
-string resultsFile = "results/"+dirName+fileName+".fit";
+// string epsName = "../pics/roofit/"+dirName+fileName+".eps";
+// string resultsFile = "results/"+dirName+fileName+".fit";
 
-// string epsName = "../pics/roofit/working.eps";
-// string resultsFile = "results/working.dat";
+string epsName = "../pics/roofit/working.eps";
+string resultsFile = "results/working.dat";
 
 int main(int argc, char* argv[]) {
     ifstream test(dataName.c_str());
@@ -69,16 +69,16 @@ void fitting(void) {
     RooRealVar x("x", "mean for gauss model", 0.0);
 
     //Parameterization Parameters for Sigma -> sM*mu + sB
-    RooRealVar sM("sM","Slope for sigma para.", 0.0264412131874119);
-    RooRealVar sB("sB","Intercept for sigma para.", 0.0432494943386515);
+    RooRealVar sM("sM","Slope for sigma para.", 0.0288026438611703);
+    RooRealVar sB("sB","Intercept for sigma para.", -0.0413372812483731);
 
     //Parameterization Parameters for Alpha -> aM/mu + aB
-    RooRealVar aM("aM","Scale for alpha para.", -9.53022215447638);
-    RooRealVar aB("aB","Intercept for alpha para.", -0.357060159281673);
+    RooRealVar aM("aM","Scale for alpha para.",-5.66309545261006);
+    RooRealVar aB("aB","Intercept for alpha para.", -0.408753253930762);
 
     //Parameterization Parameters for N -> nM/mu + nB
-    RooRealVar nM("nM","Scale for n para.", -5.99204241877324);
-    RooRealVar nB("nB","Intercept for n para.", 1.25859614260662);
+    RooRealVar nM("nM","Scale for n para.", -4.53373119793572);
+    RooRealVar nB("nB","Intercept for n para.", 1.3468761986679);
     
     //---------- Peak Number 0 ----------
     RooRealVar yield00("yield00", "", yStart, yLow, yHigh);
