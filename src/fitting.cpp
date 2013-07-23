@@ -56,9 +56,10 @@ void fitting(void) {
     double binning = 0.5;
 
     //Set the information for the peaks
-    double peaks[]={23.899, 30.199, 38.136, 44.920, 
-                    50.197, 56.889, 65.431, 71.600,
-                    80.235, 90.033, 97.432, 107.94, 120.0, 134.14};
+    double peaks[]={23.855, 30.196, 38.128, 44.917, 
+                    50.181, 56.835, 65.151, 70.826,
+                    79.253, 87.198, 94.690, 104.69, 
+                    112.73, 135.93};
     double wiggle = 100.;
     
     double yStart = 3.e3, yLow = 0., yHigh = 1.e8;
@@ -246,7 +247,7 @@ void fitting(void) {
     ofstream resultsParam(resultsFile.c_str());
     fitResult->printMultiline(resultsParam, 0, false, "");
     resultsParam.close();
-    
+
     //Do the plots
     RooPlot* frame = tof.frame();
     frame = tof.frame(high*binning);
