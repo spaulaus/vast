@@ -9,7 +9,7 @@
 
 using namespace std;
 
-vector<double> mu, area;
+vector<double> mu, area, muErr;
 
 //********** MAGIC NUMBERS **********
 double sn = 4558, q = 10490, z = 30, betaEff = 0.22;
@@ -19,15 +19,28 @@ double numBars = 10;
 double omega = numBars * 4.727e-3;
 double coeff = 3812.413; //this is D/(ga/gv)**2 in units of seconds
 
+double CalcErrEnergy(const unsigned int &i, const double &en) {
+    double thk = 3, dist = 50.5;
+    double betaRes = 4.04;
+    double timeRes = sqrt(pow(muErr[i],2)+pow(betaRes,2));
+
+    double timeComp = pow(2*timeRes/mu[i], 2);
+    double physComp = pow(2*thk/dist,2);
+
+    return( en * sqrt(timeComp+physComp) );
+}
+
 void ReadData(const string &file) {
+    mu.clear(); area.clear();
     ifstream data(file.c_str());
     if(data.is_open()) {
         while(data.good()) {
             if(isdigit(data.peek())) {
-                double junk, temp, temp1;
-                data >> junk >> temp >> junk >> temp1 >> junk >> junk;
+                double junk, temp, temp1, temp2;
+                data >> junk >> temp >> temp2 >> temp1 >> junk >> junk;
                 mu.push_back(temp);
                 area.push_back(temp1);
+                muErr.push_back(temp2);
             }else {
                 data.ignore(1000,'\n');
             }
@@ -105,14 +118,31 @@ int main() {
         ofstream output(outFiles.at(i).c_str());
         
         double totN = 0, rawTotN = 0;
-        output << "#En+Sn(keV)     B(GT) (1/MeV)   log(ft)" << endl;
-        for(unsigned int i = 0; i < mu.size(); i++) {
-            double en = CalcEnergy(mu[i]); //in keV
-            double bgt = coeff/CalcF(en)/(t/CalcBr(area[i], en));
-            double logft = log10(CalcF(en)*(t/CalcBr(area[i],en)));
-            totN += area[i]/CalcEff(en);
-            rawTotN += area[i];
-            output << en+sn << "     " << bgt << "    " << logft << endl;
+        output << "#En+Sn(MeV) errEn(MeV)   B(GT)(1/MeV)   log(ft)    "
+               << "yield/gamma-eff" << endl;
+
+        for(unsigned int j = 0; j < mu.size(); j++) {
+            double en = CalcEnergy(mu[j]); //in keV
+            double bgt = coeff/CalcF(en)/(t/CalcBr(area[j], en));
+            double logft = log10(CalcF(en)*(t/CalcBr(area[j],en)));
+            totN += area[j]/CalcEff(en);
+            rawTotN += area[j];
+            double eOut = (en+sn)/1000.;
+            
+            if(i==0)
+                output << eOut <<  "     ";
+            else if(i==1)
+                output << eOut+0.59856 <<  "     ";
+            else if(i==2)
+                output << eOut+0.59856+0.69772 <<   "     ";
+            output << CalcErrEnergy(j,en)/1000. << "    " << bgt << "    " 
+                   << logft  << "     ";
+            if(i == 0)
+                output << area[j] << endl;
+            else if(i == 1)
+                output << area[j]/0.0566419 << endl;
+            else if(i == 2)
+                output << area[j]/0.0497657 << endl;
         }
         output << "#Pn is " << totN / numBeta / betaEff / omega 
                << "  Ntot = " << totN << "   Raw Ntot = " << rawTotN << endl;
