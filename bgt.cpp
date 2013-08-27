@@ -19,8 +19,8 @@ double numBars = 10;
 double omega = numBars * 4.727e-3;
 double coeff = 3812.413; //this is D/(ga/gv)**2 in units of seconds
 
-void ReadData(void) {
-    ifstream data("data/077cu-ban4-lower/077cu-ban4-lower-tof.out");
+void ReadData(const string &file) {
+    ifstream data(file.c_str());
     if(data.is_open()) {
         while(data.good()) {
             if(isdigit(data.peek())) {
@@ -55,7 +55,7 @@ double CalcEff(const double &energy) {
     //                 pow(d+e*y+f*y*y,-g), -1/g)))/100);
 
     //From Sergey's eff_var_thresh
-    return(52349.3/(energy+572.064)+5.17822);
+    return((52349.3/(energy+572.064)+5.17822)/100.);
 }
 
 double CalcBr(const double &area, const double &energy) { 
@@ -90,19 +90,31 @@ double CalcF(const double &energy) {
 }
 
 int main() {
-    //read in the data file
-    ReadData();
-    
-    double totN = 0, rawTotN = 0;
-    cout << "#En+Sn(keV)     B(GT)     log(ft)" << endl;
-    for(unsigned int i = 0; i < mu.size(); i++) {
-        double en = CalcEnergy(mu[i]); //in keV
-        double bgt = coeff/CalcF(en)/(t/CalcBr(area[i], en));
-        double logft = log10(CalcF(en)*(t/CalcBr(area[i],en)));
-        totN += area[i]/CalcEff(en);
-        rawTotN += area[i];
-        cout << en+sn << "     " << bgt << "    " << logft << endl;
+    vector<string> inFiles;
+    inFiles.push_back("data/077cu-ban4-lower/077cu-ban4-lower-tof.out");
+    inFiles.push_back("data/077cu-ban4-lower/077cu-ban4-lower-tof-02Plus.out");
+    inFiles.push_back("data/077cu-ban4-lower/077cu-ban4-lower-tof-04Plus.out");
+
+    vector<string> outFiles;
+    outFiles.push_back("results/077cu-ban4-lower.dat");
+    outFiles.push_back("results/077cu-ban4-lower-02Plus.dat");
+    outFiles.push_back("results/077cu-ban4-lower-04Plus.dat");
+
+    for(unsigned int i = 0; i < inFiles.size(); i++) {
+        ReadData(inFiles.at(i));
+        ofstream output(outFiles.at(i).c_str());
+        
+        double totN = 0, rawTotN = 0;
+        output << "#En+Sn(keV)     B(GT) (1/MeV)   log(ft)" << endl;
+        for(unsigned int i = 0; i < mu.size(); i++) {
+            double en = CalcEnergy(mu[i]); //in keV
+            double bgt = coeff/CalcF(en)/(t/CalcBr(area[i], en));
+            double logft = log10(CalcF(en)*(t/CalcBr(area[i],en)));
+            totN += area[i]/CalcEff(en);
+            rawTotN += area[i];
+            output << en+sn << "     " << bgt << "    " << logft << endl;
+        }
+        output << "#Pn is " << totN / numBeta / betaEff / omega 
+               << "  Ntot = " << totN << "   Raw Ntot = " << rawTotN << endl;
     }
-    cout << "#Pn is " << totN / numBeta / betaEff / omega 
-         << "  Ntot = " << totN << "   Raw Ntot = " << rawTotN << endl;
 }
