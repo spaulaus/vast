@@ -13,7 +13,6 @@ c++SrcSuf = cpp
 
 #Set the name of the program to be compiled
 PROGRAM = fitting
-VERSION = $(shell git describe --abbrev=0 --tags)
 
 #Define Objects
 FITTINGO = fitting.o
@@ -43,10 +42,13 @@ $(PROGRAM): $(OBJS_W_DIR)
 $(OBJDIR)/%.o: %.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-.PHONY: clean mc
+.PHONY: clean mc param
 clean: 
 	@echo "Cleaning..."
 	@rm -f $(OBJDIR)/* $(PROGRAM) mcStudy *~ src/*~ include/*~
 
 mc:
 	$(CXX) $(CXXFLAGS) $(LDLIBS) src/mcStudy-yield.cpp -o mcStudy
+
+param:
+	$(CXX) $(CXXFLAGS) $(LDLIBS) src/param.cpp -o param
