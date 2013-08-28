@@ -21,10 +21,8 @@ double coeff = 3812.413; //this is D/(ga/gv)**2 in units of seconds
 
 double CalcErrEnergy(const unsigned int &i, const double &en) {
     double thk = 3, dist = 50.5;
-    double betaRes = 4.04;
-    double timeRes = sqrt(pow(muErr[i],2)+pow(betaRes,2));
 
-    double timeComp = pow(2*timeRes/mu[i], 2);
+    double timeComp = pow(2*muErr[i]/mu[i], 2);
     double physComp = pow(2*thk/dist,2);
 
     return( en * sqrt(timeComp+physComp) );
@@ -119,13 +117,16 @@ int main() {
         
         double totN = 0, rawTotN = 0;
         output << "#En+Sn(MeV) errEn(MeV)   B(GT)(1/MeV)   log(ft)    "
-               << "yield/gamma-eff" << endl;
+               << "yield/gamma-eff/n-eff" << endl;
 
         for(unsigned int j = 0; j < mu.size(); j++) {
             double en = CalcEnergy(mu[j]); //in keV
-            double bgt = coeff/CalcF(en)/(t/CalcBr(area[j], en));
-            double logft = log10(CalcF(en)*(t/CalcBr(area[j],en)));
-            totN += area[j]/CalcEff(en);
+            double br = CalcBr(area[j],en);
+            double f = CalcF(en);
+            double bgt = coeff/f/(t/br);
+            double logft = log10(f*(t/br));
+            double eff = CalcEff(en);
+            totN += area[j]/eff;
             rawTotN += area[j];
             double eOut = (en+sn)/1000.;
             
@@ -138,11 +139,11 @@ int main() {
             output << CalcErrEnergy(j,en)/1000. << "    " << bgt << "    " 
                    << logft  << "     ";
             if(i == 0)
-                output << area[j] << endl;
+                output << area[j]/eff << endl;
             else if(i == 1)
-                output << area[j]/0.0566419 << endl;
+                output << area[j]/0.0566419/eff << endl;
             else if(i == 2)
-                output << area[j]/0.0497657 << endl;
+                output << area[j]/0.0497657/eff << endl;
         }
         output << "#Pn is " << totN / numBeta / betaEff / omega 
                << "  Ntot = " << totN << "   Raw Ntot = " << rawTotN << endl;
