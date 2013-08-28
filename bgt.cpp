@@ -20,12 +20,8 @@ double omega = numBars * 4.727e-3;
 double coeff = 3812.413; //this is D/(ga/gv)**2 in units of seconds
 
 double CalcErrEnergy(const unsigned int &i, const double &en) {
-    double thk = 3, dist = 50.5;
-
-    double timeComp = pow(2*muErr[i]/mu[i], 2);
-    double physComp = pow(2*thk/dist,2);
-
-    return( en * sqrt(timeComp+physComp) );
+    double timeComp = 2*muErr[i]/mu[i];
+    return( en * timeComp );
 }
 
 void ReadData(const string &file) {

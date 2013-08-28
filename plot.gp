@@ -5,6 +5,8 @@ set terminal postscript eps enhanced color solid "NimbusSanL-Regu,18"
 e1=0.59856
 e2=0.69772
 
+set key left top
+
 set arrow 1 from 4.558,0 to 4.558,2000 nohead lc -1
 set label 1 "S_n" at 4.6,1800 font "NimbusSanL-Regu,18"
 
