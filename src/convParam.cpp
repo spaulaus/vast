@@ -46,10 +46,13 @@ void ReadData(void) {
 }
 
 int main() {
-    ReadData();
-
-    RooRealVar tof("tof","tof",0.,200.);
+    //Read in the data and set the variable to fit.
+    double low = 0.;
+    double high = 2000.;
+    RooRealVar tof("tof","",0.0,low,high,"ns");
     tof.setBins(1e5,"cache");
+
+    ReadData();
 
     //Set the information for the resolution model
     double detRes = 4.04;
@@ -222,8 +225,9 @@ int main() {
     RooGaussModel res13("res13", "", tof, x, res);
     RooFFTConvPdf pk13("pk13","",tof,cb13,res13);
     
-    RooDataSet* mcData=pk13.generate(tof,1.e5);
-    int prk = 13;
+
+    RooDataSet* mcData=pk01.generate(tof,1.e5);
+    int prk = 1;
 
     RooRealVar yieldZ("yieldZ", "", yields[prk], 0., 1.e8);
     RooRealVar muZ("muZ","",mus[prk], 0., 200.);
@@ -233,18 +237,21 @@ int main() {
     RooCBShape cbZ("cbZ", "", tof, muZ, sigmaZ, alphaZ, nZ);
     
     RooAddPdf model("model", "", cbZ, yieldZ); 
+    RooDataSet *data = RooDataSet::read("../data/roofit/077cu-ban4-lower/077cu-ban4-lower-tof.dat", RooArgList(tof));
     RooFitResult* fitResult = model.fitTo(*mcData, NumCPU(3), 
                                           Range(0., 200.));
 
     //Do the plots
     RooPlot* frame = tof.frame();
+    tof.plotOn(frame);
     mcData->plotOn(frame);
     model.plotOn(frame);
+    pk01.plotOn(frame, LineStyle(kDashed), LineColor(kGreen));
 
     TCanvas* c = new TCanvas("c","",0,0,700,500);
     c->cd();
     frame->Draw();
-    c->SaveAs("../pics/roofit/params.eps");
+    c->SaveAs("../pics/roofit/working-params.eps");
 
    if(fitResult->statusCodeHistory(0) != 0)
         cout << endl << endl << "Oh, Jesus, the fit did not converge." << endl;
