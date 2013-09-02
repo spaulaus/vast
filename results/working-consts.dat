@@ -1,0 +1,19 @@
+--- RooAbsArg ---
+  Value State: DIRTY
+  Shape State: DIRTY
+  Attributes: 
+  Address: 0x7fff63a87850
+  Clients: 
+    (0x7fff63a94a50,V-) RooCBShape::cb00 ""
+  Servers: 
+    (0x7fff63a7dd30,V-) RooRealVar::sM "Slope for sigma para."
+    (0x7fff63a7fd20,V-) RooRealVar::mu00 ""
+    (0x7fff63a7e1c0,V-) RooRealVar::sB "Intercept for sigma para."
+  Proxies: 
+    actualVars -> 
+      1)    sM
+      2)  mu00
+      3)    sB
+--- RooAbsReal ---
+
+  Plot label is "sigma00"
