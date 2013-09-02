@@ -42,13 +42,19 @@ $(PROGRAM): $(OBJS_W_DIR)
 $(OBJDIR)/%.o: %.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-.PHONY: clean mc param
+.PHONY: clean mc param calcConsts convPar
 clean: 
 	@echo "Cleaning..."
-	@rm -f $(OBJDIR)/* $(PROGRAM) mcStudy *~ src/*~ include/*~
+	@rm -f $(OBJDIR)/* $(PROGRAM) ./mcStudy ./param ./calcConsts ./convPar *~ src/*~ include/*~
 
 mc:
 	$(CXX) $(CXXFLAGS) $(LDLIBS) src/mcStudy-yield.cpp -o mcStudy
 
 param:
 	$(CXX) $(CXXFLAGS) $(LDLIBS) src/param.cpp -o param
+
+calcConsts:
+	$(CXX) src/calcConsts.cpp -o $@
+
+convPar:
+	$(CXX) $(CXXFLAGS) $(LDLIBS) src/convParam.cpp -o $@
