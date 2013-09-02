@@ -27,13 +27,13 @@ do
         if echo $1 | grep -q yield
         then
             pos=`echo ${1:5} | bc`
-            yield[$pos]=$2
-            yieldErr[$pos]=$4
+            yield[$pos]=$3
+            yieldErr[$pos]=$5
         elif echo $1 | grep -q mu
         then
             pos=`echo ${1:2} | bc`
-            mu[$pos]=$2
-            muErr[$pos]=$4
+            mu[$pos]=$3
+            muErr[$pos]=$5
         fi
     fi
     let lc=$lc+1
