@@ -31,8 +31,11 @@ plot file u 1:4:5 w yerrorbars pt 7 ps 3 lc rgb prim3,\
 
 j=1.
 k=1.
-h(x)=j/x+k
-fit h(x) file u 1:6:7 via j,k
+l=1.
+m=1.
+n=1.
+h(x)=j/x+k*x+l
+fit h(x) file u 1:6:7 via j,k,l
 set ylabel offset 1.25,0 "n\'"
 set output '../../pics/roofit/convNVsTof.eps'
 plot file u 1:6:7 w yerrorbars pt 7 ps 3 lc rgb prim3,\
@@ -43,4 +46,4 @@ print "sigma(tof)=e*x**4+d*x**3+c*x**2+b*x+a\n","a=",a
 print "b=",b,"\nc=",c,"\nd=",d,"\ne=",e
 print "alpha(tof)=i*x**3+h*x**2+g*x+f","\nf=",f
 print "g=",g,"\nh=",h,"\ni=",i
-print "n(tof)=j/x+k","\nj=",j,"\nk=",k
+print "n(tof)=j/x+k*x+l","\nj=",j,"\nk=",k,"\nl=",l
