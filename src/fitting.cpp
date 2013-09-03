@@ -211,9 +211,6 @@ void fitting(void) {
     RooFitResult* fitResult = model.fitTo(*data, NumCPU(3), Save(), 
                                           Range(low, high));
 
-    cout << sigma00.getVal() << " " << alpha00.getVal() << " " << n00.getVal() 
-         << endl;
-
     ofstream resultsParam(resultsFile.c_str());
     fitResult->printMultiline(resultsParam, 0, true, "");
     resultsParam.close();
