@@ -98,22 +98,22 @@ double CalcF(const double &energy) {
 
 int main() {
     vector<string> inFiles;
-    inFiles.push_back("data/077cu-ban4-lower/077cu-ban4-lower-tof.out");
-    inFiles.push_back("data/077cu-ban4-lower/077cu-ban4-lower-tof-02Plus.out");
-    inFiles.push_back("data/077cu-ban4-lower/077cu-ban4-lower-tof-04Plus.out");
+    inFiles.push_back("data/077cu-ban4-lower/077cu-ban4-lower-tof-noConv.out");
+    inFiles.push_back("data/077cu-ban4-lower/077cu-ban4-lower-tof-02Plus-noConv.out");
+    inFiles.push_back("data/077cu-ban4-lower/077cu-ban4-lower-tof-04Plus-noConv.out");
 
     vector<string> outFiles;
-    outFiles.push_back("results/077cu-ban4-lower.dat");
-    outFiles.push_back("results/077cu-ban4-lower-02Plus.dat");
-    outFiles.push_back("results/077cu-ban4-lower-04Plus.dat");
+    outFiles.push_back("results/077cu-ban4-lower-noConv.dat");
+    outFiles.push_back("results/077cu-ban4-lower-02Plus-noConv.dat");
+    outFiles.push_back("results/077cu-ban4-lower-04Plus-noConv.dat");
 
     for(unsigned int i = 0; i < inFiles.size(); i++) {
         ReadData(inFiles.at(i));
         ofstream output(outFiles.at(i).c_str());
         
         double totN = 0, rawTotN = 0;
-        output << "#En+Sn(MeV) errEn(MeV)   B(GT)(1/MeV)   log(ft)    "
-               << "yield/gamma-eff/n-eff" << endl;
+        output << "#ToF(ns) ToF-err(ns) En+Sn(MeV) errEn(MeV)   B(GT)(1/MeV)   "
+               << "log(ft)    yield/gamma-eff/n-eff" << endl;
 
         for(unsigned int j = 0; j < mu.size(); j++) {
             double en = CalcEnergy(mu[j]); //in keV
@@ -126,6 +126,8 @@ int main() {
             rawTotN += area[j];
             double eOut = (en+sn)/1000.;
             
+            output << mu[j] << "   " << muErr[j] << "   ";
+
             if(i==0)
                 output << eOut <<  "     ";
             else if(i==1)
