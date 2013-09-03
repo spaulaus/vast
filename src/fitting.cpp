@@ -221,20 +221,20 @@ void fitting(void) {
     data->plotOn(frame,Name("data"));
     model.plotOn(frame,Name("model"));
 
-    model.plotOn(frame,Components("cb00"),LineColor(kGreen), LineStyle(kDashed));
-    model.plotOn(frame,Components("cb01"),LineColor(kRed), LineStyle(kDashed));
-    model.plotOn(frame,Components("cb02"),LineColor(kBlue), LineStyle(kDashed));
-    model.plotOn(frame,Components("cb03"),LineColor(kViolet), LineStyle(kDashed));
-    model.plotOn(frame,Components("cb04"),LineColor(kBlack), LineStyle(kDashed));
-    model.plotOn(frame,Components("cb05"),LineColor(kPink), LineStyle(kDashed));
-    model.plotOn(frame,Components("cb06"),LineColor(kGreen), LineStyle(kDashed));
-    model.plotOn(frame,Components("cb07"),LineColor(kRed), LineStyle(kDashed));
-    model.plotOn(frame,Components("cb08"),LineColor(kBlue), LineStyle(kDashed));
-    model.plotOn(frame,Components("cb09"),LineColor(kViolet), LineStyle(kDashed));
-    model.plotOn(frame,Components("cb10"),LineColor(kBlack), LineStyle(kDashed));
-    model.plotOn(frame,Components("cb11"),LineColor(kPink), LineStyle(kDashed));
-    model.plotOn(frame,Components("cb12"),LineColor(kGreen), LineStyle(kDashed));
-    model.plotOn(frame,Components("cb13"),LineColor(kRed), LineStyle(kDashed));
+    model.plotOn(frame,Components("cb00"),LineColor(40), LineStyle(2));
+    model.plotOn(frame,Components("cb01"),LineColor(41), LineStyle(2));
+    model.plotOn(frame,Components("cb02"),LineColor(42), LineStyle(2));
+    model.plotOn(frame,Components("cb03"),LineColor(43), LineStyle(2));
+    model.plotOn(frame,Components("cb04"),LineColor(44), LineStyle(2));
+    model.plotOn(frame,Components("cb05"),LineColor(45), LineStyle(2));
+    model.plotOn(frame,Components("cb06"),LineColor(46), LineStyle(2));
+    model.plotOn(frame,Components("cb07"),LineColor(47), LineStyle(2));
+    model.plotOn(frame,Components("cb08"),LineColor(48), LineStyle(2));
+    model.plotOn(frame,Components("cb09"),LineColor(49), LineStyle(2));
+    model.plotOn(frame,Components("cb10"),LineColor(30), LineStyle(2));
+    model.plotOn(frame,Components("cb11"),LineColor(31), LineStyle(2));
+    model.plotOn(frame,Components("cb12"),LineColor(32), LineStyle(2));
+    model.plotOn(frame,Components("cb13"),LineColor(33), LineStyle(2));
     
     TCanvas* c = new TCanvas("c","",0,0,700,500);
     c->cd();
