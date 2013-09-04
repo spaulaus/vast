@@ -22,11 +22,10 @@ private:
 
     //double (Integrator::*CB) (double);
 
-    double AdaptiveSimpsons(double (*f)(double),   // ptr to function
-                            const double &a, const double &b,  // interval [a,b]
+    double AdaptiveSimpsons(const double &a, const double &b,  // interval [a,b]
                             const double &epsilon,  // error tolerance
                             const int &maxRecursionDepth);   // recursion cap
-    double AdaptiveSimpsonsAux(double (*f)(double), const double &a, 
+    double AdaptiveSimpsonsAux(const double &a, 
                                const double &b, const double &epsilon, 
                                const double &S, const double &fa, 
                                const double &fb, const double &fc, 

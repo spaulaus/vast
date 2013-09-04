@@ -20,37 +20,35 @@ Integrator::Integrator(Neutron &neutron, const double &fitLow,
 
     //CB=&Integrator::CrystalBall;
 
-    AdaptiveSimpsons(*CrystalBall, 
-                     fitLow, fitHigh, 1.e-9, 10);
+    AdaptiveSimpsons(fitLow, fitHigh, 1.e-9, 10);
     //double uSimp = adaptiveSimpsons(*CrystalBall, fHigh, 1.e10, 1.e-9,10);
     
 }
 
-double Integrator::AdaptiveSimpsons(double (*f)(double), // ptr to function
-                                    const double &a, const double &b, // interval 
+double Integrator::AdaptiveSimpsons(const double &a, const double &b, // interval 
                                     const double &epsilon, // error tolerance
                                     const int &maxRecursionDepth){ // recursion cap
     double c = (a + b)/2, h = b - a;
-    double fa = f(a), fb = f(b), fc = f(c);
+    double fa = CrystalBall(a), fb = CrystalBall(b), fc = CrystalBall(c);
     double S = (h/6)*(fa + 4*fc + fb);
-    return AdaptiveSimpsonsAux(f, a, b, epsilon, S, fa, fb, fc, maxRecursionDepth);
+    return AdaptiveSimpsonsAux(a, b, epsilon, S, fa, fb, fc, maxRecursionDepth);
 }
 
-double Integrator::AdaptiveSimpsonsAux(double (*f)(double), const double &a, 
+double Integrator::AdaptiveSimpsonsAux(const double &a, 
                                        const double &b, const double &epsilon, 
                                        const double &S, const double &fa, 
                                        const double &fb, const double &fc, 
                                        const int &bottom) {
     double c = (a + b)/2, h = b - a;
     double d = (a + c)/2, e = (c + b)/2;
-    double fd = f(d), fe = f(e);
+    double fd = CrystalBall(d), fe = CrystalBall(e);
     double Sleft = (h/12)*(fa + 4*fd + fc);
     double Sright = (h/12)*(fc + 4*fe + fb);
     double S2 = Sleft + Sright;
     if (bottom <= 0 || fabs(S2 - S) <= 15*epsilon)
         return( S2 + (S2 - S)/15 );
-    return( AdaptiveSimpsonsAux(f, a, c, epsilon/2, Sleft,  fa, fc, fd, bottom-1) + 
-            AdaptiveSimpsonsAux(f, c, b, epsilon/2, Sright, fc, fb, fe, bottom-1) );
+    return( AdaptiveSimpsonsAux(a, c, epsilon/2, Sleft,  fa, fc, fd, bottom-1) + 
+            AdaptiveSimpsonsAux(c, b, epsilon/2, Sright, fc, fb, fe, bottom-1) );
 }
 
 double Integrator::CrystalBall(double var){
