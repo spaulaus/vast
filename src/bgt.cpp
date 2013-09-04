@@ -15,8 +15,8 @@ vector<double> mu, area, muErr;
 double sn = 4558, q = 10490, z = 30, betaEff = 0.22;
 double numBeta = 350311/0.0655391/0.191; //taken from logbook
 double t = 0.4679; // in units of seconds
-double numBars = 10;
-double omega = numBars * 4.727e-3;
+double numBars = 9;
+double omega = numBars * 0.0061; //from Sergey's Simulation
 double coeff = 3812.413; //this is D/(ga/gv)**2 in units of seconds
 
 double CalcErrEnergy(const unsigned int &i, const double &en) {
@@ -31,10 +31,9 @@ void ReadData(const string &file) {
         while(data.good()) {
             if(isdigit(data.peek())) {
                 double junk, temp, temp1, temp2;
-                data >> junk >> temp >> temp2 >> temp1 >> junk >> junk;
+                data >> temp >> temp1;
                 mu.push_back(temp);
                 area.push_back(temp1);
-                muErr.push_back(temp2);
             }else {
                 data.ignore(1000,'\n');
             }
@@ -98,21 +97,17 @@ double CalcF(const double &energy) {
 
 int main() {
     vector<string> inFiles;
-    inFiles.push_back("data/077cu-ban4-lower/077cu-ban4-lower-tof-noConv.out");
-    inFiles.push_back("data/077cu-ban4-lower/077cu-ban4-lower-tof-02Plus-noConv.out");
-    inFiles.push_back("data/077cu-ban4-lower/077cu-ban4-lower-tof-04Plus-noConv.out");
+    inFiles.push_back("intData/077cu-ban4-lower-tof-noConv-int.dat");
 
     vector<string> outFiles;
-    outFiles.push_back("results/077cu-ban4-lower-noConv.dat");
-    outFiles.push_back("results/077cu-ban4-lower-02Plus-noConv.dat");
-    outFiles.push_back("results/077cu-ban4-lower-04Plus-noConv.dat");
+    outFiles.push_back("results/077cu-ban4-lower-noConv-int.dat");
 
     for(unsigned int i = 0; i < inFiles.size(); i++) {
         ReadData(inFiles.at(i));
         ofstream output(outFiles.at(i).c_str());
         
         double totN = 0, rawTotN = 0;
-        output << "#ToF(ns) ToF-err(ns) En+Sn(MeV) errEn(MeV)   B(GT)(1/MeV)   "
+        output << "#ToF(ns) En+Sn(MeV)   B(GT)(1/MeV)   "
                << "log(ft)    yield/gamma-eff/n-eff" << endl;
 
         for(unsigned int j = 0; j < mu.size(); j++) {
@@ -122,11 +117,11 @@ int main() {
             double bgt = coeff/f/(t/br);
             double logft = log10(f*(t/br));
             double eff = CalcEff(en);
-            totN += area[j]/eff;
+            totN += area[j]/eff/betaEff/omega;
             rawTotN += area[j];
             double eOut = (en+sn)/1000.;
             
-            output << mu[j] << "   " << muErr[j] << "   ";
+            output << mu[j] << "   ";
 
             if(i==0)
                 output << eOut <<  "     ";
@@ -134,7 +129,7 @@ int main() {
                 output << eOut+0.59856 <<  "     ";
             else if(i==2)
                 output << eOut+0.59856+0.69772 <<   "     ";
-            output << CalcErrEnergy(j,en)/1000. << "    " << bgt << "    " 
+            output << bgt << "    " 
                    << logft  << "     ";
             if(i == 0)
                 output << area[j]/eff << endl;
@@ -143,7 +138,8 @@ int main() {
             else if(i == 2)
                 output << area[j]/0.0497657/eff << endl;
         }
-        output << "#Pn is " << totN / numBeta / betaEff / omega 
-               << "  Ntot = " << totN << "   Raw Ntot = " << rawTotN << endl;
+        output << "#Pn is " << totN / numBeta << "  Ntot = " << totN 
+               << "   Raw Ntot = " << rawTotN  << "  NumBeta = " << numBeta 
+               << endl;
     }
 }
