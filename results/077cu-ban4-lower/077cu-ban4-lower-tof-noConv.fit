@@ -1,0 +1,36 @@
+
+  RooFitResult: minimized FCN value: -56526.7, estimated distance to minimum: 0.000299313
+                covariance matrix quality: Full, accurate covariance matrix
+                Status : MIGRAD=0 HESSE=0 
+
+    Floating Parameter  InitialValue    FinalValue +/-  Error     GblCorr.
+  --------------------  ------------  --------------------------  --------
+                  mu00    2.3855e+01    2.3631e+01 +/-  1.93e-01  <none>
+                  mu01    3.0197e+01    3.0091e+01 +/-  4.32e-01  <none>
+                  mu02    3.8128e+01    3.7873e+01 +/-  4.15e-01  <none>
+                  mu03    4.4917e+01    4.4817e+01 +/-  4.58e-01  <none>
+                  mu04    5.0181e+01    5.0145e+01 +/-  6.19e-01  <none>
+                  mu05    5.6835e+01    5.6705e+01 +/-  5.31e-01  <none>
+                  mu06    6.5151e+01    6.4852e+01 +/-  8.94e-01  <none>
+                  mu07    7.0826e+01    7.0321e+01 +/-  1.62e+00  <none>
+                  mu08    7.9253e+01    7.8392e+01 +/-  1.19e+00  <none>
+                  mu09    8.7198e+01    8.6078e+01 +/-  2.05e+00  <none>
+                  mu10    9.4690e+01    9.4092e+01 +/-  1.15e+00  <none>
+                  mu11    1.0469e+02    1.0411e+02 +/-  1.25e+00  <none>
+                  mu12    1.1273e+02    1.1217e+02 +/-  1.47e+00  <none>
+                  mu13    1.3593e+02    1.3547e+02 +/-  1.51e+00  <none>
+               yield00    3.0000e+03    1.1505e+03 +/-  8.01e+01  <none>
+               yield01    3.0000e+03    9.7208e+02 +/-  7.22e+01  <none>
+               yield02    3.0000e+03    1.1316e+03 +/-  8.86e+01  <none>
+               yield03    3.0000e+03    1.9488e+03 +/-  2.02e+02  <none>
+               yield04    3.0000e+03    1.8381e+03 +/-  1.88e+02  <none>
+               yield05    3.0000e+03    1.5619e+03 +/-  1.51e+02  <none>
+               yield06    3.0000e+03    1.3696e+03 +/-  2.71e+02  <none>
+               yield07    3.0000e+03    8.4732e+02 +/-  2.56e+02  <none>
+               yield08    3.0000e+03    8.6506e+02 +/-  1.58e+02  <none>
+               yield09    3.0000e+03    7.1709e+02 +/-  1.48e+02  <none>
+               yield10    3.0000e+03    1.1339e+03 +/-  1.67e+02  <none>
+               yield11    3.0000e+03    8.8418e+02 +/-  1.53e+02  <none>
+               yield12    3.0000e+03    5.9974e+02 +/-  1.62e+02  <none>
+               yield13    3.0000e+03    3.9118e+02 +/-  5.14e+01  <none>
+

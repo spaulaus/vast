@@ -15,15 +15,12 @@ c++SrcSuf = cpp
 
 #Set the name of the program to be compiled
 PROGRAM = fitting
-VERSION = $(shell git describe --abbrev=0 --tags)
 
 #Define Objects
 FITTINGO = fitting.o
-MODELBUILDERO = ModelBuilder.o
-TOFFITTERO = ToFFitter.o
 
 #Make the object list and prefix the object directory
-OBJS = $(FITTINGO) $(MODELBUILDERO) $(TOFFITTERO)
+OBJS = $(FITTINGO)
 OBJDIR = obj
 OBJS_W_DIR = $(addprefix $(OBJDIR)/,$(OBJS))
 
@@ -47,7 +44,19 @@ $(PROGRAM): $(OBJS_W_DIR)
 $(OBJDIR)/%.o: %.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-.PHONY: clean
+.PHONY: clean mc param calcConsts convPar
 clean: 
 	@echo "Cleaning..."
-	@rm -f $(OBJDIR)/* $(PROGRAM) *~ src/*~ include/*~
+	@rm -f $(OBJDIR)/* $(PROGRAM) ./mcStudy ./param ./calcConsts ./convPar *~ src/*~ include/*~
+
+mc:
+	$(CXX) $(CXXFLAGS) $(LDLIBS) src/mcStudy-yield.cpp -o mcStudy
+
+param:
+	$(CXX) $(CXXFLAGS) $(LDLIBS) src/param.cpp -o param
+
+calcConsts:
+	$(CXX) src/calcConsts.cpp -o $@
+
+convPar:
+	$(CXX) $(CXXFLAGS) $(LDLIBS) src/convParam.cpp -o $@

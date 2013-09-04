@@ -1,0 +1,22 @@
+
+  RooFitResult: minimized FCN value: -1264.49, estimated distance to minimum: 0.000282668
+                covariance matrix quality: Full, accurate covariance matrix
+                Status : MIGRAD=0 HESSE=0 
+
+    Floating Parameter    FinalValue +/-  Error   
+  --------------------  --------------------------
+                  mu00    2.1823e+01 +/-  9.98e-02
+                  mu01    2.7325e+01 +/-  2.91e-01
+                  mu02    3.5600e+01 +/-  1.05e+00
+                  mu03    4.1256e+01 +/-  1.36e+00
+                  mu04    4.8508e+01 +/-  1.94e+00
+                  mu05    5.2500e+01 +/-  1.70e+00
+                  mu06    7.0058e+01 +/-  1.50e+00
+               yield00    2.7445e+02 +/-  3.01e+01
+               yield01    2.8659e+02 +/-  3.14e+01
+               yield02    1.1056e+02 +/-  3.56e+01
+               yield03    1.1866e+02 +/-  3.12e+01
+               yield04    6.2891e+01 +/-  4.13e+01
+               yield05    6.2828e+01 +/-  4.39e+01
+               yield06    6.3046e+01 +/-  1.63e+01
+
