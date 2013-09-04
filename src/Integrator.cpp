@@ -17,12 +17,13 @@ Integrator::Integrator(Neutron &neutron, const double &fitLow,
     mu_    = neutron.GetMu();
     n_     = neutron.GetN();
     sigma_ = neutron.GetSigma();
+    yield_ = neutron.GetYield();
+    yldErr_ = neutron.GetYieldErr();
 
-    //CB=&Integrator::CrystalBall;
-
-    AdaptiveSimpsons(fitLow, fitHigh, 1.e-9, 10);
-    //double uSimp = adaptiveSimpsons(*CrystalBall, fHigh, 1.e10, 1.e-9,10);
-    
+    double fSimp = AdaptiveSimpsons(fitLow, fitHigh, 1.e-9, 10);
+    double uSimp = AdaptiveSimpsons(fitHigh, 1.e10, 1.e-9, 10);
+    neutron.SetIntegratedYield((yield_/fSimp)*uSimp + yield_);
+    neutron.SetIntegratedYieldErr(CalcError(fSimp,uSimp));
 }
 
 double Integrator::AdaptiveSimpsons(const double &a, const double &b, // interval 
@@ -51,7 +52,14 @@ double Integrator::AdaptiveSimpsonsAux(const double &a,
             AdaptiveSimpsonsAux(c, b, epsilon/2, Sright, fc, fb, fe, bottom-1) );
 }
 
-double Integrator::CrystalBall(double var){
+double Integrator::CalcError(const double &fSimp,
+                             const double &uSimp){
+    double xErr = (yldErr_/fSimp) * uSimp;
+    return(sqrt(xErr*xErr+yldErr_*yldErr_));
+}
+                          
+
+double Integrator::CrystalBall(const double &var){
     double t = (var-mu_)/sigma_;
     
     if (alpha_ < 0) 

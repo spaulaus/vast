@@ -10,7 +10,7 @@ using namespace std;
 int main(int argc, char* argv[]) {
     vector<Neutron> neutrons;
 
-    ifstream data("data/077cu-ban4-lower/077cu-ban4-lower-tof.out");
+    ifstream data("data/077cu-ban4-lower/077cu-ban4-lower-tof-noConv.out");
     if(data.is_open()) {
         while(data.good()) {
             if(isdigit(data.peek())) {
@@ -33,7 +33,7 @@ int main(int argc, char* argv[]) {
     //          << (*it).GetN() << " " << (*it).GetSigma() << endl;
     // }
 
-    Neutron num0 = neutrons.at(0);
+    Neutron num0 = neutrons.at(12);
     Integrator integrator(num0, 0, 200.);
     
     cout << "---------------IN THE EXAMPLE CODE HERE -------------" << endl;
@@ -42,5 +42,6 @@ int main(int argc, char* argv[]) {
          << num0.GetYield() << " " << num0.GetYieldErr() << " " 
          << num0.GetEfficiency() << " " << num0.GetAlpha() << " " 
          << num0.GetN() << " " << num0.GetSigma() << " " 
-         << num0.GetIntegratedYield() << " " << endl;
+         << num0.GetIntegratedYield() << " " 
+         << num0.GetIntegratedYieldErr() << " " << endl;
 }

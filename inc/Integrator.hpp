@@ -18,9 +18,9 @@ public:
     double GetValue(const double &t) {return(CrystalBall(t));};
 private:
     Neutron neutron_; 
-    double alpha_, mu_, n_, sigma_;
+    double alpha_, mu_, n_, sigma_, yield_, yldErr_;
 
-    //double (Integrator::*CB) (double);
+    double CalcError(const double &fSimp, const double &uSimp);
 
     double AdaptiveSimpsons(const double &a, const double &b,  // interval [a,b]
                             const double &epsilon,  // error tolerance
@@ -30,6 +30,6 @@ private:
                                const double &S, const double &fa, 
                                const double &fb, const double &fc, 
                                const int &bottom);
-    double CrystalBall(double var);
+    double CrystalBall(const double &var);
 };
 #endif //__INTEGRATOR_HPP__
