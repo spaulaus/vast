@@ -8,6 +8,7 @@
 
 class Neutron {
 public:
+    Neutron(){};
     Neutron(const double &mu, const double &yld);
     Neutron(const double &mu, const double &muErr, 
          const double &yld);
@@ -28,8 +29,8 @@ public:
     double GetYield(void){return(yld_);};
     double GetYieldErr(void){return(yldErr_);};
 
-    void SetIntegratedYield(double &a){intYld_ = a;};
-    void SetIntegratedYieldErr(double &a){intYldErr_ = a;};
+    void SetIntegratedYield(const double &a){intYld_ = a;};
+    void SetIntegratedYieldErr(const double &a){intYldErr_ = a;};
 private:
     double mu_, muErr_, en_, enErr_;
     double yld_, yldErr_, intYld_, intYldErr_;

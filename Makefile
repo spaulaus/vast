@@ -19,9 +19,10 @@ PROGRAM = testing
 #Define Objects
 EXO = ex.o
 NEUTRONO = Neutron.o
+INTEGRATORO = Integrator.o
 
 #Make the object list and prefix the object directory
-OBJS = $(EXO) $(NEUTRONO)
+OBJS = $(EXO) $(NEUTRONO) $(INTEGRATORO)
 OBJDIR = obj
 OBJS_W_DIR = $(addprefix $(OBJDIR)/,$(OBJS))
 
