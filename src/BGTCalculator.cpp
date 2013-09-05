@@ -36,7 +36,10 @@ void BGTCalculator::CalcBranchingRatio(const double &betaEff,
 }
 
 void BGTCalculator::CalcF(void) {
-    //--------- ENERGIES NEED TO BE IN keV !!! ---------
+    //------------------------------------------------------------------
+    //--------- This routine is adapted from the original basic --------
+    //--------- code written by J. Kantele; energies in keV     --------
+    //------------------------------------------------------------------
     double betaEp = (decay_.GetQValue()*1000.) - eLvl_*1000.;
     double z = decay_.GetDaughterZ();
 
