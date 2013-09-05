@@ -14,7 +14,7 @@ CINCLUDEDIRS = -Iinc
 c++SrcSuf = cpp
 
 #Set the name of the program to be compiled
-PROGRAM = testing
+PROGRAM = analyze
 
 #Define Objects
 BGTCALCULATORO = BGTCalculator.o
