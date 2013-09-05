@@ -41,7 +41,7 @@ int main(int argc, char* argv[]) {
     }
     data.close();
 
-    double totN  = 0., rawN = 0., pn = 0.;
+    double totN  = 0., rawN = 0.;
     ofstream outTheory("results/077cu-ban4-lower-noConv.inp");
     ofstream outExp("results/077cu-ban4-lower-noConv.dat");
     outExp << "#Tof(ns) TofErr(ns) Ex(MeV) ExErr(MeV) B(GT) log(FT) " 
@@ -62,6 +62,6 @@ int main(int argc, char* argv[]) {
         
         outTheory << bgt.GetLevelEnergy() << " " << bgt.GetBgt() << endl;
     }
-    outExp << "Pn = " << totN << " / " << decay.GetNumberDecays() << " = " 
+    outExp << "#Pn = " << totN << " / " << decay.GetNumberDecays() << " = " 
            << totN / decay.GetNumberDecays() << "  RawN = " << rawN << endl;
 }
