@@ -8,6 +8,7 @@
 #include <iostream>
 #include <vector>
 
+#include "BGTCalculator.hpp"
 #include "Decay.hpp"
 #include "Integrator.hpp"
 #include "Neutron.hpp"
@@ -15,7 +16,10 @@
 using namespace std;
 
 int main(int argc, char* argv[]) {
-    int numBars = 9;
+    double numBars = 9;
+    double omega = numBars*0.0061; // solid angle from Sergey's simulation
+    //double omega = numBars*4.727e-3; // the calculation for the solid angle
+    double betaEff = 0.22;
 
     //---------- SET THE DECAY INFORMATION HERE ---------
     Decay decay(29,10.490,4.558,0.4679); //ParentZ, Q(MeV), Sn(MeV), T1/2(s)
@@ -42,17 +46,12 @@ int main(int argc, char* argv[]) {
         it != neutrons.end(); it++) {
         //---------- INTEGRATE THE NEUTRON PEAKS HERE ----------
         Integrator integrator(*it, 0, 200.);
-
-        totN+=(*it).GetIntegratedYield()/0.22/numBars/0.0061;
-
-        // cout << (*it).GetMu() << " " << (*it).GetMuErr() << " "
-        //      << (*it).GetEnergy() << " " << (*it).GetEnergyErr() << " " 
-        //      << (*it).GetYield() << " " << (*it).GetYieldErr() << " " 
-        //      << (*it).GetEfficiency() << " " << (*it).GetAlpha() << " " 
-        //      << (*it).GetN() << " " << (*it).GetSigma() << " " 
-        //      << (*it).GetIntegratedYield() << " " 
-        //      << (*it).GetIntegratedYieldErr() << " " << endl;
+        //---------- CALCULATE THE BGT AND LOGFT HERE ----------
+        BGTCalculator bgt((*it), decay, betaEff, omega);
+        //---------- CALCULATE THE TOTAL NUMBER OF NEUTRONS --------
+        totN += (*it).GetIntegratedYield() / betaEff / omega;
+        cout << (*it).GetMu() << " " 
+             << bgt.GetLevelEnergy()<< " " << bgt.GetBgt() << " " 
+             << bgt.GetLogft() << " " << endl;
     }
-    cout << totN << " " << decay.GetNumberDecays() << " " 
-         << totN / decay.GetNumberDecays() << endl;
 }

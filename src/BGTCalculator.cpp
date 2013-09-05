@@ -11,13 +11,34 @@
 
 using namespace std;
 
-double BGTCalculator::CalcBranchingRatio(const double &area, 
-                                         const double &energy) { 
-    return(area / CalcEff(energy) / numBeta / omega / betaEff);
+BGTCalculator::BGTCalculator(Neutron &neutron, const Decay &decay,
+                             const double &betaEff, const double &omega) {
+    eG_ = 0.0;
+    decay_ = decay;
+    neutron_ = neutron;
+    CalcLevelEnergy();
+    CalcBranchingRatio(betaEff, omega);
+    CalcF();
+    CalcBgt();
+    CalcLogft();
 }
 
-double BGTCalculator::CalcF(const double &energy) {
-    double betaEp = q - (energy + sn);
+void BGTCalculator::CalcBgt(void) {
+    double coeff = 3812.413; //D/(ga/gv)**2 in units of s
+    bgt_ = coeff/f_/(decay_.GetHalfLife()/br_);
+}
+
+void BGTCalculator::CalcBranchingRatio(const double &betaEff, 
+                                       const double &omega) { 
+    br_ = neutron_.GetIntegratedYield() / 
+        decay_.GetNumberDecays() / omega / betaEff;
+    neutron_.SetBranchingRatio(br_);
+}
+
+void BGTCalculator::CalcF(void) {
+    //--------- ENERGIES NEED TO BE IN keV !!! ---------
+    double betaEp = (decay_.GetQValue()*1000.) - eLvl_*1000.;
+    double z = decay_.GetDaughterZ();
 
     double coeff[4][4] = { {-17.2, 7.9015, -2.54, 0.28482,}, 
                            {3.31368, -2.06273, 0.703822, -0.075039,}, 
@@ -33,5 +54,14 @@ double BGTCalculator::CalcF(const double &energy) {
     double logf = evalCoeff[0] + evalCoeff[1]*log(betaEp) + 
         evalCoeff[2]*pow(log(betaEp),2.) + evalCoeff[3]*pow(log(betaEp),3.);
 
-    return(pow(10,logf));
+    f_ = pow(10,logf);
+}
+
+void BGTCalculator::CalcLevelEnergy(void) {
+    eLvl_ = neutron_.GetEnergy() + decay_.GetNeutronSepEnergy() + 
+        eG_;
+}
+
+void BGTCalculator::CalcLogft(void) {
+    logft_ = log10(f_*(decay_.GetHalfLife()/br_));
 }

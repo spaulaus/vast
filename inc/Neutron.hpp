@@ -17,6 +17,7 @@ public:
     ~Neutron(){};
 
     double GetAlpha(void){return(alph_);};
+    double GetBranchingRatio(void){return(br_);};
     double GetEfficiency(void){return(eff_);};
     double GetEnergy(void){return(en_);};
     double GetEnergyErr(void){return(enErr_);};
@@ -31,12 +32,13 @@ public:
     double GetYield(void){return(yld_/eff_);};
     double GetYieldErr(void){return(yldErr_/eff_);};
     
+    void SetBranchingRatio(const double &a){br_ = a;};
     void SetIntegratedYield(const double &a){intYld_ = a;};
     void SetIntegratedYieldErr(const double &a){intYldErr_ = a;};
 private:
     double mu_, muErr_, en_, enErr_;
     double yld_, yldErr_, intYld_, intYldErr_, rawYld_, rawYldErr_;
-    double alph_, eff_, n_, sig_;
+    double br_, alph_, eff_, n_, sig_;
 
     double CalcAlpha(const double &mu);
     double CalcEfficiency(const double &mu);

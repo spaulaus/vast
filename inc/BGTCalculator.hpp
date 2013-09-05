@@ -11,13 +11,28 @@
 
 class BGTCalculator {
 public:
-    BGTCalculator(Neutron &neutron, const Decay &decay);
-    ~BGTCalculator();
+    BGTCalculator(){};
+    BGTCalculator(Neutron &neutron, const Decay &decay,
+                  const double &betaEff, const double &omega);
+    ~BGTCalculator(){};
+
+    
+    double GetBgt(void){return(bgt_);};
+    double GetBranchingRatio(void){return(br_);};
+    double GetLevelEnergy(void){return(eLvl_);};
+    double GetLogft(void){return(logft_);};
+
+    void SetGammaEnergy(const double &a){eG_ = a;};
 
 private:
-    double bgt_, eLvl_, f_, logft_; 
-    
-    double CalcBranchingRatio(const double &area, const double &energy);
-    double CalcF(const double &energy);
+    Decay decay_;
+    double br_, bgt_, eG_, eLvl_, eN_, f_, logft_; 
+    Neutron neutron_; 
+
+    void CalcBgt(void);
+    void CalcBranchingRatio(const double &betaEff, const double &omega);
+    void CalcF(void);
+    void CalcLevelEnergy(void);
+    void CalcLogft(void);
 };
 #endif //__BGTCALCULATOR_HPP__

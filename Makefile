@@ -17,13 +17,14 @@ c++SrcSuf = cpp
 PROGRAM = testing
 
 #Define Objects
+BGTCALCULATORO = BGTCalculator.o
 DECAYO = Decay.o
 EXO = ex.o
 INTEGRATORO = Integrator.o
 NEUTRONO = Neutron.o
 
 #Make the object list and prefix the object directory
-OBJS = $(DECAYO) $(EXO) $(INTEGRATORO) $(NEUTRONO)
+OBJS = $(BGTCALCULATORO) $(DECAYO) $(EXO) $(INTEGRATORO) $(NEUTRONO)
 OBJDIR = obj
 OBJS_W_DIR = $(addprefix $(OBJDIR)/,$(OBJS))
 
