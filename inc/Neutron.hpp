@@ -25,15 +25,17 @@ public:
     double GetMu(void){return(mu_);};
     double GetMuErr(void){return(muErr_);};
     double GetN(void){return(n_);};
+    double GetRawYield(void){return(rawYld_);};
+    double GetRawYieldErr(void){return(rawYldErr_);};
     double GetSigma(void){return(sig_);};
-    double GetYield(void){return(yld_);};
-    double GetYieldErr(void){return(yldErr_);};
-
+    double GetYield(void){return(yld_/eff_);};
+    double GetYieldErr(void){return(yldErr_/eff_);};
+    
     void SetIntegratedYield(const double &a){intYld_ = a;};
     void SetIntegratedYieldErr(const double &a){intYldErr_ = a;};
 private:
     double mu_, muErr_, en_, enErr_;
-    double yld_, yldErr_, intYld_, intYldErr_;
+    double yld_, yldErr_, intYld_, intYldErr_, rawYld_, rawYldErr_;
     double alph_, eff_, n_, sig_;
 
     double CalcAlpha(const double &mu);

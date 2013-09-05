@@ -1,15 +1,28 @@
+/** \file ex.cpp
+ *  \brief Just a simple code to test and play with the classes
+ *  \author S. V. Paulauskas
+ *  \date 04 September 2013
+ */
 #include <fstream>
+#include <iomanip>
 #include <iostream>
 #include <vector>
 
+#include "Decay.hpp"
 #include "Integrator.hpp"
 #include "Neutron.hpp"
 
 using namespace std;
 
 int main(int argc, char* argv[]) {
-    vector<Neutron> neutrons;
+    int numBars = 9;
 
+    //---------- SET THE DECAY INFORMATION HERE ---------
+    Decay decay(29,10.490,4.558,0.4679); //ParentZ, Q(MeV), Sn(MeV), T1/2(s)
+    decay.SetGammaInfo(350311,0.0655391,0.191); //RawNumGammas, eff_gamma, absBr
+
+    //---------- SET THE NEUTRON INFORMATION HERE ----------
+    vector<Neutron> neutrons;
     ifstream data("data/077cu-ban4-lower/077cu-ban4-lower-tof-noConv.out");
     if(data.is_open()) {
         while(data.good()) {
@@ -24,24 +37,22 @@ int main(int argc, char* argv[]) {
     }
     data.close();
 
-    // for(vector<Neutron>::iterator it = neutrons.begin(); 
-    //     it != neutrons.end(); it++) {
-    //     cout << (*it).GetMu() << " " << (*it).GetMuErr() << " "
-    //          << (*it).GetEnergy() << " " << (*it).GetEnergyErr() << " " 
-    //          << (*it).GetYield() << " " << (*it).GetYieldErr() << " " 
-    //          << (*it).GetEfficiency() << " " << (*it).GetAlpha() << " " 
-    //          << (*it).GetN() << " " << (*it).GetSigma() << endl;
-    // }
+    double totN  = 0.;
+    for(vector<Neutron>::iterator it = neutrons.begin(); 
+        it != neutrons.end(); it++) {
+        //---------- INTEGRATE THE NEUTRON PEAKS HERE ----------
+        Integrator integrator(*it, 0, 200.);
 
-    Neutron num0 = neutrons.at(12);
-    Integrator integrator(num0, 0, 200.);
-    
-    cout << "---------------IN THE EXAMPLE CODE HERE -------------" << endl;
-    cout << num0.GetMu() << " " << num0.GetMuErr() << " "
-         << num0.GetEnergy() << " " << num0.GetEnergyErr() << " " 
-         << num0.GetYield() << " " << num0.GetYieldErr() << " " 
-         << num0.GetEfficiency() << " " << num0.GetAlpha() << " " 
-         << num0.GetN() << " " << num0.GetSigma() << " " 
-         << num0.GetIntegratedYield() << " " 
-         << num0.GetIntegratedYieldErr() << " " << endl;
+        totN+=(*it).GetIntegratedYield()/0.22/numBars/0.0061;
+
+        // cout << (*it).GetMu() << " " << (*it).GetMuErr() << " "
+        //      << (*it).GetEnergy() << " " << (*it).GetEnergyErr() << " " 
+        //      << (*it).GetYield() << " " << (*it).GetYieldErr() << " " 
+        //      << (*it).GetEfficiency() << " " << (*it).GetAlpha() << " " 
+        //      << (*it).GetN() << " " << (*it).GetSigma() << " " 
+        //      << (*it).GetIntegratedYield() << " " 
+        //      << (*it).GetIntegratedYieldErr() << " " << endl;
+    }
+    cout << totN << " " << decay.GetNumberDecays() << " " 
+         << totN / decay.GetNumberDecays() << endl;
 }

@@ -17,12 +17,13 @@ c++SrcSuf = cpp
 PROGRAM = testing
 
 #Define Objects
+DECAYO = Decay.o
 EXO = ex.o
-NEUTRONO = Neutron.o
 INTEGRATORO = Integrator.o
+NEUTRONO = Neutron.o
 
 #Make the object list and prefix the object directory
-OBJS = $(EXO) $(NEUTRONO) $(INTEGRATORO)
+OBJS = $(DECAYO) $(EXO) $(INTEGRATORO) $(NEUTRONO)
 OBJDIR = obj
 OBJS_W_DIR = $(addprefix $(OBJDIR)/,$(OBJS))
 
