@@ -45,7 +45,9 @@ $(PROGRAM): $(OBJS_W_DIR)
 $(OBJDIR)/%.o: %.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-.PHONY: clean
+.PHONY: clean eff
 clean: 
 	@echo "Cleaning..."
-	@rm -f $(OBJDIR)/* $(PROGRAM) *~ src/*~ include/*~
+	@rm -f $(OBJDIR)/* $(PROGRAM) ./eff *~ src/*~ include/*~
+eff: src/eff.cpp $(EFFCALCULATORO)
+	$(CXX) $(CXXFLAGS) $(LDLIBS) $^ -o $@

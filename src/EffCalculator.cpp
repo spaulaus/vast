@@ -40,8 +40,7 @@ double EffCalculator::GetEff(const double &energy) {
     double y = log(energy/e2_);                     
     
     return(exp(pow(pow(a_+b_*x+c_*x*x,-g_) + 
-                   pow(d_+e_*y+f_*y*y,-g_), -1/g_)));
-
+                   pow(d_+e_*y+f_*y*y,-g_), -1/g_)))/100.;
 }
 
 double EffCalculator::GetSimRollingEff(const double &energy) {
