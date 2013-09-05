@@ -41,7 +41,11 @@ int main(int argc, char* argv[]) {
     }
     data.close();
 
-    double totN  = 0.;
+    double totN  = 0., rawN = 0., pn = 0.;
+    ofstream outTheory("results/077cu-ban4-lower-noConv.inp");
+    ofstream outExp("results/077cu-ban4-lower-noConv.dat");
+    outExp << "#Tof(ns) TofErr(ns) Ex(MeV) ExErr(MeV) B(GT) log(FT) " 
+           << endl;
     for(vector<Neutron>::iterator it = neutrons.begin(); 
         it != neutrons.end(); it++) {
         //---------- INTEGRATE THE NEUTRON PEAKS HERE ----------
@@ -50,8 +54,14 @@ int main(int argc, char* argv[]) {
         BGTCalculator bgt((*it), decay, betaEff, omega);
         //---------- CALCULATE THE TOTAL NUMBER OF NEUTRONS --------
         totN += (*it).GetIntegratedYield() / betaEff / omega;
-        cout << (*it).GetMu() << " " 
-             << bgt.GetLevelEnergy()<< " " << bgt.GetBgt() << " " 
-             << bgt.GetLogft() << " " << endl;
+        rawN += (*it).GetRawYield();
+        
+        outExp << (*it).GetMu() << " " << (*it).GetMuErr() << " " 
+               << bgt.GetLevelEnergy() << " " << (*it).GetEnergyErr() 
+               << " " << bgt.GetBgt() << " " << bgt.GetLogft() << endl;
+        
+        outTheory << bgt.GetLevelEnergy() << " " << bgt.GetBgt() << endl;
     }
+    outExp << "Pn = " << totN << " / " << decay.GetNumberDecays() << " = " 
+           << totN / decay.GetNumberDecays() << "  RawN = " << rawN << endl;
 }
