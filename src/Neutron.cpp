@@ -10,14 +10,16 @@
 #include <PhysConstants.hpp>
 
 #include "Neutron.hpp"
+#include "EffCalculator.hpp"
 
 using namespace std;
 
 Neutron::Neutron(const double &mu, const double &yld) {
+    EffCalculator eff("vandle");
     alph_      = CalcAlpha(mu);
     en_        = CalcEnergy(mu);
     enErr_     = 0.0;
-    eff_       = CalcEfficiency(en_);
+    eff_       = eff.GetSimRollingEff(en_*1000.);
     intYld_    = 0.0;
     intYldErr_ = 0.0;
     mu_        = mu;
@@ -30,10 +32,11 @@ Neutron::Neutron(const double &mu, const double &yld) {
 
 Neutron::Neutron(const double &mu, const double &muErr, 
            const double &yld) {
+    EffCalculator eff("vandle");
     alph_      = CalcAlpha(mu);
     en_        = CalcEnergy(mu); 
     enErr_     = CalcEnergyErr(mu,muErr,en_); 
-    eff_       = CalcEfficiency(en_);
+    eff_       = eff.GetSimRollingEff(en_*1000.);
     intYld_    = 0.0;
     intYldErr_ = 0.0;
     mu_        = mu;
@@ -46,10 +49,11 @@ Neutron::Neutron(const double &mu, const double &muErr,
 
 Neutron::Neutron(const double &mu, const double &muErr, 
            const double &yld, const double &yldErr) {
+    EffCalculator eff("vandle");
     alph_      = CalcAlpha(mu);
     en_        = CalcEnergy(mu); 
     enErr_     = CalcEnergyErr(mu,muErr,en_); 
-    eff_       = CalcEfficiency(en_);
+    eff_       = eff.GetSimRollingEff(en_*1000.);
     intYld_    = 0.0;
     intYldErr_ = 0.0;
     mu_        = mu;
@@ -66,30 +70,6 @@ double Neutron::CalcAlpha(const double &mu) {
     double aG = 0.0135441451470589 ;
     double aF = -1.18042124700263;
     return(aI*pow(mu,3)+aH*pow(mu,2)+aG*mu+aF);
-}
-
-double Neutron::CalcEfficiency(const double &en) {
-    double enKev = en*1000.;
-
-    //Taken from cf1200VLG/000.fit - uses keV
-    // double a,b,c,d,e,f,g,E1,E2;
-    // a = 8.07991379590916;
-    // b = -2.76506346801857;
-    // c = 0.659153868962284;
-    // d = 5.90882582548888;
-    // e = -0.64468269369943;
-    // f = -0.395030757008049;
-    // g = 1.73807042912493;
-    // E1= 150.0;
-    // E2 = 1000.0;
-    // double x = log(energy/E1);
-    // double y = log(energy/E2);                     
-    
-    // return((exp(pow(pow(a+b*x+c*x*x,-g) + 
-    //                 pow(d+e*y+f*y*y,-g), -1/g)))/100);
-
-    //From Sergey's eff_var_thresh
-    return((52349.3/(enKev+572.064)+5.17822)/100.);
 }
 
 double Neutron::CalcEnergy(const double &mu) {

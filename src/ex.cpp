@@ -42,9 +42,9 @@ int main(int argc, char* argv[]) {
     data.close();
 
     double totN  = 0., rawN = 0.;
-    ofstream outTheory("results/077cu-ban4-lower-noConv.inp");
-    ofstream outExp("results/077cu-ban4-lower-noConv.dat");
-    outExp << "#Tof(ns) TofErr(ns) Ex(MeV) ExErr(MeV) B(GT) log(FT) " 
+    ofstream outTheory("results/noConv/077cu-ban4-lower-noConv.inp");
+    ofstream outExp("results/noConv/077cu-ban4-lower-noConv.dat");
+    outExp << "#Tof(ns) TofErr(ns) Ex(MeV) ExErr(MeV) B(GT) log(FT) Yield" 
            << endl;
     for(vector<Neutron>::iterator it = neutrons.begin(); 
         it != neutrons.end(); it++) {
@@ -58,7 +58,8 @@ int main(int argc, char* argv[]) {
         
         outExp << (*it).GetMu() << " " << (*it).GetMuErr() << " " 
                << bgt.GetLevelEnergy() << " " << (*it).GetEnergyErr() 
-               << " " << bgt.GetBgt() << " " << bgt.GetLogft() << endl;
+               << " " << bgt.GetBgt() << " " << bgt.GetLogft() 
+               << " " << (*it).GetIntegratedYield() << endl;
         
         outTheory << bgt.GetLevelEnergy() << " " << bgt.GetBgt() << endl;
     }

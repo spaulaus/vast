@@ -19,12 +19,14 @@ PROGRAM = analyze
 #Define Objects
 BGTCALCULATORO = BGTCalculator.o
 DECAYO = Decay.o
+EFFCALCULATORO = EffCalculator.o
 EXO = ex.o
 INTEGRATORO = Integrator.o
 NEUTRONO = Neutron.o
 
 #Make the object list and prefix the object directory
-OBJS = $(BGTCALCULATORO) $(DECAYO) $(EXO) $(INTEGRATORO) $(NEUTRONO)
+OBJS =  $(BGTCALCULATORO) $(DECAYO) $(EFFCALCULATORO) $(EXO) 
+OBJS += $(INTEGRATORO) $(NEUTRONO)
 OBJDIR = obj
 OBJS_W_DIR = $(addprefix $(OBJDIR)/,$(OBJS))
 
