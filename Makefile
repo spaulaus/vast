@@ -8,8 +8,8 @@ vpath %.o obj/
 
 #Set some of the compile options
 CXX = g++
-CXXFLAGS = -fPIC -g -Wall $(CINCLUDEDIRS)
-LDLIBS = -ldl -lpthread -lPhysConstants
+CXXFLAGS = -fPIC -g -std=c++11 -Wall $(CINCLUDEDIRS)
+LDLIBS = -ldl -lpthread -lPhysConstants -lSignalGenerator
 CINCLUDEDIRS = -Iinc
 c++SrcSuf = cpp
 
@@ -19,14 +19,15 @@ PROGRAM = analyze
 #Define Objects
 BGTCALCULATORO = BGTCalculator.o
 DECAYO = Decay.o
+DENSITYCALCULATORO = DensityCalculator.o
 EFFCALCULATORO = EffCalculator.o
 EXO = ex.o
 INTEGRATORO = Integrator.o
 NEUTRONO = Neutron.o
 
 #Make the object list and prefix the object directory
-OBJS =  $(BGTCALCULATORO) $(DECAYO) $(EFFCALCULATORO) $(EXO) 
-OBJS += $(INTEGRATORO) $(NEUTRONO)
+OBJS =  $(BGTCALCULATORO) $(DECAYO) $(DENSITYCALCULATORO)
+OBJS += $(EFFCALCULATORO) $(EXO) $(INTEGRATORO) $(NEUTRONO)
 OBJDIR = obj
 OBJS_W_DIR = $(addprefix $(OBJDIR)/,$(OBJS))
 

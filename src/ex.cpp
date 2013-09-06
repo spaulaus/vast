@@ -10,6 +10,7 @@
 
 #include "BGTCalculator.hpp"
 #include "Decay.hpp"
+#include "DensityCalculator.hpp"
 #include "Integrator.hpp"
 #include "Neutron.hpp"
 
@@ -41,7 +42,8 @@ int main(int argc, char* argv[]) {
     }
     data.close();
 
-    double totN  = 0., rawN = 0.;
+    double totN  = 0., rawN = 0., res = 0.001, len = 20.;
+    vector<double> sumDen(len/res);
     ofstream outTheory("results/noConv/077cu-ban4-lower-noConv.inp");
     ofstream outExp("results/noConv/077cu-ban4-lower-noConv.dat");
     outExp << "#Tof(ns) TofErr(ns) Ex(MeV) ExErr(MeV) B(GT) log(FT) Yield" 
@@ -55,7 +57,12 @@ int main(int argc, char* argv[]) {
         //---------- CALCULATE THE TOTAL NUMBER OF NEUTRONS --------
         totN += (*it).GetIntegratedYield() / betaEff / omega;
         rawN += (*it).GetRawYield();
-        
+
+        DensityCalculator denCalc((*it),res,len);
+        vector<double> *density = denCalc.GetDensity();
+        for(unsigned int i = 0; i < density->size(); i++)
+            sumDen.at(i) += density->at(i);
+
         outExp << (*it).GetMu() << " " << (*it).GetMuErr() << " " 
                << bgt.GetLevelEnergy() << " " << (*it).GetEnergyErr() 
                << " " << bgt.GetBgt() << " " << bgt.GetLogft() 
@@ -65,4 +72,7 @@ int main(int argc, char* argv[]) {
     }
     outExp << "#Pn = " << totN << " / " << decay.GetNumberDecays() << " = " 
            << totN / decay.GetNumberDecays() << "  RawN = " << rawN << endl;
+
+    for(unsigned int i = 0; i < sumDen.size(); i++)
+        cout << i*res << " " << sumDen[i] << endl;
 }
