@@ -62,7 +62,7 @@ int main(int argc, char* argv[]) {
            << endl;
 
     //---------- HANDLE THE NEUTRON DENSITY STUFF HERE ---------
-    double res = 0.250, res1 = 0.05, len = 10.; // res and len in Mev
+    double res = 0.250, res1 = 0.0001, len = 10.; // res and len in Mev
     // vector<double> sumDen250(int(len/res)+1);
     // vector<double> sumDen001(int(len/res)+1);
 

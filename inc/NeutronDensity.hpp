@@ -6,6 +6,7 @@
 #ifndef __NEUTRONDENSITY_HPP__
 #define __NEUTRONDENSITY_HPP__
 
+#include <map>
 #include <vector>
 
 #include "Neutron.hpp"
@@ -19,13 +20,13 @@ public:
                    const double &len, const double &ge);
     ~NeutronDensity(){};
     
-    std::vector<double>* GetDensity(void){return(&density_);};
+    std::map<double,double>* GetDensity(void){return(&density_);};
 
     unsigned int GetDensitySize(void){return(density_.size());};
 
 private:
     double gE_, gEff_, len_, res_;
-    std::vector<double> density_;
+    std::map<double,double> density_;
     std::vector<Neutron> neutrons_;
     
     void CalcDensity(void);
