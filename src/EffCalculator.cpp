@@ -46,5 +46,13 @@ double EffCalculator::GetEff(const double &energy) {
 double EffCalculator::GetSimRollingEff(const double &energy) {
     //From Sergey's eff_var_thresh
     //Expects neutron energy in keV
-    return((52349.3/(energy+572.064)+5.17822)/100.);
+    double a = 29508.583014511;
+    double b = -360.519617657447;
+    double c = -0.0020863546616623;
+    double d = 19.665798880457;
+    double eff = (a/(energy-b))+c*energy+d;
+    if(eff > 100.)
+        return(1.0);
+    else
+        return(eff/100.);
 }

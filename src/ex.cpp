@@ -13,6 +13,7 @@
 #include "DensityCalculator.hpp"
 #include "Integrator.hpp"
 #include "Neutron.hpp"
+#include "NeutronDensity.hpp"
 
 using namespace std;
 
@@ -42,37 +43,41 @@ int main(int argc, char* argv[]) {
     }
     data.close();
 
-    double totN  = 0., rawN = 0., res = 0.001, len = 20.;
-    vector<double> sumDen(len/res);
+    //---------- SET THE OUTPUT FILES ----------
     ofstream outTheory("results/noConv/077cu-ban4-lower-noConv.inp");
     ofstream outExp("results/noConv/077cu-ban4-lower-noConv.dat");
-    outExp << "#Tof(ns) TofErr(ns) Ex(MeV) ExErr(MeV) B(GT) log(FT) Yield" 
-           << endl;
+
+    double totN  = 0., rawN = 0.;
     for(vector<Neutron>::iterator it = neutrons.begin(); 
         it != neutrons.end(); it++) {
         //---------- INTEGRATE THE NEUTRON PEAKS HERE ----------
         Integrator integrator(*it, 0, 200.);
-        //---------- CALCULATE THE BGT AND LOGFT HERE ----------
-        BGTCalculator bgt((*it), decay, betaEff, omega);
         //---------- CALCULATE THE TOTAL NUMBER OF NEUTRONS --------
         totN += (*it).GetIntegratedYield() / betaEff / omega;
         rawN += (*it).GetRawYield();
-
-        DensityCalculator denCalc((*it),res,len);
-        vector<double> *density = denCalc.GetDensity();
-        for(unsigned int i = 0; i < density->size(); i++)
-            sumDen.at(i) += density->at(i);
-
-        outExp << (*it).GetMu() << " " << (*it).GetMuErr() << " " 
-               << bgt.GetLevelEnergy() << " " << (*it).GetEnergyErr() 
-               << " " << bgt.GetBgt() << " " << bgt.GetLogft() 
-               << " " << (*it).GetIntegratedYield() << endl;
-        
-        outTheory << bgt.GetLevelEnergy() << " " << bgt.GetBgt() << endl;
     }
     outExp << "#Pn = " << totN << " / " << decay.GetNumberDecays() << " = " 
            << totN / decay.GetNumberDecays() << "  RawN = " << rawN << endl;
+    outExp << "Ex(MeV) ExErr(MeV) B(GT) log(FT) Yield" 
+           << endl;
 
-    for(unsigned int i = 0; i < sumDen.size(); i++)
-        cout << i*res << " " << sumDen[i] << endl;
+    //---------- HANDLE THE NEUTRON DENSITY STUFF HERE ---------
+    double res = 0.250, res1 = 0.05, len = 10.; // res and len in Mev
+    // vector<double> sumDen250(int(len/res)+1);
+    // vector<double> sumDen001(int(len/res)+1);
+
+    //NeutronDensity den250(neutrons,res,len);
+    NeutronDensity den100(neutrons,res1,len);
+
+    // vector<double> *density = denCalc.GetDensity();
+    // for(unsigned int i = 0; i < density->size(); i++)
+    //     sumDen250.at(i) += density->at(i);
+    // for(unsigned int i = 0; i < sumDen250.size(); i++)
+    //     cout << i*res << " " << sumDen250[i] << endl;
+    // outExp << (*it).GetMu() << " " << (*it).GetMuErr() << " " 
+    //        << bgt.GetLevelEnergy() << " " << (*it).GetEnergyErr() 
+    //        << " " << bgt.GetBgt() << " " << bgt.GetLogft() 
+    //        << " " << (*it).GetIntegratedYield() << endl;
+    
+    // outTheory << bgt.GetLevelEnergy() << " " << bgt.GetBgt() << endl;
 }

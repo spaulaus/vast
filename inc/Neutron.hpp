@@ -17,6 +17,7 @@ public:
     ~Neutron(){};
 
     double GetAlpha(void){return(alph_);};
+    double GetBetaEnergyErr(void){return(betaEnErr_);};
     double GetBranchingRatio(void){return(br_);};
     double GetEfficiency(void){return(eff_);};
     double GetEnergy(void){return(en_);};
@@ -38,7 +39,7 @@ public:
 private:
     double mu_, muErr_, en_, enErr_;
     double yld_, yldErr_, intYld_, intYldErr_;
-    double br_, alph_, eff_, n_, sig_;
+    double alph_, betaEnErr_, br_, eff_, gammaE_, n_, sig_;
 
     double CalcAlpha(const double &mu);
     double CalcEfficiency(const double &mu);

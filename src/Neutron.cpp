@@ -17,6 +17,7 @@ using namespace std;
 Neutron::Neutron(const double &mu, const double &yld) {
     EffCalculator eff("vandle");
     alph_      = CalcAlpha(mu);
+    betaEnErr_ = 0.0;
     en_        = CalcEnergy(mu);
     enErr_     = 0.0;
     eff_       = eff.GetSimRollingEff(en_*1000.);
@@ -36,6 +37,7 @@ Neutron::Neutron(const double &mu, const double &muErr,
     alph_      = CalcAlpha(mu);
     en_        = CalcEnergy(mu); 
     enErr_     = CalcEnergyErr(mu,muErr,en_); 
+    betaEnErr_ = CalcEnergyErr(mu,CalcSigma(mu),en_);
     eff_       = eff.GetSimRollingEff(en_*1000.);
     intYld_    = 0.0;
     intYldErr_ = 0.0;
@@ -53,6 +55,7 @@ Neutron::Neutron(const double &mu, const double &muErr,
     alph_      = CalcAlpha(mu);
     en_        = CalcEnergy(mu); 
     enErr_     = CalcEnergyErr(mu,muErr,en_); 
+    betaEnErr_ = CalcEnergyErr(mu,CalcSigma(mu),en_);
     eff_       = eff.GetSimRollingEff(en_*1000.);
     intYld_    = 0.0;
     intYldErr_ = 0.0;

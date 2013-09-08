@@ -6,12 +6,16 @@
 #ifndef __BGTCALCULATOR_HPP__
 #define __BGTCALCULATOR_HPP__
 
-#include "Neutron.hpp"
 #include "Decay.hpp"
+#include "Neutron.hpp"
+#include "NeutronDensity.hpp"
 
 class BGTCalculator {
 public:
     BGTCalculator(){};
+    BGTCalculator(NeutronDensity &density, const Decay &decay,
+                  const double &betaEff, const double &omega);
+                  
     BGTCalculator(Neutron &neutron, const Decay &decay,
                   const double &betaEff, const double &omega);
     ~BGTCalculator(){};
@@ -28,6 +32,7 @@ private:
     Decay decay_;
     double br_, bgt_, eG_, eLvl_, eN_, f_, logft_; 
     Neutron neutron_; 
+    NeutronDensity density_;
 
     void CalcBgt(void);
     void CalcBranchingRatio(const double &betaEff, const double &omega);
