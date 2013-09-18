@@ -1,7 +1,0 @@
-# RooFitResult: minimized FCN value: 98.3373, estimated distance to minimum: 1.30843e-06
-# covariance matrix quality: Full, accurate covariance matrix
-# Status : MIGRAD=0 HESSE=0
-# PkNum mu(ns) muErr(ns) Yield YieldErr PkDiff
-# -------------------- ------------ -------------------------- --------
-0  2.7580e+01 1.53e+00 1.5724e+01 4.70e+00   0
-1  6.0753e+01 1.68e+00 2.8279e+01 5.88e+00   33.173
