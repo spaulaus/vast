@@ -6,11 +6,10 @@
 #include <fstream>
 #include <iomanip>
 #include <iostream>
-#include <vector>
+#include <sstream>
 
 #include "BGTCalculator.hpp"
 #include "Decay.hpp"
-#include "DensityCalculator.hpp"
 #include "Integrator.hpp"
 #include "Neutron.hpp"
 #include "NeutronDensity.hpp"
@@ -44,40 +43,65 @@ int main(int argc, char* argv[]) {
     data.close();
 
     //---------- SET THE OUTPUT FILES ----------
-    ofstream outTheory("results/noConv/077cu-ban4-lower-noConv.inp");
     ofstream outExp("results/noConv/077cu-ban4-lower-noConv.dat");
-
     double totN  = 0., rawN = 0.;
-    for(vector<Neutron>::iterator it = neutrons.begin(); 
+    outExp << "Ex(MeV) ExErr(MeV) B(GT) log(FT) Yield" 
+           << endl;
+   for(vector<Neutron>::iterator it = neutrons.begin(); 
         it != neutrons.end(); it++) {
         //---------- INTEGRATE THE NEUTRON PEAKS HERE ----------
         Integrator integrator(*it, 0, 200.);
         //---------- CALCULATE THE TOTAL NUMBER OF NEUTRONS --------
         totN += (*it).GetIntegratedYield() / betaEff / omega;
         rawN += (*it).GetRawYield();
+
+        // outExp << (*it).GetMu() << " " << (*it).GetMuErr() << " " 
+        //        << bgt.GetLevelEnergy() << " " << (*it).GetEnergyErr() 
+        //        << " " << bgt.GetBgt() << " " << bgt.GetLogft() 
+        //        << " " << (*it).GetIntegratedYield() << endl;
     }
     outExp << "#Pn = " << totN << " / " << decay.GetNumberDecays() << " = " 
            << totN / decay.GetNumberDecays() << "  RawN = " << rawN << endl;
-    outExp << "Ex(MeV) ExErr(MeV) B(GT) log(FT) Yield" 
-           << endl;
-
+ 
     //---------- HANDLE THE NEUTRON DENSITY STUFF HERE ---------
-    double res = 0.250, res1 = 0.0001, len = 10.; // res and len in Mev
-    // vector<double> sumDen250(int(len/res)+1);
-    // vector<double> sumDen001(int(len/res)+1);
+    double res[] = {0.250, 0.100, 0.001}; //in MeV
+    double len = 10.; // in Mev
 
-    //NeutronDensity den250(neutrons,res,len);
-    NeutronDensity den100(neutrons,res1,len);
+    stringstream outname;
+    map<double,double> fullDensity;
 
-    // vector<double> *density = denCalc.GetDensity();
-    // for(unsigned int i = 0; i < density->size(); i++)
-    //     sumDen250.at(i) += density->at(i);
-    // for(unsigned int i = 0; i < sumDen250.size(); i++)
-    //     cout << i*res << " " << sumDen250[i] << endl;
-    // outExp << (*it).GetMu() << " " << (*it).GetMuErr() << " " 
-    //        << bgt.GetLevelEnergy() << " " << (*it).GetEnergyErr() 
-    //        << " " << bgt.GetBgt() << " " << bgt.GetLogft() 
-    //        << " " << (*it).GetIntegratedYield() << endl;
+    for(int i = 0; i < 3; i++) {
+        NeutronDensity denGs(neutrons,res[i],len);
+        map<double,double> *densityGs = denGs.GetDensity();
+
+        NeutronDensity den2p(neutrons,res[i],len,0.59856); //pass GE in MeV
+        map<double,double> *density2p = den2p.GetDensity();
+        map<double,double> *density2pShift = den2p.GetGshiftedDensity();
+
+        if(res[i] == 0.001) {
+        for(map<double,double>::iterator it = densityGs->begin(); 
+            it != densityGs->end(); it++) {
+            map<double,double>::iterator pos2p = density2p->find((*it).first);
+            map<double,double>::iterator posS2p = 
+                density2pShift->find((*it).first);
+            double val = (*it).second-(*pos2p).second+(*posS2p).second;
+            // if(val < 0)
+            //     val = 0.0;
+            fullDensity.insert(make_pair((*it).first,val));
+        // denGsOut.close();
+        // outname << "results/noConv/077cu-ban5-lower-denGS-" 
+        //         << res[i] << ".dat";
+
+        // ofstream denOut(outname.str().c_str());
+        // outname.str("");
+        } //for(map<double,double>
+        } //if(res[i]
+    }//for(int i = 0; i < 3
     
+    //ofstream outTheory("results/noConv/077cu-ban4-lower-noConv.inp");
     // outTheory << bgt.GetLevelEnergy() << " " << bgt.GetBgt() << endl;
+
+    for(map<double,double>::iterator it = fullDensity.begin();
+        it != fullDensity.end(); it++)
+        cout << (*it).first << " " << (*it).second << endl;
 }

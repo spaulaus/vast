@@ -11,6 +11,18 @@
 
 using namespace std;
 
+BGTCalculator::BGTCalculator(map<double,double> &density, const Decay &decay,
+                             const double &betaEff, const double &omega) {
+    eG_ = 0.0;
+    decay_ = decay;
+    density_ = density;
+    CalcLevelEnergy();
+    CalcBranchingRatio(betaEff, omega);
+    CalcF();
+    CalcBgt();
+    CalcLogft();
+}
+
 BGTCalculator::BGTCalculator(Neutron &neutron, const Decay &decay,
                              const double &betaEff, const double &omega) {
     eG_ = 0.0;
@@ -25,7 +37,15 @@ BGTCalculator::BGTCalculator(Neutron &neutron, const Decay &decay,
 
 void BGTCalculator::CalcBgt(void) {
     double coeff = 3812.413; //D/(ga/gv)**2 in units of s
-    bgt_ = coeff/f_/(decay_.GetHalfLife()/br_);
+    if(density_.empty()) {
+        bgt_ = coeff/f_/(decay_.GetHalfLife()/br_);
+    }else {
+        // for(map<double,double>::iterator it = density_.begin();
+        //     it != density_.end(); it++) {
+
+        // }
+    }
+        
 }
 
 void BGTCalculator::CalcBranchingRatio(const double &betaEff, 

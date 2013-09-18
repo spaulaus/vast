@@ -24,8 +24,9 @@ NeutronDensity::NeutronDensity(vector<Neutron> &neutrons, const double &res,
     gE_(gE), len_(len), res_(res) {
     neutrons_ = neutrons;
     EffCalculator effGe("ge");
-    gEff_ = effGe.GetEff(gE);
+    gEff_ = effGe.GetEff(gE*1000.); //needs gamma energy in keV
     CalcDensity();
+    CalcGshiftedDensity();
 }
 
 void NeutronDensity::CalcDensity(void) {
@@ -38,7 +39,8 @@ void NeutronDensity::CalcDensity(void) {
     for(vector<Neutron>::iterator it = neutrons_.begin(); 
         it != neutrons_.end(); it++) {
         sig.SetAmplitude((*it).GetIntegratedYield());
-        sig.SetSigma((*it).GetBetaEnergyErr());
+        sig.SetSigma((*it).GetSigma()*0.5);
+        //sig.SetSigma((*it).GetBetaEnergyErr());
         sig.SetDelay((*it).GetEnergy());
         sig.GenerateSignal();
         
@@ -52,8 +54,32 @@ void NeutronDensity::CalcDensity(void) {
                 (*en).second += val;
         }
     }
-
-    for(map<double,double>::iterator it = density_.begin(); it != density_.end();
-        it++)
-        cout << (*it).first << " " << (*it).second << endl; 
 }
+
+void NeutronDensity::CalcGshiftedDensity(void) {
+    SignalGenerator sig;
+    EffCalculator eff("vandle");
+    sig.SetSignalType("gaussian");
+    sig.SetSignalResolution(res_);
+    sig.SetSignalLength(len_);
+        
+    for(vector<Neutron>::iterator it = neutrons_.begin(); 
+        it != neutrons_.end(); it++) {
+        sig.SetAmplitude((*it).GetIntegratedYield());
+        sig.SetSigma((*it).GetSigma()*0.5);
+        //sig.SetSigma((*it).GetBetaEnergyErr());
+        sig.SetDelay((*it).GetEnergy()+gE_);
+        sig.GenerateSignal();
+        
+        for(double i = 0; i < len_; i+=res_) {
+            double val = sig.GetSignalValue(i)
+                / eff.GetSimRollingEff(i*1000.) / gEff_;
+            map<double,double>::iterator en = gshiftDensity_.find(i);
+            if(en == gshiftDensity_.end())
+                gshiftDensity_.insert(make_pair(i,val));
+            else
+                (*en).second += val;
+        }
+    }
+}
+

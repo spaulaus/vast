@@ -21,15 +21,14 @@ public:
     ~NeutronDensity(){};
     
     std::map<double,double>* GetDensity(void){return(&density_);};
-
-    unsigned int GetDensitySize(void){return(density_.size());};
-
+    std::map<double,double>* GetGshiftedDensity(void){return(&gshiftDensity_);};
 private:
     double gE_, gEff_, len_, res_;
-    std::map<double,double> density_;
+    std::map<double,double> density_, gshiftDensity_;
     std::vector<Neutron> neutrons_;
     
     void CalcDensity(void);
+    void CalcGshiftedDensity(void);
 };
 
 #endif //__NEUTRONDENSITY_HPP__
