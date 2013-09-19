@@ -29,13 +29,13 @@ int main(int argc, char* argv[]) {
 
     //---------- SET THE NEUTRON INFORMATION HERE ----------
     vector<Neutron> singles;
-    ReadData(singles,"data/077cu-ban4-lower/077cu-ban4-lower-tof-noConv.out");
+    ReadData(singles,"data/077cu-ban4-lower/077cu-ban4-lower-noConv.out");
     OutputBasics(singles, decay,
                  "results/noConv/077cu-ban4-lower-sngl.dat");
     
     vector<Neutron> twoPlus;
     ReadData(twoPlus, 
-             "data/077cu-ban4-lower/077cu-ban4-lower-tof-02Plus-noConv.out");
+             "data/077cu-ban4-lower/077cu-ban4-lower-02Plus-noConv.out");
     OutputBasics(twoPlus, decay,
                  "results/noConv/077cu-ban4-lower-2p.dat");
 
