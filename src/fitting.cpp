@@ -25,14 +25,14 @@ using namespace RooFit;
 void fitting(void);
 
 string dirName = "077cu-ban4-lower/";
-string fileName = "077cu-ban4-lower-tof";
+string fileName = "077cu-ban4-lower";
 
 string dataName="../data/roofit/"+dirName+fileName+".dat";
-//string epsName = "../pics/roofit/"+dirName+fileName+"-noConv.eps";
-//string resultsFile = "results/"+dirName+fileName+"-noConv.fit";
+string epsName = "../pics/roofit/"+dirName+fileName+"-noConv.eps";
+string resultsFile = "results/"+dirName+fileName+"-noConv.fit";
 
-string epsName = "../pics/roofit/working.eps";
-string resultsFile = "results/working.dat";
+//string epsName = "../pics/roofit/working.eps";
+//string resultsFile = "results/working.dat";
 
 int main(int argc, char* argv[]) {
     ifstream test(dataName.c_str());
@@ -55,7 +55,7 @@ void fitting(void) {
     double peaks[]={23.855, 30.1971, 38.128, 44.917, 
                     50.181, 56.835, 65.151, 70.826,
                     79.253, 87.198, 94.690, 104.69, 
-                    112.73, 135.93};
+                    112.73, 122.5, 135.93};
     double wiggle = 100.;
     
     double yStart = 3.e3, yLow = 0., yHigh = 1.e8;
@@ -190,6 +190,16 @@ void fitting(void) {
     RooFormulaVar n13("n13", "nJ/mu13+nK*mu13+nL", RooArgList(nJ,mu13,nK,nL));
     RooCBShape cb13("cb13", "", tof, mu13, sigma13, alpha13, n13);
     
+    //---------- Peak Number 14 ----------
+    RooRealVar yield14("yield14", "", yStart, yLow, yHigh);
+    RooRealVar mu14("mu14","", peaks[14], peaks[14]-wiggle, peaks[14]+wiggle);
+    RooFormulaVar sigma14("sigma14", "sE*pow(mu14,4)+sD*pow(mu14,3)+sC*pow(mu14,2)+sB*mu14+sA", RooArgList(sA,sB,sC,sD,sE,mu14));
+    RooFormulaVar alpha14("alpha14", "aI*pow(mu14,3)+aH*pow(mu14,2)+aG*mu14+aF", RooArgList(aI,aH,aG,aF,mu14));
+    RooFormulaVar n14("n14", "nJ/mu14+nK*mu14+nL", RooArgList(nJ,mu14,nK,nL));
+    RooCBShape cb14("cb14", "", tof, mu14, sigma14, alpha14, n14);
+    
+
+
     //Do the plots
     RooPlot* frame = tof.frame();
     frame = tof.frame(high*binning);
@@ -201,9 +211,10 @@ void fitting(void) {
     frame->GetYaxis()->SetTitleOffset(1.2);
     
     RooArgList cbs(cb00,cb01,cb02,cb03,cb04,cb05,cb06,cb07,cb08);
-    cbs.add(RooArgList(cb09,cb10,cb11,cb12,cb13));
-    RooArgList yields(yield00,yield01,yield02,yield03,yield04,yield05,yield06,yield07,yield08);
-    yields.add(RooArgList(yield09,yield10,yield11,yield12,yield13));
+    cbs.add(RooArgList(cb09,cb10,cb11,cb12,cb13,cb14));
+    RooArgList yields(yield00,yield01,yield02,yield03,yield04,
+                      yield05,yield06,yield07,yield08);
+    yields.add(RooArgList(yield09,yield10,yield11,yield12,yield13,yield14));
     RooAddPdf model("model", "", cbs, yields);
 
     RooDataSet *data = RooDataSet::read(dataName.c_str(), RooArgList(tof));
@@ -232,6 +243,7 @@ void fitting(void) {
     model.plotOn(frame,Components("cb11"),LineColor(31), LineStyle(2));
     model.plotOn(frame,Components("cb12"),LineColor(32), LineStyle(2));
     model.plotOn(frame,Components("cb13"),LineColor(33), LineStyle(2));
+    model.plotOn(frame,Components("cb14"),LineColor(34), LineStyle(2));
     
     TCanvas* c = new TCanvas("c","",0,0,700,500);
     c->cd();
