@@ -39,8 +39,7 @@ void NeutronDensity::CalcDensity(void) {
     for(vector<Neutron>::iterator it = neutrons_.begin(); 
         it != neutrons_.end(); it++) {
         sig.SetAmplitude((*it).GetIntegratedYield());
-        sig.SetSigma((*it).GetSigma()*0.5);
-        //sig.SetSigma((*it).GetBetaEnergyErr());
+        sig.SetSigma((*it).GetDensitySigma());
         sig.SetDelay((*it).GetEnergy());
         sig.GenerateSignal();
         
@@ -66,8 +65,7 @@ void NeutronDensity::CalcGshiftedDensity(void) {
     for(vector<Neutron>::iterator it = neutrons_.begin(); 
         it != neutrons_.end(); it++) {
         sig.SetAmplitude((*it).GetIntegratedYield());
-        sig.SetSigma((*it).GetSigma()*0.5);
-        //sig.SetSigma((*it).GetBetaEnergyErr());
+        sig.SetSigma((*it).GetDensitySigma());
         sig.SetDelay((*it).GetEnergy()+gE_);
         sig.GenerateSignal();
         

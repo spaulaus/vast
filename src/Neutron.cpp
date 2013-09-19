@@ -17,7 +17,7 @@ using namespace std;
 Neutron::Neutron(const double &mu, const double &yld) {
     EffCalculator eff("vandle");
     alph_      = CalcAlpha(mu);
-    betaEnErr_ = 0.0;
+    denSig_    = CalcDensitySigma(mu);
     en_        = CalcEnergy(mu);
     enErr_     = 0.0;
     eff_       = eff.GetSimRollingEff(en_*1000.);
@@ -37,7 +37,7 @@ Neutron::Neutron(const double &mu, const double &muErr,
     alph_      = CalcAlpha(mu);
     en_        = CalcEnergy(mu); 
     enErr_     = CalcEnergyErr(mu,muErr,en_); 
-    betaEnErr_ = CalcEnergyErr(mu,CalcSigma(mu),en_);
+    denSig_    = CalcDensitySigma(mu);
     eff_       = eff.GetSimRollingEff(en_*1000.);
     intYld_    = 0.0;
     intYldErr_ = 0.0;
@@ -53,9 +53,9 @@ Neutron::Neutron(const double &mu, const double &muErr,
            const double &yld, const double &yldErr) {
     EffCalculator eff("vandle");
     alph_      = CalcAlpha(mu);
+    denSig_    = CalcDensitySigma(mu);
     en_        = CalcEnergy(mu); 
     enErr_     = CalcEnergyErr(mu,muErr,en_); 
-    betaEnErr_ = CalcEnergyErr(mu,CalcSigma(mu),en_);
     eff_       = eff.GetSimRollingEff(en_*1000.);
     intYld_    = 0.0;
     intYldErr_ = 0.0;
@@ -73,6 +73,13 @@ double Neutron::CalcAlpha(const double &mu) {
     double aG = 0.0135441451470589 ;
     double aF = -1.18042124700263;
     return(aI*pow(mu,3)+aH*pow(mu,2)+aG*mu+aF);
+}
+
+double Neutron::CalcDensitySigma(const double &mu){
+    double sig  = CalcSigma(mu)*0.25;
+    double low  = CalcEnergy(mu-sig);
+    double high = CalcEnergy(mu+sig);
+    return(low-high);
 }
 
 double Neutron::CalcEnergy(const double &mu) {
