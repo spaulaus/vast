@@ -25,7 +25,7 @@ using namespace RooFit;
 void fitting(void);
 
 string dirName = "077cu-ban4-lower/";
-string fileName = "077cu-ban4-lower-tof";
+string fileName = "077cu-ban4-lower";
 
 string dataName="../data/roofit/"+dirName+fileName+".dat";
 //string epsName = "../pics/roofit/"+dirName+fileName+"-noConv.eps";
@@ -83,6 +83,7 @@ void fitting(void) {
 
     for(int i = 0; i < 14; i++) {
         stringstream nameMu, nameYld, nameSig, nameAlph, nameN, nameCb;
+        stringstream fAlph, fN, fSig;
         if(i < 10) {
             nameMu << "mu0" << i;
             nameYld << "yield0" << i;
@@ -100,78 +101,71 @@ void fitting(void) {
         }                         
         components.push_back(nameCb.str());
 
-        RooRealVar yield(nameYld.str().c_str(), "", yStart, yLow, yHigh);
-        RooRealVar mu(nameMu.str().c_str(),"",peaks[i], 
+        RooRealVar *yield = new RooRealVar(nameYld.str().c_str(), "", yStart, 
+                                     yLow, yHigh);
+        RooRealVar *mu = new RooRealVar(nameMu.str().c_str(),"",peaks[i], 
                       peaks[i]-wiggle, peaks[i]+wiggle);
-        // RooFormulaVar sigma(nameSig.str().c_str(), "sE*pow(mu,4)+sD*pow(mu,3)+sC*pow(mu,2)+sB*mu+sA", RooArgList(sA,sB,sC,sD,sE,mu));
-        // RooFormulaVar alpha(nameAlph.str().c_str(), 
-        //                     "aI*pow(mu,3)+aH*pow(mu,2)+aG*mu+aF", 
-        //                     RooArgList(aI,aH,aG,aF,mu));
-        // RooFormulaVar n(nameN.str().c_str(), "nJ/mu+nK*mu+nL", 
-        //                 RooArgList(nJ,nK,nL,mu));
-        RooConstVar sigma(nameSig.str().c_str(),"", 1.9);
-        RooConstVar alpha(nameAlph.str().c_str(),"", -1.0);
-        RooConstVar n(nameN.str().c_str(),"", 1.1);
-        RooCBShape cb(nameCb.str().c_str(), "", tof, mu, sigma, alpha, n);
         
-        cout << nameMu.str().c_str() << " " << nameYld.str().c_str() << " " 
-             << nameSig.str().c_str() << " " << nameAlph.str().c_str() << " " 
-             << nameN.str().c_str() << " " << nameCb.str().c_str() << endl;
-        cout << "Insertion Status : " << cbs.add(cb) << " " 
-             << ylds.add(yield) << endl;
+        fSig << "sE*pow(" << nameMu.str() << ",4)+sD*pow(" << nameMu.str() 
+             << ",3)+sC*pow(" << nameMu.str() << ",2)+sB*" << nameMu.str()
+             << "+sA";
+        RooFormulaVar *sigma = new RooFormulaVar(nameSig.str().c_str(), fSig.str().c_str(), RooArgList(sA,sB,sC,sD,sE,*mu));
+        
+        fAlph << "aI*pow(" << nameMu.str() << ",3)+aH*pow(" << nameMu.str() 
+              << ",2)+aG*" << nameMu.str() << "+aF";
+        RooFormulaVar *alpha = new RooFormulaVar(nameAlph.str().c_str(), fAlph.str().c_str(), RooArgList(aI,aH,aG,aF,*mu));
+
+        fN << "nJ/" << nameMu.str() << "+nK*" << nameMu.str() << "+nL";
+        RooFormulaVar *n = new RooFormulaVar(nameN.str().c_str(), fN.str().c_str(), 
+                         RooArgList(nJ,nK,nL,*mu));
+
+        RooCBShape *cb = new RooCBShape(nameCb.str().c_str(), "", tof, *mu, 
+                                    *sigma, *alpha, *n);
+        
+        cbs.add(*cb);
+        ylds.add(*yield);
     }
     
     RooAddPdf model("model", "", cbs, ylds);
+    RooDataSet *data = RooDataSet::read(dataName.c_str(), RooArgList(tof));
+    RooFitResult* fitResult = model.fitTo(*data, NumCPU(3), Save(), 
+                                          Range(low, high));
 
-    // RooDataSet *data = RooDataSet::read(dataName.c_str(), RooArgList(tof));
-
-    // RooFitResult* fitResult = model.fitTo(*data, NumCPU(3), Save(), 
-    //                                       Range(low, high));
-
-    // ofstream resultsParam(resultsFile.c_str());
-    // fitResult->printMultiline(resultsParam, 0, true, "");
-    // resultsParam.close();
-
+    ofstream resultsParam(resultsFile.c_str());
+    fitResult->printMultiline(resultsParam, 0, true, "");
+    resultsParam.close();
+    
     //Do the plots
-    // RooPlot* frame = tof.frame();
-    // frame = tof.frame(high*binning);
-    // frame->SetTitle("");
-    // frame->SetAxisRange(0.,500.,"Y");
-    // frame->SetAxisRange(0.,200.,"X");
-    // frame->SetXTitle("Time-of-Flight (2 ns)");
-    // frame->SetYTitle("Events / 2 ns");
-    // frame->GetYaxis()->SetTitleOffset(1.2);
+    RooPlot* frame = tof.frame();
+    frame = tof.frame(high*binning);
+    frame->SetTitle("");
+    frame->SetAxisRange(0.,500.,"Y");
+    frame->SetAxisRange(0.,200.,"X");
+    frame->SetXTitle("Time-of-Flight (2 ns)");
+    frame->SetYTitle("Events / 2 ns");
+    frame->GetYaxis()->SetTitleOffset(1.2);
     
-    // data->plotOn(frame,Name("data"));
-    // model.plotOn(frame,Name("model"));
-
-    // model.plotOn(frame,Components("cb00"),LineColor(40), LineStyle(2));
-    // model.plotOn(frame,Components("cb01"),LineColor(41), LineStyle(2));
-    // model.plotOn(frame,Components("cb02"),LineColor(42), LineStyle(2));
-    // model.plotOn(frame,Components("cb03"),LineColor(43), LineStyle(2));
-    // model.plotOn(frame,Components("cb04"),LineColor(44), LineStyle(2));
-    // model.plotOn(frame,Components("cb05"),LineColor(45), LineStyle(2));
-    // model.plotOn(frame,Components("cb06"),LineColor(46), LineStyle(2));
-    // model.plotOn(frame,Components("cb07"),LineColor(47), LineStyle(2));
-    // model.plotOn(frame,Components("cb08"),LineColor(48), LineStyle(2));
-    // model.plotOn(frame,Components("cb09"),LineColor(49), LineStyle(2));
-    // model.plotOn(frame,Components("cb10"),LineColor(30), LineStyle(2));
-    // model.plotOn(frame,Components("cb11"),LineColor(31), LineStyle(2));
-    // model.plotOn(frame,Components("cb12"),LineColor(32), LineStyle(2));
-    // model.plotOn(frame,Components("cb13"),LineColor(33), LineStyle(2));
+    data->plotOn(frame,Name("data"));
+    model.plotOn(frame,Name("model"));
     
-    // TCanvas* c = new TCanvas("c","",0,0,700,500);
-    // c->cd();
-    // frame->Draw();
-    // c->SaveAs(epsName.c_str());
+    int lineColor = 36;
+    for(unsigned int i = 0; i < components.size(); i++, lineColor++) {
+        model.plotOn(frame,Components(components.at(i).c_str()),
+                     LineColor(lineColor), LineStyle(2));
+    }
+   
+    TCanvas* c = new TCanvas("c","",0,0,700,500);
+    c->cd();
+    frame->Draw();
+    c->SaveAs(epsName.c_str());
 
-    // if(fitResult->statusCodeHistory(0) != 0)
-    //     cout << endl << endl << "Oh, Jesus, the fit did not converge." << endl;
-    // else
-    //     cout << endl << endl << "The fit converged successfully." << endl;
+    if(fitResult->statusCodeHistory(0) != 0)
+        cout << endl << endl << "Oh, Jesus, the fit did not converge." << endl;
+    else
+        cout << endl << endl << "The fit converged successfully." << endl;
 
-    // if(fitResult->statusCodeHistory(1) != 0)
-    //     cout << "Hesse FAILED to calculate things properly." << endl << endl;
-    // else
-    //     cout << "HESSE successfully calculated things." << endl << endl;
+    if(fitResult->statusCodeHistory(1) != 0)
+        cout << "Hesse FAILED to calculate things properly." << endl << endl;
+    else
+        cout << "HESSE successfully calculated things." << endl << endl;
 }
