@@ -29,51 +29,51 @@ int main(int argc, char* argv[]) {
 
     //---------- SET THE NEUTRON INFORMATION HERE ----------
     vector<Neutron> singles;
-    ReadData(singles,"data/077cu-ban4-lower/077cu-ban4-lower-noConv.out");
+    ReadData(singles,"data/077cu-ban4-lower/077cu-ban4-lower-8keVee-b.fit");
     OutputBasics(singles, decay,
-                 "results/noConv/077cu-ban4-lower-sngl.dat");
+                 "results/noConv/077cu-ban4-lower-8keVee-b.dat");
     
-    vector<Neutron> twoPlus;
-    ReadData(twoPlus, 
-             "data/077cu-ban4-lower/077cu-ban4-lower-02Plus-noConv.out");
-    OutputBasics(twoPlus, decay,
-                 "results/noConv/077cu-ban4-lower-2p.dat");
+    // vector<Neutron> twoPlus;
+    // ReadData(twoPlus, 
+    //          "data/077cu-ban4-lower/077cu-ban4-lower-02Plus-noConv.out");
+    // OutputBasics(twoPlus, decay,
+    //              "results/noConv/077cu-ban4-lower-2p.dat");
 
     //---------- HANDLE THE NEUTRON DENSITY STUFF HERE ---------
-    double res[] = {0.250, 0.100, 0.001}; //in MeV
-    double len = 10.; // in Mev
+    // double res[] = {0.250, 0.100, 0.001}; //in MeV
+    // double len = 10.; // in Mev
     
-    stringstream outname;
-    map<double,double> fullDensity;
-    for(int i = 0; i < 3; i++) {
-        outname << "results/noConv/077cu-ban4-lower-nDensity-" 
-                << res[i] << ".dat";
-        ofstream denOut(outname.str().c_str());
-        denOut << "#Energy(MeV) Sngl 2Plus Shft2Plus Full" << endl;
-        NeutronDensity denGs(singles,res[i],len);
-        map<double,double> *densityGs = denGs.GetDensity();
+    // stringstream outname;
+    // map<double,double> fullDensity;
+    // for(int i = 0; i < 3; i++) {
+    //     outname << "results/noConv/077cu-ban4-lower-nDensity-" 
+    //             << res[i] << ".dat";
+    //     ofstream denOut(outname.str().c_str());
+    //     denOut << "#Energy(MeV) Sngl 2Plus Shft2Plus Full" << endl;
+    //     NeutronDensity denGs(singles,res[i],len);
+    //     map<double,double> *densityGs = denGs.GetDensity();
         
-        NeutronDensity den2p(twoPlus,res[i],len,0.59856); //pass GE in MeV
-        map<double,double> *density2p = den2p.GetDensity();
-        map<double,double> *density2pShift = den2p.GetGshiftedDensity();
+    //     NeutronDensity den2p(twoPlus,res[i],len,0.59856); //pass GE in MeV
+    //     map<double,double> *density2p = den2p.GetDensity();
+    //     map<double,double> *density2pShift = den2p.GetGshiftedDensity();
         
-        for(map<double,double>::iterator it = densityGs->begin(); 
-            it != densityGs->end(); it++) {
-            map<double,double>::iterator pos2p = 
-                density2p->find((*it).first);
-            map<double,double>::iterator posS2p = 
-                density2pShift->find((*it).first);
+    //     for(map<double,double>::iterator it = densityGs->begin(); 
+    //         it != densityGs->end(); it++) {
+    //         map<double,double>::iterator pos2p = 
+    //             density2p->find((*it).first);
+    //         map<double,double>::iterator posS2p = 
+    //             density2pShift->find((*it).first);
             
-            double val = (*it).second-(*pos2p).second+(*posS2p).second;
-            fullDensity.insert(make_pair((*it).first,val));
-            denOut << (*it).first << " " << (*it).second << " " 
-                   << (*pos2p).second << " " 
-                   << (*posS2p).second << " " 
-                   << val << endl;
-        } //for(map<double,double>
-        outname.str("");
-        denOut.close();
-    }//for(int i = 0; i < 3
+    //         double val = (*it).second-(*pos2p).second+(*posS2p).second;
+    //         fullDensity.insert(make_pair((*it).first,val));
+    //         denOut << (*it).first << " " << (*it).second << " " 
+    //                << (*pos2p).second << " " 
+    //                << (*posS2p).second << " " 
+    //                << val << endl;
+    //     } //for(map<double,double>
+    //     outname.str("");
+    //     denOut.close();
+    // }//for(int i = 0; i < 3
 
     //ofstream outTheory("results/noConv/077cu-ban4-lower-noConv.inp");
     // outTheory << bgt.GetLevelEnergy() << " " << bgt.GetBgt() << endl;
@@ -85,7 +85,8 @@ void ReadData(vector<Neutron> &nvec, const string &file) {
         while(data.good()) {
             if(isdigit(data.peek())) {
                 double junk, temp0, temp1, temp2, temp3;
-                data >> junk >> temp0 >> temp1 >> temp2 >> temp3 >> junk;
+                data >> junk >> temp0 >> temp1 >> temp2 >> temp3 >> junk 
+                     >> junk >> junk;
                 nvec.push_back(Neutron(temp0,temp1,temp2,temp3));
             }else {
                 data.ignore(1000,'\n');
@@ -119,7 +120,7 @@ void OutputBasics(vector<Neutron> &nvec, Decay &dky,
         totN += (*it).GetIntegratedYield() / betaEff / omega;
         rawN += (*it).GetRawYield();
         
-        out << (*it).GetMu() << " " << (*it).GetMuErr() << " "
+        out << setprecision(12) << (*it).GetMu() << " " << (*it).GetMuErr() << " "
             << (*it).GetEnergy() << " " << (*it).GetEnergyErr() << " " 
             << " " << (*it).GetYield() 
             << " " << (*it).GetIntegratedYield() << endl;

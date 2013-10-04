@@ -22,6 +22,8 @@ Integrator::Integrator(Neutron &neutron, const double &fitLow,
 
     double fSimp = AdaptiveSimpsons(fitLow, fitHigh, 1.e-10, 30);
     double uSimp = AdaptiveSimpsons(fitHigh, 1.e8, 1.e-20, 30);
+    
+    cout << fSimp << " " << uSimp << " " << endl;
     neutron.SetIntegratedYield((yield_/fSimp)*uSimp + yield_);
     neutron.SetIntegratedYieldErr(CalcError(fSimp,uSimp));
 }
