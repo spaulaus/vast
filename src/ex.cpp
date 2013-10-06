@@ -15,6 +15,7 @@
 #include "Integrator.hpp"
 #include "Neutron.hpp"
 #include "NeutronDensity.hpp"
+#include "TofFitter.hpp"
 
 using namespace std;
 
@@ -23,15 +24,28 @@ void OutputBasics(vector<Neutron> &nvec, Decay &dky,
                   const string &file);
 
 int main(int argc, char* argv[]) {
+   //Set the information for the peaks
+    //Do not need two peaks at 50 ns.
+    // vector<double> peaks ={20., 30., 31, 35, 42.,
+    //                        50.181, 70.151};
+
+    //Reproduces Miguel's fit pretty much exactly
+    vector<double> peaks ={20., 30., 31, 35, 42.,
+                           50.181, 55, 70.151};
+
+
+    TofFitter fitter(peaks, "084ga-mmf/", "084ga-tof-sGated", true);
+
+
     //---------- SET THE DECAY INFORMATION HERE ---------
-    Decay decay(29,10.490,4.558,0.4679); //ParentZ, Q(MeV), Sn(MeV), T1/2(s)
-    decay.SetGammaInfo(350311,0.0655391,0.191); //RawNumGammas, eff_gamma, absBr
+    //Decay decay(29,10.490,4.558,0.4679); //ParentZ, Q(MeV), Sn(MeV), T1/2(s)
+    //decay.SetGammaInfo(350311,0.0655391,0.191); //RawNumGammas, eff_gamma, absBr
 
     //---------- SET THE NEUTRON INFORMATION HERE ----------
-    vector<Neutron> singles;
-    ReadData(singles,"data/077cu-ban4-lower/077cu-ban4-lower-8keVee-b.fit");
-    OutputBasics(singles, decay,
-                 "results/noConv/077cu-ban4-lower-8keVee-b.dat");
+    //vector<Neutron> singles;
+    //ReadData(singles,"data/077cu-ban4-lower/077cu-ban4-lower-8keVee-b.fit");
+    //OutputBasics(singles, decay,
+    //             "results/noConv/077cu-ban4-lower-8keVee-b.dat");
     
     // vector<Neutron> twoPlus;
     // ReadData(twoPlus, 

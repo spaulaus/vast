@@ -24,13 +24,20 @@ EXO = ex.o
 INTEGRATORO = Integrator.o
 NEUTRONO = Neutron.o
 NEUTRONDENSITYO = NeutronDensity.o
+TOFFITTERO = TofFitter.o
 
 #Make the object list and prefix the object directory
 OBJS =  $(BGTCALCULATORO) $(DECAYO) 
 OBJS += $(EFFCALCULATORO) $(EXO) $(INTEGRATORO) $(NEUTRONO)
-OBJS += $(NEUTRONDENSITYO)
+OBJS += $(NEUTRONDENSITYO) $(TOFFITTERO)
 OBJDIR = obj
 OBJS_W_DIR = $(addprefix $(OBJDIR)/,$(OBJS))
+
+#Add the ROOT config stuff to the compilation
+ROOTCONFIG   := root-config
+CXXFLAGS     += $(shell $(ROOTCONFIG) --cflags)
+LDFLAGS      += $(shell $(ROOTCONFIG) --ldflags)
+LDLIBS       += $(shell $(ROOTCONFIG) --libs) -lRooFit -lRooFitCore
 
 .SUFFIXES: .$(c++SrcSuf)
 
