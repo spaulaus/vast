@@ -33,19 +33,19 @@ int main(int argc, char* argv[]) {
     vector<double> peaks ={20., 30., 31, 35, 42.,
                            50.181, 55, 70.151};
 
-
-    TofFitter fitter(peaks, "084ga-mmf/", "084ga-tof-sGated", true);
-
+    // TofFitter fitter(peaks, "084ga-mmf", "084ga-tof-sGated", 
+    //                  "-8keVee-b", false);
+    //vector<Neutron> singles = fitter.GetFitResults();
 
     //---------- SET THE DECAY INFORMATION HERE ---------
-    //Decay decay(29,10.490,4.558,0.4679); //ParentZ, Q(MeV), Sn(MeV), T1/2(s)
-    //decay.SetGammaInfo(350311,0.0655391,0.191); //RawNumGammas, eff_gamma, absBr
+    Decay decay(29,10.490,4.558,0.4679); //ParentZ, Q(MeV), Sn(MeV), T1/2(s)
+    decay.SetGammaInfo(350311,0.0655391,0.191); //RawNumGammas, eff_gamma, absBr
 
     //---------- SET THE NEUTRON INFORMATION HERE ----------
-    //vector<Neutron> singles;
-    //ReadData(singles,"data/077cu-ban4-lower/077cu-ban4-lower-8keVee-b.fit");
-    //OutputBasics(singles, decay,
-    //             "results/noConv/077cu-ban4-lower-8keVee-b.dat");
+    vector<Neutron> singles;
+    ReadData(singles,"data/084ga-mmf/084ga-tof-sGated-8keVee-b.fit");
+    OutputBasics(singles, decay,
+                 "results/084ga-mmf/084ga-tof-sGated-8keVee-b.dat");
     
     // vector<Neutron> twoPlus;
     // ReadData(twoPlus, 
@@ -98,10 +98,13 @@ void ReadData(vector<Neutron> &nvec, const string &file) {
     if(data.is_open()) {
         while(data.good()) {
             if(isdigit(data.peek())) {
-                double junk, temp0, temp1, temp2, temp3;
-                data >> junk >> temp0 >> temp1 >> temp2 >> temp3 >> junk 
-                     >> junk >> junk;
+                double junk, temp0, temp1, temp2, temp3, a, s, n;
+                data >> junk >> temp0 >> temp1 >> temp2 >> temp3 >> s
+                     >> a >> n;
                 nvec.push_back(Neutron(temp0,temp1,temp2,temp3));
+                nvec.back().SetSigma(s);
+                nvec.back().SetAlpha(a);
+                nvec.back().SetN(n);
             }else {
                 data.ignore(1000,'\n');
             }
@@ -117,29 +120,38 @@ void ReadData(vector<Neutron> &nvec, const string &file) {
 
 void OutputBasics(vector<Neutron> &nvec, Decay &dky, 
                   const string &file) {
-    double numBars = 9;
+    double numBars = 10;
     double omega = numBars*0.0061; // solid angle from Sergey's simulation
     //double omega = numBars*4.727e-3; // the calculation for the solid angle
-    double betaEff = 0.22;
+    double betaEff = 0.13;
     
     ofstream out(file.c_str());
-    double totN  = 0., rawN = 0.;
-    out << "#Mu(ns) MuErr(ns) E(MeV) EErr(MeV) Yld IntYld" 
+    if(out.fail()) {
+        cout << endl << endl 
+             << "Woah! Could not open up the output file. Check this  " 
+             << file << endl << endl;
+        exit(1);
+    }
+            
+    double totN  = 0., rawN = 0., intN = 0;
+    out << "#Mu(ns) MuErr(ns) E(MeV) EErr(MeV) RawYld EffYld IntYld" 
             << endl;
     for(vector<Neutron>::iterator it = nvec.begin(); 
         it != nvec.end(); it++) {
         //---------- INTEGRATE THE NEUTRON PEAKS HERE ----------
         Integrator integrator(*it, 0, 200.);
         //---------- CALCULATE THE TOTAL NUMBER OF NEUTRONS --------
+        intN += (*it).GetIntegratedYield();
         totN += (*it).GetIntegratedYield() / betaEff / omega;
         rawN += (*it).GetRawYield();
         
         out << setprecision(12) << (*it).GetMu() << " " << (*it).GetMuErr() << " "
             << (*it).GetEnergy() << " " << (*it).GetEnergyErr() << " " 
-            << " " << (*it).GetYield() 
+            << " " << (*it).GetRawYield() << " " << (*it).GetYield() 
             << " " << (*it).GetIntegratedYield() << endl;
     }
-    out << "#Pn = " << totN << " / " << dky.GetNumberDecays() << " = " 
-            << totN / dky.GetNumberDecays() << "  RawN = " << rawN << endl;
+    out << "#Pn = " << totN << " / " << 662674.58 << " = " 
+        << totN / 662674.58 << "  RawN = " << rawN 
+        << " " << "  IntN = " << intN << endl;
     out.close();
 }

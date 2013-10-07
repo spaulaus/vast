@@ -1,19 +1,14 @@
-/** \file ToFFitter.hpp
- *
- *  A class to handle fitting the ToF spectra from VANDLE data
- *
- *  \author S. V. Paulauskas
- *  \date 24 June 2013
- *
+/** \file TofFitter.hpp
+ * \brief A class to store information about the fitted peaks
+ * \author S. V. Paulauskas
+ * \date 06 October 2013
  */
 #ifndef __TOFFITTER_HPP__
 #define __TOFFITTER_HPP__
 
-#include <vector>
 #include <map>
 #include <string>
-
-#include "RooRealVar.h"
+#include <vector>
 
 #include <Neutron.hpp>
 
@@ -25,18 +20,24 @@ public:
               const std::string &file, const std::string &mod, 
               const bool &isTest);
     ~TofFitter(){};
+
+    std::vector<Neutron> GetFitResults(void){return(neutrons_);};
 private:
     bool hasConvergence_, hasHesseCalc_;
-
+    double binning_, wiggle_;
+    static constexpr double yStart_=3.e3, yLow_ = 0.0, yHigh_ = 1.e8;
+    std::map<std::string,std::pair<double,double> > fit_;
+    std::string dataFile_, dir_, eps_, mod_, output_;
     std::vector<double> peaks_;
-
-    double low_, high_, wiggle_, detRes_;
-    int numPeaks_;
-    std::string eps_, output_, dataFile_;
+    std::vector<Neutron> neutrons_;
+    std::vector<std::string> components_, yields_, mus_, 
+        alphas_, sigmas_, ns_;
 
     void CheckFileExistance(void);
+    void GenerateNames(void);
     void PerformFit(void);
     void PerformMcStudy(void);
+    void StartRollin(void);
 
     double CalcAlpha(const double &tof);
     double CalcN(const double &tof);

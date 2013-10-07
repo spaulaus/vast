@@ -33,21 +33,21 @@ public:
     double GetYield(void){return(yld_/eff_);};
     double GetYieldErr(void){return(yldErr_/eff_);};
     
+    void SetAlpha(const double &a){alph_ = a;};
     void SetBranchingRatio(const double &a){br_ = a;};
     void SetIntegratedYield(const double &a){intYld_ = a;};
     void SetIntegratedYieldErr(const double &a){intYldErr_ = a;};
+    void SetN(const double &a){n_ = a;};
+    void SetSigma(const double &a){sig_ = a; CalcDensitySigma();};
 private:
     double mu_, muErr_, en_, enErr_;
     double yld_, yldErr_, intYld_, intYldErr_;
     double alph_, br_, denSig_, eff_, gammaE_, n_, sig_;
 
-    double CalcAlpha(const double &mu);
-    double CalcDensitySigma(const double &mu);
     double CalcEfficiency(const double &mu);
     double CalcEnergy(const double &mu);
     double CalcEnergyErr(const double &mu, const double &muErr,
                          const double &en);
-    double CalcN(const double &mu);
-    double CalcSigma(const double &mu);
+    void CalcDensitySigma(void);
 };
 #endif //__NEUTRON_HPP__
