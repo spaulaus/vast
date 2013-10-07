@@ -32,9 +32,14 @@ int main(int argc, char* argv[]) {
     //Reproduces Miguel's fit pretty much exactly
     vector<double> peaks ={20., 30., 31, 35, 42.,
                            50.181, 55, 70.151};
+    //The Exact peaks from Miguel's fit
+    // vector<double> peaks ={18.39, 22.77, 26.67, 33.81, 39.22, 
+    //                        45.63, 51.24, 56.38, 70.44, 82.98};
     
     TofFitter fitter(peaks, "084ga-mmf", "084ga-tof-sGated", 
                      "-8keVee-b", false);
+    // TofFitter fitter(peaks, "084ga-mmf", "084ga-testing-tof", 
+    //                  "-8keVee-b", false);
     //vector<Neutron> singles = fitter.GetFitResults();
 
     //---------- SET THE DECAY INFORMATION HERE ---------
@@ -43,6 +48,9 @@ int main(int argc, char* argv[]) {
 
     //---------- SET THE NEUTRON INFORMATION HERE ----------
     vector<Neutron> singles;
+    // ReadData(singles,"data/084ga-mmf/084ga-testing-tof-8keVee-b.fit");
+    // OutputBasics(singles, decay,
+    //              "results/084ga-mmf/084ga-testing-tof-8keVee-b.dat");
     ReadData(singles,"data/084ga-mmf/084ga-tof-sGated-8keVee-b.fit");
     OutputBasics(singles, decay,
                  "results/084ga-mmf/084ga-tof-sGated-8keVee-b.dat");
@@ -120,7 +128,7 @@ void ReadData(vector<Neutron> &nvec, const string &file) {
 
 void OutputBasics(vector<Neutron> &nvec, Decay &dky, 
                   const string &file) {
-    double numBars = 10;
+    double numBars = 9;
     double omega = numBars*0.0061; // solid angle from Sergey's simulation
     //double omega = numBars*4.727e-3; // the calculation for the solid angle
     double betaEff = 0.13;
