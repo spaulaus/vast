@@ -22,13 +22,15 @@ public:
     double GetEfficiency(void){return(eff_);};
     double GetEnergy(void){return(en_);};
     double GetEnergyErr(void){return(enErr_);};
-    double GetIntegratedYield(void){return(intYld_);};
-    double GetIntegratedYieldErr(void){return(intYldErr_);};
+    double GetIntegratedYield(void){return(intYld_/eff_);};
+    double GetIntegratedYieldErr(void){return(intYldErr_/eff_);};
     double GetMu(void){return(mu_);};
     double GetMuErr(void){return(muErr_);};
     double GetN(void){return(n_);};
     double GetRawYield(void){return(yld_);};
     double GetRawYieldErr(void){return(yldErr_);};
+    double GetRawIntegratedYield(void){return(intYld_);};
+    double GetRawIntegratedYieldErr(void){return(intYldErr_);};
     double GetSigma(void){return(sig_);};
     double GetYield(void){return(yld_/eff_);};
     double GetYieldErr(void){return(yldErr_/eff_);};

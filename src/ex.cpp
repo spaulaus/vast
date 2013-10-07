@@ -32,9 +32,9 @@ int main(int argc, char* argv[]) {
     //Reproduces Miguel's fit pretty much exactly
     vector<double> peaks ={20., 30., 31, 35, 42.,
                            50.181, 55, 70.151};
-
-    // TofFitter fitter(peaks, "084ga-mmf", "084ga-tof-sGated", 
-    //                  "-8keVee-b", false);
+    
+    TofFitter fitter(peaks, "084ga-mmf", "084ga-tof-sGated", 
+                     "-8keVee-b", false);
     //vector<Neutron> singles = fitter.GetFitResults();
 
     //---------- SET THE DECAY INFORMATION HERE ---------
@@ -134,24 +134,25 @@ void OutputBasics(vector<Neutron> &nvec, Decay &dky,
     }
             
     double totN  = 0., rawN = 0., intN = 0;
-    out << "#Mu(ns) MuErr(ns) E(MeV) EErr(MeV) RawYld EffYld IntYld" 
+    out << "#Mu(ns) MuErr(ns) E(MeV) EErr(MeV) RawYld RawIntYld EffYld EffIntYld" 
             << endl;
     for(vector<Neutron>::iterator it = nvec.begin(); 
         it != nvec.end(); it++) {
         //---------- INTEGRATE THE NEUTRON PEAKS HERE ----------
         Integrator integrator(*it, 0, 200.);
         //---------- CALCULATE THE TOTAL NUMBER OF NEUTRONS --------
-        intN += (*it).GetIntegratedYield();
+        intN += (*it).GetRawIntegratedYield();
         totN += (*it).GetIntegratedYield() / betaEff / omega;
         rawN += (*it).GetRawYield();
         
         out << setprecision(12) << (*it).GetMu() << " " << (*it).GetMuErr() << " "
             << (*it).GetEnergy() << " " << (*it).GetEnergyErr() << " " 
-            << " " << (*it).GetRawYield() << " " << (*it).GetYield() 
+            << " " << (*it).GetRawYield() << " " << (*it).GetRawIntegratedYield() 
+            << " " << (*it).GetYield() 
             << " " << (*it).GetIntegratedYield() << endl;
     }
     out << "#Pn = " << totN << " / " << 662674.58 << " = " 
         << totN / 662674.58 << "  RawN = " << rawN 
-        << " " << "  IntN = " << intN << endl;
+        << " " << "  RawIntN = " << intN << endl;
     out.close();
 }

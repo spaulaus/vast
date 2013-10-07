@@ -3,6 +3,8 @@
  *  \author S. V. Paulauskas
  *  \date 05 September 2013
  */
+#include<iostream> 
+
 #include <cmath>
 
 #include "EffCalculator.hpp"
