@@ -7,12 +7,13 @@
 #define __INTEGRATOR_HPP__
 
 #include <vector>
+#include <utility>
 
 #include "Neutron.hpp"
 
 class Integrator{
 public:
-    Integrator(Neutron &neutron, const double &fitLow, const double &fitHigh);
+    Integrator(Neutron &neutron, const std::pair<double,double> &range);
     ~Integrator(){};
 
     double GetValue(const double &t) {return(CrystalBall(t));};

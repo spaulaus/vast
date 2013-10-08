@@ -9,6 +9,7 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include <utility>
 
 #include "BGTCalculator.hpp"
 #include "Decay.hpp"
@@ -21,9 +22,10 @@ using namespace std;
 
 void ReadData(vector<Neutron> &nvec, const string &file);
 void OutputBasics(vector<Neutron> &nvec, Decay &dky, 
-                  const string &file);
+                  const string &file, const pair<double,double> &rng);
 
 int main(int argc, char* argv[]) {
+    pair<double,double> fitRange = make_pair(0.,200.0);
    //Set the information for the peaks
     //Do not need two peaks at 50 ns.
     // vector<double> peaks ={20., 30., 31, 35, 42.,
@@ -37,9 +39,9 @@ int main(int argc, char* argv[]) {
     //                        45.63, 51.24, 56.38, 70.44, 82.98};
     
     TofFitter fitter(peaks, "084ga-mmf", "084ga-tof-sGated", 
-                     "-8keVee-b", false);
+                     "-8keVee-b", fitRange, false);
     // TofFitter fitter(peaks, "084ga-mmf", "084ga-testing-tof", 
-    //                  "-8keVee-b", false);
+    //                  "-8keVee-b", fitRange, false);
     //vector<Neutron> singles = fitter.GetFitResults();
 
     //---------- SET THE DECAY INFORMATION HERE ---------
@@ -53,7 +55,7 @@ int main(int argc, char* argv[]) {
     //              "results/084ga-mmf/084ga-testing-tof-8keVee-b.dat");
     ReadData(singles,"data/084ga-mmf/084ga-tof-sGated-8keVee-b.fit");
     OutputBasics(singles, decay,
-                 "results/084ga-mmf/084ga-tof-sGated-8keVee-b.dat");
+                 "results/084ga-mmf/084ga-tof-sGated-8keVee-b.dat", fitRange);
     
     // vector<Neutron> twoPlus;
     // ReadData(twoPlus, 
@@ -127,7 +129,7 @@ void ReadData(vector<Neutron> &nvec, const string &file) {
 }
 
 void OutputBasics(vector<Neutron> &nvec, Decay &dky, 
-                  const string &file) {
+                  const string &file, const pair<double,double> &rng) {
     double numBars = 9;
     double omega = numBars*0.0061; // solid angle from Sergey's simulation
     //double omega = numBars*4.727e-3; // the calculation for the solid angle
@@ -147,7 +149,7 @@ void OutputBasics(vector<Neutron> &nvec, Decay &dky,
     for(vector<Neutron>::iterator it = nvec.begin(); 
         it != nvec.end(); it++) {
         //---------- INTEGRATE THE NEUTRON PEAKS HERE ----------
-        Integrator integrator(*it, 10., 100.);
+        Integrator integrator(*it, rng);
         //---------- CALCULATE THE TOTAL NUMBER OF NEUTRONS --------
         intN += (*it).GetRawIntegratedYield();
         totN += (*it).GetIntegratedYield() / betaEff / omega;

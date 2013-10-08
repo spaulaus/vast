@@ -11,8 +11,7 @@
 
 using namespace std;
 
-Integrator::Integrator(Neutron &neutron, const double &fitLow, 
-                       const double &fitHigh) {
+Integrator::Integrator(Neutron &neutron, const pair<double,double> &range) {
     alpha_ = neutron.GetAlpha();
     mu_    = neutron.GetMu();
     n_     = neutron.GetN();
@@ -20,8 +19,8 @@ Integrator::Integrator(Neutron &neutron, const double &fitLow,
     yield_ = neutron.GetRawYield();
     yldErr_ = neutron.GetRawYieldErr();
 
-    double fSimp = AdaptiveSimpsons(fitLow, fitHigh, 1.e-20, 30);
-    double uSimp = AdaptiveSimpsons(fitHigh, 1.e8, 1.e-20, 30);
+    double fSimp = AdaptiveSimpsons(range.first, range.second, 1.e-20, 30);
+    double uSimp = AdaptiveSimpsons(range.second, 1.e8, 1.e-20, 30);
     
     neutron.SetIntegratedYield((yield_/fSimp)*uSimp + yield_);
     neutron.SetIntegratedYieldErr(CalcError(fSimp,uSimp));

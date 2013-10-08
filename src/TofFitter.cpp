@@ -29,8 +29,10 @@ using namespace std;
 using namespace RooFit;
 
 TofFitter::TofFitter(const vector<double> &peaks, const string &dir, 
-                     const string &file, const bool &isTest = false)  {
+                     const string &file, const pair<double,double> &range,
+                     const bool &isTest = false)  {
     peaks_ = peaks;
+    rng_ = range;
     dataFile_ ="../data/tof/"+dir+"/"+file+".dat";
     if(isTest) {
         dir_ = "working/";
@@ -46,8 +48,10 @@ TofFitter::TofFitter(const vector<double> &peaks, const string &dir,
 
 TofFitter::TofFitter(const vector<double> &peaks, const string &dir, 
                      const string &file, const string &mod, 
+                     const pair<double,double> &range,
                      const bool &isTest = false)  {
     peaks_ = peaks;
+    rng_ = range;
     dataFile_ ="../data/tof/"+dir+"/"+file+".dat";
     if(isTest) {
         dir_ = "working/";
@@ -124,10 +128,10 @@ void TofFitter::GenerateNames(void) {
 
 void TofFitter::PerformFit(void) {
      //Read in the data and set the variable to fit.
-    RooRealVar tof("tof","tof", 0.0, 0.0, 200.);
+    RooRealVar tof("tof","tof", 0.0, rng_.first, rng_.second);
 
     double binning = 0.5;
-    double wiggle = 200.;
+    double wiggle = 200.0;
     double yStart = 3.e3, yLow = 0., yHigh = 1.e8;
     
     //Parameterization Parameters for Sigma 
@@ -181,7 +185,7 @@ void TofFitter::PerformFit(void) {
     RooAddPdf model("model", "", cbs, ylds);
     RooDataSet *data = RooDataSet::read(dataFile_.c_str(), RooArgList(tof));
     RooFitResult* fitResult = model.fitTo(*data, NumCPU(3), Save(), 
-                                          Range(0., 200.));
+                                          Range(rng_.first, rng_.second));
     
     RooArgList finals = fitResult->floatParsFinal();
     for(unsigned int i = 0; i < yields_.size()*2; i++) {
@@ -244,7 +248,7 @@ void TofFitter::PerformFit(void) {
 }
 
 void TofFitter::PerformMcStudy(void) {
-    RooRealVar tof("tof","tof", 0.0, 0., 200.);
+    RooRealVar tof("tof","tof", 0.0, rng_.first, rng_.second);
 
     //Parameterization Parameters for Sigma 
     RooConstVar sM("sM","", -0.000121210451962825);
@@ -295,7 +299,7 @@ void TofFitter::PerformMcStudy(void) {
     RooAddPdf model1("model1", "", newcb, newyld);
     
     RooMCStudy mcstudy(model1,tof,Binned(kTRUE),Silence(), Extended(), 
-                       FitOptions(Save(kTRUE),Range(0.,200.),
+                       FitOptions(Save(kTRUE),Range(rng_.first,rng_.second),
                                   PrintEvalErrors(0)));
     mcstudy.generateAndFit(200);
     for(unsigned int i = 0; i < yields_.size(); i++) {
