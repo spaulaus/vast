@@ -33,15 +33,15 @@ TofFitter::TofFitter(const vector<double> &peaks, const string &dir,
                      const bool &isTest = false)  {
     peaks_ = peaks;
     rng_ = range;
-    dataFile_ ="../data/tof/"+dir+"/"+file+".dat";
+    dataFile_ ="data/"+dir+"/"+file+".dat";
     if(isTest) {
         dir_ = "working/";
-        eps_ = "../pics/tof/working/working.eps";
-        output_ = "../results/tof/working/working.fit";
+        eps_ = "pics/tof/working/working.eps";
+        output_ = "results/tof/working/working.fit";
     }else {
         dir_ = dir;
-        eps_ = "../pics/tof/"+dir+file+".eps";
-        output_ = "../results/tof/"+dir+file+".fit";
+        eps_ = "pics/tof/"+dir+file+".eps";
+        output_ = "results/tof/"+dir+file+".fit";
     }
     StartRollin();
 }
@@ -52,16 +52,16 @@ TofFitter::TofFitter(const vector<double> &peaks, const string &dir,
                      const bool &isTest = false)  {
     peaks_ = peaks;
     rng_ = range;
-    dataFile_ ="../data/tof/"+dir+"/"+file+".dat";
+    dataFile_ ="data/"+dir+"/"+file+".dat";
     if(isTest) {
         dir_ = "working/";
-        eps_ = "../pics/tof/working/working.eps";
-        output_ = "../results/tof/working/working.fit";
+        eps_ = "pics/tof/working/working.eps";
+        output_ = "results/tof/working/working.fit";
     }else {
         dir_ = dir;
         mod_ = mod;
-        eps_ = "../pics/tof/"+dir+"/"+file+mod+".eps";
-        output_ = "../results/tof/"+dir+"/"+file+mod+".fit";
+        eps_ = "pics/tof/"+dir+"/"+file+mod+".eps";
+        output_ = "results/tof/"+dir+"/"+file+mod+".fit";
     }
     StartRollin();
 }
@@ -349,7 +349,7 @@ void TofFitter::PerformMcStudy(void) {
         cc->cd(4); frame4->GetYaxis()->SetTitleOffset(1.4); frame4->Draw();
         
         stringstream name;
-        name << "../pics/tof/"+dir_+"/mcStudy" << mod_ << "/" 
+        name << "pics/tof/"+dir_+"/mcStudy" << mod_ << "/" 
              << yields_.at(i) <<".jpg";
         cc->SaveAs(name.str().c_str());
     }

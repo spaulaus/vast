@@ -44,17 +44,17 @@ int main(int argc, char* argv[]) {
     vector<Neutron> singles;
     ReadData(singles,"data/working/working.fit");
     OutputBasics(singles, decay,
-                 "results/working/working.dat", fitRange);
+                 "results/vast/working/working.dat", fitRange);
     //ReadData(singles,"data/077cu-ban4-lower/077cu-ban4-lower-8keVee-b.fit");
     // OutputBasics(singles, decay,
-    //              "results/077cu-ban4-lower/077cu-ban4-lower-8keVee-b.dat", 
+    //              "results/vast/077cu-ban4-lower/077cu-ban4-lower-8keVee-b.dat", 
     //              fitRange);
     
     // vector<Neutron> twoPlus;
     // ReadData(twoPlus, 
     //          "data/077cu-ban4-lower/077cu-ban4-lower-02Plus-noConv.out");
     // OutputBasics(twoPlus, decay,
-    //              "results/noConv/077cu-ban4-lower-2p.dat");
+    //              "results/vast/077cu-ban4-lower/077cu-ban4-lower-2p.dat");
 
     //---------- HANDLE THE NEUTRON DENSITY STUFF HERE ---------
     // double res[] = {0.250, 0.100, 0.001}; //in MeV
