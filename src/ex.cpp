@@ -25,24 +25,23 @@ void OutputBasics(vector<Neutron> &nvec, Decay &dky,
                   const string &file, const pair<double,double> &rng);
 
 int main(int argc, char* argv[]) {
+    //---------- SET THE DECAY INFORMATION HERE ---------
+    Decay decay(29,10.490,4.558,0.4679); //ParentZ, Q(MeV), Sn(MeV), T1/2(s)
+    decay.SetGammaInfo(350311,0.0655391,0.191); //RawNumGammas, eff_gamma, absBr
+
+    //---------- SET FIT INFORMATION AND PERFORM FIT HERE ----------
     pair<double,double> fitRange = make_pair(0.,200.0);
    //Set the information for the peaks
     vector<double> peaks ={24., 30., 38.128, 40, 44.917,
                            50.181, 56.835, 65.151, 70.826, 80.,
                            87.198, 94.690, 100., 104.69, 110.0, 115.,
                            135.0};
-    
-    TofFitter fitter(peaks, "077cu-ban4-lower", "077cu-ban4-lower", 
+    TofFitter fitter(peaks, "tof/077cu-ban4-lower", "077cu-ban4-lower", 
                      "-8keVee-b", fitRange, true);
-    //vector<Neutron> singles = fitter.GetFitResults();
     
-    //---------- SET THE DECAY INFORMATION HERE ---------
-    Decay decay(29,10.490,4.558,0.4679); //ParentZ, Q(MeV), Sn(MeV), T1/2(s)
-    decay.SetGammaInfo(350311,0.0655391,0.191); //RawNumGammas, eff_gamma, absBr
-
     //---------- SET THE NEUTRON INFORMATION HERE ----------
     vector<Neutron> singles;
-    ReadData(singles,"data/working/working.fit");
+    ReadData(singles,"results/tof/working/working.fit");
     OutputBasics(singles, decay,
                  "results/vast/working/working.dat", fitRange);
     //ReadData(singles,"data/077cu-ban4-lower/077cu-ban4-lower-8keVee-b.fit");
