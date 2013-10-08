@@ -36,6 +36,8 @@ int main(int argc, char* argv[]) {
                            50.181, 56.835, 65.151, 70.826, 80.,
                            87.198, 94.690, 100., 104.69, 110.0, 115.,
                            135.0};
+    //peaklist, directory (without data modifier), filename(without .dat), 
+    //modifier for file name, fitRange, isTesting
     TofFitter fitter(peaks, "tof/077cu-ban4-lower", "077cu-ban4-lower", 
                      "-8keVee-b", fitRange, true);
     
