@@ -187,11 +187,39 @@ void TofFitter::PerformFit(void) {
     RooFitResult* fitResult = model.fitTo(*data, NumCPU(3), Save(), 
                                           Range(rng_.first, rng_.second));
     
-    RooArgList finals = fitResult->floatParsFinal();
-    for(unsigned int i = 0; i < yields_.size()*2; i++) {
-        RooRealVar tmp = *((RooRealVar*)finals.at(i));
-        fit_.insert(make_pair(tmp.GetName(), 
-                             make_pair(tmp.getValV(), tmp.getError())));
+    hasConvergence_ = fitResult->statusCodeHistory(0) == 0;
+    hasHesseCalc_   = fitResult->statusCodeHistory(1) == 0;
+
+    if(hasConvergence_ && hasHesseCalc_) {
+        cout << "The Fit converged, and HESSE had no issues" << endl;
+        
+        RooArgList finals = fitResult->floatParsFinal();
+        for(unsigned int i = 0; i < yields_.size()*2; i++) {
+            RooRealVar tmp = *((RooRealVar*)finals.at(i));
+            fit_.insert(make_pair(tmp.GetName(), 
+                                  make_pair(tmp.getValV(), tmp.getError())));
+        }
+        
+        ofstream results(output_.c_str());
+        results << "#Num Mu(ns) MuErr(ns) Yld YldErr Sigma Alpha N" << endl;
+        for(unsigned int i = 0; i < yields_.size(); i++) {
+            pair<double,double> mew=fit_.find(mus_[i])->second;
+            pair<double,double> y = fit_.find(yields_[i])->second;
+            
+            results << i << " " << mew.first << " " << mew.second << " " 
+                    << y.first << " " << y.second << " " 
+                    << CalcSigma(mew.first) << " " << CalcAlpha(mew.first) 
+                    << " " << CalcN(mew.first) << endl;
+        }
+        results.close();
+    }else {
+        if(!hasConvergence_) 
+            cout << endl << endl << "Oh, Jesus, the fit did not converge." 
+                 << endl;
+        if(!hasHesseCalc_)
+            cout << "Hesse FAILED to calculate things properly." 
+                 << endl << endl;
+        exit(1);
     }
 
     //Do the plots

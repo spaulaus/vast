@@ -27,21 +27,13 @@ void OutputBasics(vector<Neutron> &nvec, Decay &dky,
 int main(int argc, char* argv[]) {
     pair<double,double> fitRange = make_pair(0.,200.0);
    //Set the information for the peaks
-    //Do not need two peaks at 50 ns.
-    // vector<double> peaks ={20., 30., 31, 35, 42.,
-    //                        50.181, 70.151};
-
-    //Reproduces Miguel's fit pretty much exactly
-    vector<double> peaks ={20., 30., 31, 35, 42.,
-                           50.181, 55, 70.151};
-    //The Exact peaks from Miguel's fit
-    // vector<double> peaks ={18.39, 22.77, 26.67, 33.81, 39.22, 
-    //                        45.63, 51.24, 56.38, 70.44, 82.98};
+    vector<double> peaks ={24., 30., 38.128, 40, 44.917,
+                           50.181, 56.835, 65.151, 70.826, 80.,
+                           87.198, 94.690, 100., 104.69, 110.0, 115.,
+                           135.0};
     
-    TofFitter fitter(peaks, "084ga-mmf", "084ga-tof-sGated", 
-                     "-8keVee-b", fitRange, false);
-    // TofFitter fitter(peaks, "084ga-mmf", "084ga-testing-tof", 
-    //                  "-8keVee-b", fitRange, false);
+    // TofFitter fitter(peaks, "077cu-ban4-lower", "077cu-ban4-lower", 
+    //                  "-8keVee-b", fitRange, true);
     //vector<Neutron> singles = fitter.GetFitResults();
 
     //---------- SET THE DECAY INFORMATION HERE ---------
@@ -50,12 +42,13 @@ int main(int argc, char* argv[]) {
 
     //---------- SET THE NEUTRON INFORMATION HERE ----------
     vector<Neutron> singles;
-    // ReadData(singles,"data/084ga-mmf/084ga-testing-tof-8keVee-b.fit");
-    // OutputBasics(singles, decay,
-    //              "results/084ga-mmf/084ga-testing-tof-8keVee-b.dat");
-    ReadData(singles,"data/084ga-mmf/084ga-tof-sGated-8keVee-b.fit");
+    ReadData(singles,"data/working/working.fit");
     OutputBasics(singles, decay,
-                 "results/084ga-mmf/084ga-tof-sGated-8keVee-b.dat", fitRange);
+                 "results/working/working.dat", fitRange);
+    //ReadData(singles,"data/077cu-ban4-lower/077cu-ban4-lower-8keVee-b.fit");
+    // OutputBasics(singles, decay,
+    //              "results/077cu-ban4-lower/077cu-ban4-lower-8keVee-b.dat", 
+    //              fitRange);
     
     // vector<Neutron> twoPlus;
     // ReadData(twoPlus, 
@@ -133,7 +126,7 @@ void OutputBasics(vector<Neutron> &nvec, Decay &dky,
     double numBars = 9;
     double omega = numBars*0.0061; // solid angle from Sergey's simulation
     //double omega = numBars*4.727e-3; // the calculation for the solid angle
-    double betaEff = 0.13;
+    double betaEff = 0.23;
     
     ofstream out(file.c_str());
     if(out.fail()) {
@@ -161,8 +154,8 @@ void OutputBasics(vector<Neutron> &nvec, Decay &dky,
             << " " << (*it).GetYield() 
             << " " << (*it).GetIntegratedYield() << endl;
     }
-    out << "#Pn = " << totN << " / " << 662674.58 << " = " 
-        << totN / 662674.58 << "  RawN = " << rawN 
+    out << "#Pn = " << totN << " / " << dky.GetNumberDecays() << " = " 
+        << totN / dky.GetNumberDecays() << "  RawN = " << rawN 
         << " " << "  RawIntN = " << intN << endl;
     out.close();
 }
