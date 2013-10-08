@@ -124,7 +124,7 @@ void TofFitter::GenerateNames(void) {
 
 void TofFitter::PerformFit(void) {
      //Read in the data and set the variable to fit.
-    RooRealVar tof("tof","tof", 0.0, 0., 200.);
+    RooRealVar tof("tof","tof", 0.0, 0.0, 200.);
 
     double binning = 0.5;
     double wiggle = 200.;
@@ -244,7 +244,7 @@ void TofFitter::PerformFit(void) {
 }
 
 void TofFitter::PerformMcStudy(void) {
-    RooRealVar tof("tof","tof", 0.0, 0.0, 200.);
+    RooRealVar tof("tof","tof", 0.0, 0., 200.);
 
     //Parameterization Parameters for Sigma 
     RooConstVar sM("sM","", -0.000121210451962825);

@@ -147,7 +147,7 @@ void OutputBasics(vector<Neutron> &nvec, Decay &dky,
     for(vector<Neutron>::iterator it = nvec.begin(); 
         it != nvec.end(); it++) {
         //---------- INTEGRATE THE NEUTRON PEAKS HERE ----------
-        Integrator integrator(*it, 0, 200.);
+        Integrator integrator(*it, 10., 100.);
         //---------- CALCULATE THE TOTAL NUMBER OF NEUTRONS --------
         intN += (*it).GetRawIntegratedYield();
         totN += (*it).GetIntegratedYield() / betaEff / omega;
