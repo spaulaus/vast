@@ -55,8 +55,8 @@ TofFitter::TofFitter(const vector<double> &peaks, const string &dir,
     dataFile_ ="../data/tof/"+dir+"/"+file+".dat";
     if(isTest) {
         dir_ = "working/";
-        eps_ = "../pics/tof/working.eps";
-        output_ = "../results/tof/working.fit";
+        eps_ = "../pics/tof/working/working.eps";
+        output_ = "../results/tof/working/working.fit";
     }else {
         dir_ = dir;
         mod_ = mod;

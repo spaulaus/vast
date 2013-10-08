@@ -32,10 +32,10 @@ int main(int argc, char* argv[]) {
                            87.198, 94.690, 100., 104.69, 110.0, 115.,
                            135.0};
     
-    // TofFitter fitter(peaks, "077cu-ban4-lower", "077cu-ban4-lower", 
-    //                  "-8keVee-b", fitRange, true);
+    TofFitter fitter(peaks, "077cu-ban4-lower", "077cu-ban4-lower", 
+                     "-8keVee-b", fitRange, true);
     //vector<Neutron> singles = fitter.GetFitResults();
-
+    
     //---------- SET THE DECAY INFORMATION HERE ---------
     Decay decay(29,10.490,4.558,0.4679); //ParentZ, Q(MeV), Sn(MeV), T1/2(s)
     decay.SetGammaInfo(350311,0.0655391,0.191); //RawNumGammas, eff_gamma, absBr
