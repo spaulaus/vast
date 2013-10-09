@@ -45,7 +45,7 @@ int main(int argc, char* argv[]) {
                            135.0};
     //peaklist, directory (without data modifier), filename(without .dat), 
     //modifier for file name, fitRange, isTesting
-    // TofFitter fitter(peaks, "tof/077cu-ban4-lower", "077cu-ban4-lower", 
+    // TofFitter fitter(peaks, "077cu-ban4-lower", "077cu-ban4-lower", 
     //                  "-8keVee-b", fitRange, true);
     
     //---------- SET THE NEUTRON INFORMATION HERE ----------
@@ -65,7 +65,7 @@ int main(int argc, char* argv[]) {
                << it->GetBgt() << " " << it->GetLogft() << endl;
         outTheory.setf(ios::fixed);
         outTheory << setprecision(8) << setw(10) 
-                  << it->GetExcitationEnergy() << " " << it->GetBgt() << endl;
+                  << it->GetExcitationEnergy() << "  " << it->GetBgt() << endl;
     }
     outBgt.close();
     outTheory.close();

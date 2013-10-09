@@ -33,7 +33,7 @@ TofFitter::TofFitter(const vector<double> &peaks, const string &dir,
                      const bool &isTest)  {
     peaks_ = peaks;
     rng_ = range;
-    dataFile_ ="data/"+dir+"/"+file+".dat";
+    dataFile_ ="data/tof/"+dir+"/"+file+".dat";
     if(isTest) {
         dir_ = "working/";
         eps_ = "pics/tof/working/working.eps";
@@ -52,7 +52,7 @@ TofFitter::TofFitter(const vector<double> &peaks, const string &dir,
                      const bool &isTest)  {
     peaks_ = peaks;
     rng_ = range;
-    dataFile_ ="data/"+dir+"/"+file+".dat";
+    dataFile_ ="data/tof/"+dir+"/"+file+".dat";
     if(isTest) {
         dir_ = "working/";
         eps_ = "pics/tof/working/working.eps";
@@ -167,8 +167,6 @@ void TofFitter::PerformFit(void) {
         RooFormulaVar *alpha = new RooFormulaVar(alphas_[i].c_str(), 
                                                  fAlph.str().c_str(), 
                                                  RooArgList(aI,aH,*mu));
-
-        cout << alpha->getValV() << endl;
 
         fN << "nJ*pow(" << mus_[i] << ",2)+nK*" << mus_[i] 
            << "+nL";
