@@ -56,14 +56,19 @@ int main(int argc, char* argv[]) {
 
     //---------- Calculate the B(GT) Using Integrated Yld NO SPREADING!! -------
     ofstream outBgt("results/vast/working/working.bgt");
+    ofstream outTheory("results/vast/working/working-mgb.bgt");
     outBgt << "#Ex(MeV) B(GT) log(ft)" << endl;
     for(vector<Neutron>::iterator it = singles.begin(); it != singles.end();
         it++) {
         BGTCalculator bgt(*it, decay, betaEff, omega);
         outBgt << setprecision(8) << it->GetExcitationEnergy() << " "
                << it->GetBgt() << " " << it->GetLogft() << endl;
+        outTheory.setf(ios::fixed);
+        outTheory << setprecision(8) << setw(10) 
+                  << it->GetExcitationEnergy() << " " << it->GetBgt() << endl;
     }
     outBgt.close();
+    outTheory.close();
 
     //---------- Calculate the B(GT) Using the Neutron Density ---------
     NeutronDensity nden(singles,0.01,decay.GetQValue()-decay.GetNeutronSepEnergy());
@@ -79,9 +84,6 @@ int main(int argc, char* argv[]) {
         outNDenBgt << it->first << " " << it->second << " " << logft << endl;
     }
     outNDenBgt.close();
-    
-    //ofstream outTheory("results/noConv/077cu-ban4-lower-noConv.inp");
-    // outTheory << bgt.GetLevelEnergy() << " " << bgt.GetBgt() << endl;
 }
 
 void ReadData(vector<Neutron> &nvec, const string &file) {
