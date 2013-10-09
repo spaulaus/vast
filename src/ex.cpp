@@ -66,20 +66,19 @@ int main(int argc, char* argv[]) {
     outBgt.close();
 
     //---------- Calculate the B(GT) Using the Neutron Density ---------
-    NeutronDensity nden(singles,0.01,decay.GetQValue());
-    map<double,double> ndensity = *nden.GetDensity();
-    // BGTCalculator bgt((*nden.GetDensity()), decay,betaEff,omega);
-    // map<double,double> bgtMap = bgt.GetBgtMap();
-    // map<double,double> logftMap = bgt.GetLogftMap();
+    NeutronDensity nden(singles,0.01,decay.GetQValue()-decay.GetNeutronSepEnergy());
+    BGTCalculator ndenBgt(*nden.GetDensity(), decay, betaEff, omega);
+    map<double,double> bgtMap = *ndenBgt.GetBgtMap();
+    map<double,double> logftMap = *ndenBgt.GetLogftMap();
     
-    // ofstream outNDenBgt("results/vast/working/working-nden.bgt");
-    // outBgt << "#Ex(MeV) B(GT) log(ft)" << endl;
-    // for(map<double,double>::iterator it = bgtMap.begin(); it != bgtMap.end();
-    //     it++) {
-    //     double logft = logftMap.find(it->first)->second;
-    //     outNDenBgt << it->first << " " << it->second << " " << logft << endl;
-    // }
-    // outNDenBgt.close();
+    ofstream outNDenBgt("results/vast/working/working-nden.bgt");
+    outBgt << "#Ex(MeV) B(GT) log(ft)" << endl;
+    for(map<double,double>::iterator it = bgtMap.begin(); it != bgtMap.end();
+        it++) {
+        double logft = logftMap.find(it->first)->second;
+        outNDenBgt << it->first << " " << it->second << " " << logft << endl;
+    }
+    outNDenBgt.close();
     
     //ofstream outTheory("results/noConv/077cu-ban4-lower-noConv.inp");
     // outTheory << bgt.GetLevelEnergy() << " " << bgt.GetBgt() << endl;

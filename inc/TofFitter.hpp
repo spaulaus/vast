@@ -16,10 +16,10 @@ class TofFitter {
 public:
     TofFitter(const std::vector<double> &peaks, const std::string &dir, 
               const std::string &file, const std::pair<double,double> &range,
-              const bool &isTest);
+              const bool &isTest = false);
     TofFitter(const std::vector<double> &peaks, const std::string &dir, 
               const std::string &file, const std::string &mod, 
-              const std::pair<double,double> &range, const bool &isTest);
+              const std::pair<double,double> &range, const bool &isTest = false);
     ~TofFitter(){};
 
     std::vector<Neutron> GetFitResults(void){return(neutrons_);};

@@ -13,49 +13,36 @@ using namespace std;
 
 //Constructor for using the Neutron Density
 BGTCalculator::BGTCalculator(map<double,double> &density, const Decay &decay,
-                             const double &betaEff, const double &omega) {
-    eG_ = 0.0;
+                             const double &betaEff, const double &omega, 
+                             const double &eg) {
+    eG_ = eg;
     decay_ = decay;
     density_ = density;
     betaEff_ = betaEff;
     omega_ = omega;
-    CalcBgt();
-    CalcLogft();
+    HandleNeutronDensity(density);
 }
 
 //Constructor for using the Neutron Class
 BGTCalculator::BGTCalculator(Neutron &neutron, const Decay &decay,
-                             const double &betaEff, const double &omega) {
-    eG_ = 0.0;
-    eN_ = neutron.GetEnergy();
-    yld_ = neutron.GetIntegratedYield();
+                             const double &betaEff, const double &omega,
+                             const double &eg) {
+    eG_ = eg;
     decay_ = decay;
-    neutron_ = neutron;
     betaEff_ = betaEff;
     omega_ = omega;
-    CalcBgt();
-    CalcLogft();
-    StuffNeutronInfo(neutron);
+    HandleNeutronIndividual(neutron);
 }
 
-void BGTCalculator::CalcBgt(void) {
+double BGTCalculator::CalcBgt(const double &en, const double &yld) {
     double coeff = 3812.413; //D/(ga/gv)**2 in units of s
-    if(density_.empty()) {
-        bgt_ = coeff/CalcF(eN_)/
-            (decay_.GetHalfLife()/CalcBranchingRatio(yld_));
-    }else {
-        for(map<double,double>::iterator it = density_.begin();
-            it != density_.end(); it++) {
-            double bgt = coeff/CalcF(it->first)/
-                (decay_.GetHalfLife()/CalcBranchingRatio(it->second));
-            bgtMap_.insert(make_pair(CalcLevelEnergy(it->first),bgt));
-        }
-    }
+    double bgt = coeff/ CalcF(en) /
+        (decay_.GetHalfLife()/CalcBranchingRatio(yld));
+    return(bgt);
 }
 
 double BGTCalculator::CalcBranchingRatio(const double &yld) { 
     double br = yld / decay_.GetNumberDecays() / omega_ / betaEff_;
-    br_ = br;
     return(br);
 }
 
@@ -86,27 +73,32 @@ double BGTCalculator::CalcF(const double &en) {
 
 double BGTCalculator::CalcLevelEnergy(const double &en) {
     double lvl = en + decay_.GetNeutronSepEnergy() + eG_;
-    lvl_ = lvl;
     return(lvl);
 }
 
-void BGTCalculator::CalcLogft(void) {
-    if(density_.empty())
-        logft_ = log10(CalcF(eN_)*(decay_.GetHalfLife() / 
-                                   CalcBranchingRatio(yld_)));
-    else {
-        for(map<double,double>::iterator it = density_.begin();
-            it != density_.end(); it++) {
-            double logft = log10(CalcF(eN_)*(decay_.GetHalfLife() / 
-                                   CalcBranchingRatio(yld_)));
-            logftMap_.insert(make_pair(CalcLevelEnergy(it->first),logft));
-        }
+double BGTCalculator::CalcLogft(const double &en, const double &yld) {
+    double logft = log10(CalcF(en)*(decay_.GetHalfLife() / 
+                                     CalcBranchingRatio(yld)));
+    return(logft);
+}
+
+void BGTCalculator::HandleNeutronDensity(const map<double,double> &density) {
+    for(map<double,double>::iterator it = density_.begin();
+        it != density_.end(); it++) {
+        double ex = CalcLevelEnergy(it->first);
+        double bgt = CalcBgt(it->first,it->second);
+        double logft = CalcLogft(it->first,it->second);
+        bgtMap_.insert(make_pair(ex,bgt));
+        logftMap_.insert(make_pair(ex,logft));
     }
 }
 
-void BGTCalculator::StuffNeutronInfo(Neutron &neutron) {
-    neutron.SetBgt(bgt_);
-    neutron.SetBranchingRatio(br_);
-    neutron.SetExitationEnergy(lvl_);
-    neutron.SetLogft(logft_);
+void BGTCalculator::HandleNeutronIndividual(Neutron &neutron) {
+    double en = neutron.GetEnergy();
+    double yld = neutron.GetIntegratedYield();
+    neutron.SetBgt(CalcBgt(en,yld));
+    neutron.SetBranchingRatio(CalcBranchingRatio(yld));
+    neutron.SetExitationEnergy(CalcLevelEnergy(en));
+    neutron.SetLogft(CalcLogft(en,yld));
 }
+

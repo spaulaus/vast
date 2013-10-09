@@ -30,7 +30,7 @@ using namespace RooFit;
 
 TofFitter::TofFitter(const vector<double> &peaks, const string &dir, 
                      const string &file, const pair<double,double> &range,
-                     const bool &isTest = false)  {
+                     const bool &isTest)  {
     peaks_ = peaks;
     rng_ = range;
     dataFile_ ="data/"+dir+"/"+file+".dat";
@@ -49,7 +49,7 @@ TofFitter::TofFitter(const vector<double> &peaks, const string &dir,
 TofFitter::TofFitter(const vector<double> &peaks, const string &dir, 
                      const string &file, const string &mod, 
                      const pair<double,double> &range,
-                     const bool &isTest = false)  {
+                     const bool &isTest)  {
     peaks_ = peaks;
     rng_ = range;
     dataFile_ ="data/"+dir+"/"+file+".dat";

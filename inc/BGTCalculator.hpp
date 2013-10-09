@@ -16,30 +16,30 @@ class BGTCalculator {
 public:
     BGTCalculator(){};
     BGTCalculator(std::map<double,double> &density, const Decay &decay,
-                  const double &betaEff, const double &omega);
+                  const double &betaEff, const double &omega,
+                  const double &eg = 0.0);
                   
     BGTCalculator(Neutron &neutron, const Decay &decay,
-                  const double &betaEff, const double &omega);
+                  const double &betaEff, const double &omega,
+                  const double &eg = 0.0);
     ~BGTCalculator(){};
 
-    std::map<double,double> GetBgtMap(void){return(bgtMap_);};
-    std::map<double,double> GetLogftMap(void){return(logftMap_);};
-    void SetGammaEnergy(const double &a){eG_ = a;};
-
+    std::map<double,double>* GetBgtMap(void){return(&bgtMap_);};
+    std::map<double,double>* GetLogftMap(void){return(&logftMap_);};
 private:
     Decay decay_;
     Neutron neutron_; 
 
     double betaEff_, eG_, eN_, f_, omega_, yld_; 
-    //Variables to be passed to Neutron
-    double bgt_, br_, logft_, lvl_;
     std::map<double,double> density_, bgtMap_, logftMap_;
     
+    double CalcBgt(const double &en, const double &yld);
     double CalcBranchingRatio(const double &yld);
     double CalcF(const double &en);
     double CalcLevelEnergy(const double &en);
-    void CalcBgt(void);
-    void CalcLogft(void);
-    void StuffNeutronInfo(Neutron &neutron);
+    double CalcLogft(const double &en, const double &yld);
+
+    void HandleNeutronDensity(const std::map<double,double> &density);
+    void HandleNeutronIndividual(Neutron &neutron);
 };
 #endif //__BGTCALCULATOR_HPP__
