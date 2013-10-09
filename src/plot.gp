@@ -1,35 +1,35 @@
 reset
 load '/home/vincent/.gnuplot'
-set terminal postscript eps enhanced color solid "NimbusSanL-Regu,18"
-
-e1=0.59856
-e2=0.69772
-
-set key left top
-
-set arrow 1 from 4.558,0 to 4.558,2000 nohead lc -1
-set label 1 "S_n" at 4.6,1800 font "NimbusSanL-Regu,18"
-
+set border lw 3
+unset key
 set xlabel "E_x (MeV)"
-set ylabel offset 1,0 "Yield/{/StandardSymL e_g}"
-set output '../../pics/bgt/comp-S-02-04-noConv.eps'
-plot '../results/noConv/077cu-ban4-lower-noConv.dat' u 3:7:4 w boxes t "Singles",\
-     '../results/noConv/077cu-ban4-lower-02Plus-noConv.dat' u 3:7:4 w boxes t "2+",\
-     '../results/noConv/077cu-ban4-lower-04Plus-noConv.dat' u 3:7:4 w boxes t "4+"\
+set terminal postscript eps enhanced color "NimbusSanL-Regu,18"
 
-set output '../../pics/bgt/comp-S-02-04-Base-noConv.eps'
-plot '../results/noConv/077cu-ban4-lower-noConv.dat' u 3:7:4 w boxes t "Singles",\
-     '../results/noConv/077cu-ban4-lower-02Plus-noConv.dat' u ($3-e1):7:4 w boxes t "2+",\
-     '../results/noConv/077cu-ban4-lower-04Plus-noConv.dat' u ($3-e1-e2):7:4 w boxes t "4+"\
+sn=4.558
 
-unset arrow 1
-unset label 1
-set key inside right top
-set output '../../pics/bgt/comp-S-02-04-tof-noConv.eps'
-plot '../results/noConv/077cu-ban4-lower-noConv.dat' u 1:7:2 w boxes t "Singles",\
-     '../results/noConv/077cu-ban4-lower-02Plus-noConv.dat' u 1:7:2 w boxes t "2+",\
-     '../results/noConv/077cu-ban4-lower-04Plus-noConv.dat' u 1:7:2 w boxes t "4+"\
+ARSTY="nohead lc rgb comp5 lw 3 lt 5"
 
-     
+#---------- PLOT THE NEUTRON INDIVIDUAL STUFF --------
+file0='../results/vast/working/working.bgt'
+set ylabel offset 1,0 "B(GT)"
+set arrow 1 from sn,0 to sn,0.06 @ARSTY
+set output '../pics/vast/working/working-bgt.eps'
+plot file0 u 1:2 w impulses lw 3 lc rgb prim3 
 
-     
+set ylabel offset 1,0 "log(ft)"
+set arrow 1 from sn,4.5 to sn,7 @ARSTY
+set output '../pics/vast/working/working-logft.eps'
+plot file0 u 1:3 w impulses lw 3 lc rgb prim3
+
+#---------- PLOT THE NEUTRON DENSITY STUFF --------
+file1='../results/vast/working/working-nden.bgt'
+set ylabel offset 1,0 "B(GT) / (0.01 MeV)"
+set arrow 1 from sn,0 to sn,0.6 @ARSTY
+set output '../pics/vast/working/working-nden-bgt.eps'
+plot[4.5:8.5] file1 u 1:2 w steps lw 3 lc rgb prim3
+
+set yrange [3.5:7.5] reverse
+set ylabel "log(ft)"
+set arrow 1 from sn,3.5 to sn,7.5 @ARSTY
+set output '../pics/vast/working/working-nden-logft.eps'
+plot[4.5:8.5] file1 u ($2 > 1e-4 ? $1 : 1/0):3 w steps lw 3 lc rgb prim3
