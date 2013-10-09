@@ -23,23 +23,23 @@ public:
     ~BGTCalculator(){};
 
     std::map<double,double> GetBgtMap(void){return(bgtMap_);};
-    double GetBgt(void){return(bgt_);};
-    double GetBranchingRatio(void){return(br_);};
-    double GetLevelEnergy(void){return(eLvl_);};
-    double GetLogft(void){return(logft_);};
-
+    std::map<double,double> GetLogftMap(void){return(logftMap_);};
     void SetGammaEnergy(const double &a){eG_ = a;};
 
 private:
     Decay decay_;
-    double br_, bgt_, eG_, eLvl_, eN_, f_, logft_; 
-    std::map<double,double> density_, bgtMap_, fMap_, brMap_;
     Neutron neutron_; 
 
+    double betaEff_, eG_, eN_, f_, omega_, yld_; 
+    //Variables to be passed to Neutron
+    double bgt_, br_, logft_, lvl_;
+    std::map<double,double> density_, bgtMap_, logftMap_;
+    
+    double CalcBranchingRatio(const double &yld);
+    double CalcF(const double &en);
+    double CalcLevelEnergy(const double &en);
     void CalcBgt(void);
-    void CalcBranchingRatio(const double &betaEff, const double &omega);
-    void CalcF(void);
-    void CalcLevelEnergy(void);
     void CalcLogft(void);
+    void StuffNeutronInfo(Neutron &neutron);
 };
 #endif //__BGTCALCULATOR_HPP__
