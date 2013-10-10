@@ -32,58 +32,68 @@ double omega = numBars*0.0061; // solid angle from Sergey's simulation
 double betaEff = 0.23;
 
 int main(int argc, char* argv[]) {
+    bool doesFit = false;
+    bool outputsBasic = true;
+    bool outputBgt = true;
+    bool outputNdenBgt = true;
     //---------- SET THE DECAY INFORMATION HERE ---------
     Decay decay(29,10.490,4.558,0.4679); //ParentZ, Q(MeV), Sn(MeV), T1/2(s)
     decay.SetGammaInfo(350311,0.0655391,0.191); //RawNumGammas, eff_gamma, absBr
 
     //---------- SET FIT INFORMATION AND PERFORM FIT HERE ----------
     pair<double,double> fitRange = make_pair(0.,200.0);
-   //Set the information for the peaks
-    vector<double> peaks ={24., 30., 38.128, 40, 44.917,
-                           50.181, 56.835, 65.151, 70.826, 80.,
-                           87.198, 94.690, 100., 104.69, 110.0, 115.,
-                           135.0};
-    //peaklist, directory (without data modifier), filename(without .dat), 
-    //modifier for file name, fitRange, isTesting
-    // TofFitter fitter(peaks, "077cu-ban4-lower", "077cu-ban4-lower", 
-    //                  "-8keVee-b", fitRange, true);
-    
+    if(doesFit) {
+        //Set the information for the peaks
+        vector<double> peaks ={24., 30., 38.128, 40, 44.917,
+                               50.181, 56.835, 65.151, 70.826, 80.,
+                               87.198, 94.690, 100., 104.69, 110.0, 115.,
+                               135.0};
+        //peaklist, directory (without data modifier), filename(without .dat), 
+        //modifier for file name, fitRange, isTesting
+        TofFitter fitter(peaks, "077cu-ban4-lower", "077cu-ban4-lower", 
+                     "-8keVee-b", fitRange, true);
+    }//if(doesFit)
     //---------- SET THE NEUTRON INFORMATION HERE ----------
     vector<Neutron> singles;
+    if(outputsBasic) {
     ReadData(singles,"results/tof/working/working.fit");
     OutputBasics(singles, decay,
                  "results/vast/working/working.dat", fitRange);
-
+    }//if(outputsBasic)
     //---------- Calculate the B(GT) Using Integrated Yld NO SPREADING!! -------
-    ofstream outBgt("results/vast/working/working.bgt");
-    ofstream outTheory("results/vast/working/working-mgb.bgt");
-    outBgt << "#Ex(MeV) B(GT) log(ft)" << endl;
-    for(vector<Neutron>::iterator it = singles.begin(); it != singles.end();
-        it++) {
-        BGTCalculator bgt(*it, decay, betaEff, omega);
-        outBgt << setprecision(8) << it->GetExcitationEnergy() << " "
-               << it->GetBgt() << " " << it->GetLogft() << endl;
-        outTheory.setf(ios::fixed);
-        outTheory << setprecision(8) << setw(10) 
-                  << it->GetExcitationEnergy() << "  " << it->GetBgt() << endl;
-    }
-    outBgt.close();
-    outTheory.close();
-
-    //---------- Calculate the B(GT) Using the Neutron Density ---------
-    NeutronDensity nden(singles,0.01,decay.GetQValue()-decay.GetNeutronSepEnergy());
-    BGTCalculator ndenBgt(*nden.GetDensity(), decay, betaEff, omega);
-    map<double,double> bgtMap = *ndenBgt.GetBgtMap();
-    map<double,double> logftMap = *ndenBgt.GetLogftMap();
+    if(outputsBasic && outputsBgt) {
+        ofstream outBgt("results/vast/working/working.bgt");
+        ofstream outTheory("results/vast/working/working-mgb.bgt");
+        outBgt << "#Ex(MeV) B(GT) log(ft)" << endl;
+        for(vector<Neutron>::iterator it = singles.begin(); it != singles.end();
+            it++) {
+            BGTCalculator bgt(*it, decay, betaEff, omega);
+            outBgt << setprecision(8) << it->GetExcitationEnergy() << " "
+                   << it->GetBgt() << " " << it->GetLogft() << endl;
+            outTheory.setf(ios::fixed);
+            outTheory << setprecision(8) << setw(10) 
+                      << it->GetExcitationEnergy() << "  " << it->GetBgt() << endl;
+        }
+        outBgt.close();
+        outTheory.close();
+    }//if(outputsBasic && outputsBgt)
     
-    ofstream outNDenBgt("results/vast/working/working-nden.bgt");
-    outBgt << "#Ex(MeV) B(GT) log(ft)" << endl;
-    for(map<double,double>::iterator it = bgtMap.begin(); it != bgtMap.end();
-        it++) {
-        double logft = logftMap.find(it->first)->second;
-        outNDenBgt << it->first << " " << it->second << " " << logft << endl;
-    }
-    outNDenBgt.close();
+    //---------- Calculate the B(GT) Using the Neutron Density ---------
+    if(outputsBasic && outputsNdenBgt) {
+        NeutronDensity nden(singles,0.01,decay.GetQValue()-decay.GetNeutronSepEnergy());
+        BGTCalculator ndenBgt(*nden.GetDensity(), decay, betaEff, omega);
+        map<double,double> bgtMap = *ndenBgt.GetBgtMap();
+        map<double,double> logftMap = *ndenBgt.GetLogftMap();
+        
+        ofstream outNDenBgt("results/vast/working/working-nden.bgt");
+        outBgt << "#Ex(MeV) B(GT) log(ft)" << endl;
+        for(map<double,double>::iterator it = bgtMap.begin(); it != bgtMap.end();
+            it++) {
+            double logft = logftMap.find(it->first)->second;
+            outNDenBgt << it->first << " " << it->second << " " << logft << endl;
+        }
+        outNDenBgt.close();
+    }//if(outputsBasic && outputsNdenBgt)
 }
 
 void ReadData(vector<Neutron> &nvec, const string &file) {
