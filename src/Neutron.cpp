@@ -56,7 +56,7 @@ Neutron::Neutron(const double &mu, const double &muErr,
 }
 
 void Neutron::CalcDensitySigma(void){
-    double sig  = sig_*0.5;
+    double sig  = sig_*0.25;
     double high  = CalcEnergy(mu_-sig);
     double low = CalcEnergy(mu_+sig);
     denSig_ = high - low;
