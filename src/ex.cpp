@@ -123,11 +123,6 @@ void ReadData(vector<Neutron> &nvec, const string &file) {
 
 void OutputBasics(vector<Neutron> &nvec, Decay &dky, 
                   const string &file, const pair<double,double> &rng) {
-    double numBars = 9;
-    double omega = numBars*0.0061; // solid angle from Sergey's simulation
-    //double omega = numBars*4.727e-3; // the calculation for the solid angle
-    double betaEff = 0.23;
-    
     ofstream out(file.c_str());
     if(out.fail()) {
         cout << endl << endl 
