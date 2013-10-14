@@ -22,7 +22,7 @@ using namespace std;
 
 void ReadData(vector<Neutron> &nvec, const string &file);
 void OutputBasics(vector<Neutron> &nvec, Decay &dky, 
-                  const string &file, const pair<double,double> &rng);
+                  const string &file);
 
 //---------- SET SOME DETAILS ABOUT THE EXP HERE ----------
 //---------- HANDLE THIS BETTER LATER ----------
@@ -30,11 +30,12 @@ double numBars = 9;
 double omega = numBars*0.0061; // solid angle from Sergey's simulation
 //double omega = numBars*4.727e-3; // the calculation for the solid angle
 double betaEff = 0.23;
+pair<double,double> effs = make_pair(betaEff,omega);
 
 int main(int argc, char* argv[]) {
     bool doesFit = false;
-    bool outputsBasic = true;
-    bool outputBgt = true;
+    bool outputBasic = true;
+    bool outputTheory = true;
     bool outputNdenBgt = true;
     //---------- SET THE DECAY INFORMATION HERE ---------
     Decay decay(29,10.490,4.558,0.4679); //ParentZ, Q(MeV), Sn(MeV), T1/2(s)
@@ -53,44 +54,50 @@ int main(int argc, char* argv[]) {
         TofFitter fitter(peaks, "077cu-ban4-lower", "077cu-ban4-lower", 
                      "-8keVee-b", fitRange, true);
     }//if(doesFit)
-    //---------- SET THE NEUTRON INFORMATION HERE ----------
+    
+    //---------- SET THE NEUTRON INFORMATION AND OUTPUT ----------
     vector<Neutron> singles;
-    if(outputsBasic) {
-    ReadData(singles,"results/tof/working/working.fit");
-    OutputBasics(singles, decay,
-                 "results/vast/working/working.dat", fitRange);
+    if(outputBasic) {
+        ReadData(singles,"results/tof/working/working.fit");
+        for(vector<Neutron>::iterator it = singles.begin(); it!= singles.end();
+            it++) {
+            //---------- INTEGRATE THE NEUTRON PEAKS HERE ----------
+            Integrator integrator(*it, fitRange);
+            //---------- Calculate the B(GT) for the Line ---------
+            BGTCalculator bgt(*it, decay, betaEff, omega);
+        }
+        OutputBasics(singles, decay,
+                     "results/vast/working/working.dat");
     }//if(outputsBasic)
-    //---------- Calculate the B(GT) Using Integrated Yld NO SPREADING!! -------
-    if(outputsBasic && outputsBgt) {
-        ofstream outBgt("results/vast/working/working.bgt");
+    //---------- B(GT) for the simulations -------
+    if(outputBasic && outputTheory) {
         ofstream outTheory("results/vast/working/working-mgb.bgt");
-        outBgt << "#Ex(MeV) B(GT) log(ft)" << endl;
         for(vector<Neutron>::iterator it = singles.begin(); it != singles.end();
             it++) {
-            BGTCalculator bgt(*it, decay, betaEff, omega);
-            outBgt << setprecision(8) << it->GetExcitationEnergy() << " "
-                   << it->GetBgt() << " " << it->GetLogft() << endl;
             outTheory.setf(ios::fixed);
             outTheory << setprecision(8) << setw(10) 
-                      << it->GetExcitationEnergy() << "  " << it->GetBgt() << endl;
+                      << it->GetExcitationEnergy() << "  " 
+                      << it->GetBgt() << endl;
         }
-        outBgt.close();
         outTheory.close();
     }//if(outputsBasic && outputsBgt)
     
     //---------- Calculate the B(GT) Using the Neutron Density ---------
-    if(outputsBasic && outputsNdenBgt) {
-        NeutronDensity nden(singles,0.01,decay.GetQValue()-decay.GetNeutronSepEnergy());
+    if(outputBasic && outputNdenBgt) {
+        NeutronDensity nden(singles, decay.GetQBetaN(), 0.001);
         BGTCalculator ndenBgt(*nden.GetDensity(), decay, betaEff, omega);
         map<double,double> bgtMap = *ndenBgt.GetBgtMap();
         map<double,double> logftMap = *ndenBgt.GetLogftMap();
+        map<double,double> sdensityMap = *ndenBgt.GetSDensity();
         
         ofstream outNDenBgt("results/vast/working/working-nden.bgt");
-        outBgt << "#Ex(MeV) B(GT) log(ft)" << endl;
+        outNDenBgt << "#Ex(MeV) BR B(GT) log(ft)" << endl;
         for(map<double,double>::iterator it = bgtMap.begin(); it != bgtMap.end();
             it++) {
             double logft = logftMap.find(it->first)->second;
-            outNDenBgt << it->first << " " << it->second << " " << logft << endl;
+            double density = sdensityMap.find(it->first)->second;
+            outNDenBgt << it->first << " " << density << " " 
+                       << it->second << " " << logft << endl;
         }
         outNDenBgt.close();
     }//if(outputsBasic && outputsNdenBgt)
@@ -105,6 +112,8 @@ void ReadData(vector<Neutron> &nvec, const string &file) {
                 data >> junk >> temp0 >> temp1 >> temp2 >> temp3 >> s
                      >> a >> n;
                 nvec.push_back(Neutron(temp0,temp1,temp2,temp3));
+
+                //Set the information for the CB from the fit
                 nvec.back().SetSigma(s);
                 nvec.back().SetAlpha(a);
                 nvec.back().SetN(n);
@@ -121,8 +130,7 @@ void ReadData(vector<Neutron> &nvec, const string &file) {
     data.close();
 }
 
-void OutputBasics(vector<Neutron> &nvec, Decay &dky, 
-                  const string &file, const pair<double,double> &rng) {
+void OutputBasics(vector<Neutron> &nvec, Decay &dky, const string &file) {
     ofstream out(file.c_str());
     if(out.fail()) {
         cout << endl << endl 
@@ -132,22 +140,20 @@ void OutputBasics(vector<Neutron> &nvec, Decay &dky,
     }
             
     double totN  = 0., rawN = 0., intN = 0;
-    out << "#Mu(ns) MuErr(ns) E(MeV) EErr(MeV) RawYld RawIntYld EffYld EffIntYld" 
+    out << "#Mu(ns) MuErr(ns) E(MeV) EErr(MeV) Yld IntYld BR B(GT) log(ft)" 
             << endl;
     for(vector<Neutron>::iterator it = nvec.begin(); 
         it != nvec.end(); it++) {
-        //---------- INTEGRATE THE NEUTRON PEAKS HERE ----------
-        Integrator integrator(*it, rng);
         //---------- CALCULATE THE TOTAL NUMBER OF NEUTRONS --------
-        intN += (*it).GetRawIntegratedYield();
-        totN += (*it).GetIntegratedYield() / betaEff / omega;
-        rawN += (*it).GetRawYield();
+        intN += it->GetRawIntegratedYield();
+        totN += it->GetIntegratedYield() / betaEff / omega;
+        rawN += it->GetRawYield();
         
-        out << setprecision(12) << (*it).GetMu() << " " << (*it).GetMuErr() << " "
-            << (*it).GetEnergy() << " " << (*it).GetEnergyErr() << " " 
-            << " " << (*it).GetRawYield() << " " << (*it).GetRawIntegratedYield() 
-            << " " << (*it).GetYield() 
-            << " " << (*it).GetIntegratedYield() << endl;
+        out << setprecision(12) << it->GetMu() << " " << it->GetMuErr() << " "
+            << it->GetEnergy() << " " << it->GetEnergyErr() << " " 
+            << it->GetYield() << " " << it->GetIntegratedYield() << " " 
+            << it->GetBranchingRatio() << " " 
+            << it->GetBgt() << " " << it->GetLogft() << endl;
     }
     out << "#Pn = " << totN << " / " << dky.GetNumberDecays() << " = " 
         << totN / dky.GetNumberDecays() << "  RawN = " << rawN 

@@ -14,21 +14,17 @@
 class NeutronDensity {
 public:
     NeutronDensity(){};
-    NeutronDensity(std::vector<Neutron> &neutrons, const double &res, 
-                   const double &len);
-    NeutronDensity(std::vector<Neutron> &neutrons, const double &res,
-                   const double &len, const double &ge);
+    NeutronDensity(std::vector<Neutron> &neutrons, const double &len,
+                   const double &res, const double &ge = 0);
     ~NeutronDensity(){};
     
     std::map<double,double>* GetDensity(void){return(&density_);};
-    std::map<double,double>* GetGshiftedDensity(void){return(&gshiftDensity_);};
 private:
-    double gE_, gEff_, len_, res_;
-    std::map<double,double> density_, gshiftDensity_;
+    double len_, res_;
+    std::map<double,double> density_;
     std::vector<Neutron> neutrons_;
-    
-    void CalcDensity(void);
-    void CalcGshiftedDensity(void);
+
+    void CalcDensity(const double &ge, const double &geEff);
 };
 
 #endif //__NEUTRONDENSITY_HPP__

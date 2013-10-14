@@ -8,5 +8,5 @@
 
 Decay::Decay(const double &z, const double&q, const double &sn, 
              const double &t) : parZ_(z), q_(q), sn_(sn), t_(t) {
-
+    qbn_ = q - sn;
 }

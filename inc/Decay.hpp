@@ -21,12 +21,13 @@ public:
     double GetNeutronBR(void){return(pn_);};
     double GetNeutronSepEnergy(void) {return(sn_);};
     double GetQValue(void) {return(q_);};
+    double GetQBetaN(void) {return(qbn_);};
 
     void SetGammaInfo(const double &rawG, const double &gEff,
                       const double &br){rawG_=rawG; gEff_=gEff; gBr_=br;};
 
 private:
-    double gBr_, dauZ_, numDecay_, parZ_, pn_, q_, sn_, t_, rawG_, gEff_;
+    double gBr_, dauZ_, numDecay_, parZ_, pn_, q_, qbn_, sn_, t_, rawG_, gEff_;
     
     double CalcDaughterZ(){return(parZ_+1);};
     double CalcNumberDecays(void){return(rawG_/gEff_/gBr_);};
