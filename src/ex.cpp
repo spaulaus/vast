@@ -24,6 +24,12 @@ void ReadData(vector<Neutron> &nvec, const string &file);
 void OutputBasics(vector<Neutron> &nvec, Decay &dky, 
                   const string &file);
 
+vector<string> files = {"077cu-ban4-lower", "077cu-ban4-lower", "-8b", 
+                        "results/tof/working/working.fit", 
+                        "results/vast/working/working.dat",
+                        "results/vast/working/working.mgb",
+                        "results/vast/working/working.bgt"};
+
 //---------- SET SOME DETAILS ABOUT THE EXP HERE ----------
 //---------- HANDLE THIS BETTER LATER ----------
 double numBars = 9;
@@ -51,14 +57,13 @@ int main(int argc, char* argv[]) {
                                135.0};
         //peaklist, directory (without data modifier), filename(without .dat), 
         //modifier for file name, fitRange, isTesting
-        TofFitter fitter(peaks, "077cu-ban4-lower", "077cu-ban4-lower", 
-                     "-8keVee-b", fitRange, true);
+        TofFitter fitter(peaks, files[0], files[1], files[2], fitRange, true);
     }//if(doesFit)
     
     //---------- SET THE NEUTRON INFORMATION AND OUTPUT ----------
     vector<Neutron> singles;
     if(outputBasic) {
-        ReadData(singles,"results/tof/working/working.fit");
+        ReadData(singles, files[3]);
         for(vector<Neutron>::iterator it = singles.begin(); it!= singles.end();
             it++) {
             //---------- INTEGRATE THE NEUTRON PEAKS HERE ----------
@@ -66,12 +71,11 @@ int main(int argc, char* argv[]) {
             //---------- Calculate the B(GT) for the Line ---------
             BGTCalculator bgt(*it, decay, betaEff, omega);
         }
-        OutputBasics(singles, decay,
-                     "results/vast/working/working.dat");
+        OutputBasics(singles, decay, files[4]);
     }//if(outputsBasic)
     //---------- B(GT) for the simulations -------
     if(outputBasic && outputTheory) {
-        ofstream outTheory("results/vast/working/working-mgb.bgt");
+        ofstream outTheory(files[5]);
         for(vector<Neutron>::iterator it = singles.begin(); it != singles.end();
             it++) {
             outTheory.setf(ios::fixed);
@@ -90,7 +94,7 @@ int main(int argc, char* argv[]) {
         map<double,double> logftMap = *ndenBgt.GetLogftMap();
         map<double,double> sdensityMap = *ndenBgt.GetSDensity();
         
-        ofstream outNDenBgt("results/vast/working/working-nden.bgt");
+        ofstream outNDenBgt(files[6]);
         outNDenBgt << "#Ex(MeV) BR B(GT) log(ft)" << endl;
         for(map<double,double>::iterator it = bgtMap.begin(); it != bgtMap.end();
             it++) {
