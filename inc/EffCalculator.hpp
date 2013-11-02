@@ -6,6 +6,9 @@
 #ifndef __EFFCALCULATOR_HPP__
 #define __EFFCALCULATOR_HPP__
 #include <string>
+#include <utility>
+
+#include <PhysConstants.hpp>
 
 class EffCalculator{
 public:
@@ -13,11 +16,11 @@ public:
     EffCalculator(const std::string &type);
     ~EffCalculator(){};
 
-    double GetEff(const double &energy);
-    double GetSimRollingEff(const double &energy);
+    Variable GetEff(const Variable &energy);
+    Variable GetSimRollingEff(const Variable &energy);
 
 private:
-    double a_, b_, c_, d_, e_, f_, g_, e1_, e2_;
+    std::map<std::string, Variable> vals_;
 };
 
 #endif //__EFFCALCULATOR_HPP__

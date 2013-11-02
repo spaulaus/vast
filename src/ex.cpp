@@ -39,7 +39,7 @@ double betaEff = 0.23;
 pair<double,double> effs = make_pair(betaEff,omega);
 
 int main(int argc, char* argv[]) {
-    bool doesFit = false;
+    bool doesFit = true;
     bool outputBasic = true;
     bool outputTheory = true;
     bool outputNdenBgt = true;

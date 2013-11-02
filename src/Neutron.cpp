@@ -71,5 +71,5 @@ double Neutron::CalcEnergy(const double &mu) {
 
 double Neutron::CalcEnergyErr(const double &mu, const double &muErr, 
                               const double &en) {
-    return( en * (2*muErr/mu) ); // MeV
+    return( en * sqrt((2*2.5/50.5) + (2*muErr/mu)) ); // MeV
 }

@@ -5,10 +5,13 @@
  */
 #include <iostream>
 #include <string>
+#include <utility>
 
 #include <cstdlib>
 
 #include <unistd.h>
+
+#include <PhysConstants.hpp>
 
 #include "EffCalculator.hpp"
 
@@ -16,24 +19,39 @@ using namespace std;
 
 int main(int argc, char* argv[]) {
     int opt = -1;
-    double eff = 0.0;
+    double temp, temp1 = 0.;
     string name;
-    while((opt = getopt (argc, argv, "g:v:")) != -1)
+    while((opt = getopt (argc, argv, "e:g:v:")) != -1) {
         switch(opt) {
-        case 'g': {
-            EffCalculator ge("ge");
-            eff = ge.GetEff(atof(optarg));
-            name = "Ge";
+        case 'e': {
+            temp1 = atof(optarg);
+            break;
+        } case 'g': {
+            name = "ge";
+            temp = atof(optarg);
             break;
         } case 'v': {
-            EffCalculator vandle("vandle");
-            eff = vandle.GetSimRollingEff(atof(optarg));
-            name = "VANDLE";
+            name = "vandle";
+            temp = atof(optarg);
             break;
-        } case '?':
-            return 1;
-        default:
+        } case '?': {
+              return 1;
+        } default: {
             abort();
+          }
         }
-    cout << "Eff for " << name << " = " << eff << endl;
+    }
+
+    Variable energy(temp, temp1, "keV");
+    EffCalculator eff(name);
+    Variable effRes;
+    if(name == "ge")
+        effRes = eff.GetEff(energy);
+    else if(name == "vandle")
+        effRes = eff.GetSimRollingEff(energy);
+    else
+        cout << "You didn't specify a known type" << endl;
+
+    cout << "Eff for " << name << " = " << effRes.GetValue() << " +- " 
+         << effRes.GetError() << endl;
 }

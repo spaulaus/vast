@@ -96,6 +96,7 @@ void TofFitter::CheckFileExistance(void) {
              << dataFile_ << endl << endl;
         exit(1);
     }
+    test.close();
 }
 
 void TofFitter::GenerateNames(void) {

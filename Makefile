@@ -17,19 +17,25 @@ c++SrcSuf = cpp
 PROGRAM = vast
 
 #Define Objects
-BGTCALCULATORO = BGTCalculator.o
-DECAYO = Decay.o
-EFFCALCULATORO = EffCalculator.o
-EXO = ex.o
-INTEGRATORO = Integrator.o
-NEUTRONO = Neutron.o
-NEUTRONDENSITYO = NeutronDensity.o
-TOFFITTERO = TofFitter.o
+#BGTCALCULATORO   = BGTCalculator.o
+#DECAYO           = Decay.o
+EFFCALCULATORO   = EffCalculator.o
+ERRORCALCULATORO = ErrorCalculator.o
+#FILECHECKERO     = FileChecker.o
+#EXO             = simtest.o
+#EXO              = ex.o
+#INTEGRATORO      = Integrator.o
+#NEUTRONO         = Neutron.o
+#NEUTRONDENSITYO  = NeutronDensity.o
+#SIMCONVOLUTERO   = SimConvoluter.o
+#TOFFITTERO       = TofFitter.o
 
-#Make the object list and prefix the object directory
-OBJS =  $(BGTCALCULATORO) $(DECAYO) 
-OBJS += $(EFFCALCULATORO) $(EXO) $(INTEGRATORO) $(NEUTRONO)
-OBJS += $(NEUTRONDENSITYO) $(TOFFITTERO)
+#Make the object list
+OBJS =  $(BGTCALCULATORO) $(DECAYO) $(EFFCALCULATORO) $(ERRORCALCULATORO)
+OBJS += $(EXO) $(FILECHECKERO) $(INTEGRATORO) $(NEUTRONO)
+OBJS += $(NEUTRONDENSITYO) $(SIMCONVOLUTERO) $(TOFFITTERO)
+
+#prefix the object directory
 OBJDIR = obj
 OBJS_W_DIR = $(addprefix $(OBJDIR)/,$(OBJS))
 
@@ -58,5 +64,5 @@ $(OBJDIR)/%.o: %.cpp
 clean: 
 	@echo "Cleaning..."
 	@rm -f $(OBJDIR)/* $(PROGRAM) ./eff *~ src/*~ include/*~
-eff: src/eff.cpp $(EFFCALCULATORO)
+eff: src/eff.cpp $(EFFCALCULATORO) $(ERRORCALCULATORO)
 	$(CXX) $(CXXFLAGS) $(LDLIBS) $^ -o $@
