@@ -17,18 +17,18 @@ c++SrcSuf = cpp
 PROGRAM = vast
 
 #Define Objects
-#BGTCALCULATORO   = BGTCalculator.o
-#DECAYO           = Decay.o
+BGTCALCULATORO   = BGTCalculator.o
+DECAYO           = Decay.o
 EFFCALCULATORO   = EffCalculator.o
 ERRORCALCULATORO = ErrorCalculator.o
-#FILECHECKERO     = FileChecker.o
-#EXO             = simtest.o
-#EXO              = ex.o
-#INTEGRATORO      = Integrator.o
-#NEUTRONO         = Neutron.o
-#NEUTRONDENSITYO  = NeutronDensity.o
-#SIMCONVOLUTERO   = SimConvoluter.o
-#TOFFITTERO       = TofFitter.o
+FILECHECKERO     = FileChecker.o
+SIMTESTO         = simtest.o
+EXO              = ex.o
+INTEGRATORO      = Integrator.o
+NEUTRONO         = Neutron.o
+NEUTRONDENSITYO  = NeutronDensity.o
+SIMCONVOLUTERO   = SimConvoluter.o
+TOFFITTERO       = TofFitter.o
 
 #Make the object list
 OBJS =  $(BGTCALCULATORO) $(DECAYO) $(EFFCALCULATORO) $(ERRORCALCULATORO)

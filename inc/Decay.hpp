@@ -5,31 +5,32 @@
  */
 #ifndef __DECAY_HPP__
 #define __DECAY_HPP__
+#include <Variable.hpp>
 
 class Decay{
 public:
     Decay(){};
-    Decay(const double &z, const double&q, const double &sn, 
-          const double &t);
+    Decay(const Variable &z, const Variable&q, const Variable &sn, 
+          const Variable &qbn, const Variable &t);
     ~Decay(){};
     
-    double GetDaughterZ(void) {return(CalcDaughterZ());};
-    double GetNumberDecays(void) {return(CalcNumberDecays());};
-    double GetParentZ(void) {return(parZ_);};
+    Variable GetDaughterZ(void) const {return(dauZ_);};
+    Variable GetNumberDecays(void) const {return(numDecay_);};
+    Variable GetParentZ(void) const {return(parZ_);};
 
-    double GetHalfLife(void) {return(t_);};
-    double GetNeutronBR(void){return(pn_);};
-    double GetNeutronSepEnergy(void) {return(sn_);};
-    double GetQValue(void) {return(q_);};
-    double GetQBetaN(void) {return(qbn_);};
+    Variable GetHalfLife(void) {return(t_);};
+    Variable GetNeutronBR(void){return(pn_);};
+    Variable GetNeutronSepEnergy(void) {return(sn_);};
+    Variable GetQValue(void) {return(q_);};
+    Variable GetQBetaN(void) {return(qbn_);};
 
-    void SetGammaInfo(const double &rawG, const double &gEff,
-                      const double &br){rawG_=rawG; gEff_=gEff; gBr_=br;};
+    void SetGammaInfo(const Variable &rawG, const Variable &gEff,
+                      const Variable &br);
 
 private:
-    double gBr_, dauZ_, numDecay_, parZ_, pn_, q_, qbn_, sn_, t_, rawG_, gEff_;
+    Variable gBr_, dauZ_, numDecay_, parZ_, pn_, 
+        q_, qbn_, sn_, t_, rawG_, gEff_;
     
-    double CalcDaughterZ(){return(parZ_+1);};
-    double CalcNumberDecays(void){return(rawG_/gEff_/gBr_);};
+    void CalcNumberDecays(void);
 };
 #endif //__DECAY_HPP__

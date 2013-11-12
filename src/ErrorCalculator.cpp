@@ -5,13 +5,34 @@
  */
 #include <iostream>
 #include <random>
-#include <vector>
+
+#include <PhysConstants.hpp>
 
 #include "ErrorCalculator.hpp"
 
 using namespace std;
 
-double ErrorCalculator::GetEffErr(const map<string,Variable> &vars, 
+double ErrorCalculator::CalcBgtErr(const double &bgt, const Variable &br, 
+                  const Variable &halfLife) {
+    double brPart = br.GetError() / br.GetValue();
+    double hlPart = halfLife.GetError() / halfLife.GetValue();
+    double sqrtPart = sqrt(pow(brPart,2)+pow(hlPart,2));
+    return(bgt*sqrtPart);
+}
+
+double ErrorCalculator::CalcBrErr(const double &br, const Variable &yld, const Variable &ndky,
+                     const Variable &gammaEff, const Variable &betaEff)
+{
+    double yldPart = yld.GetError() / yld.GetValue();
+    double dkyPart = ndky.GetError() / ndky.GetValue();
+    double gammaPart = gammaEff.GetError() / gammaEff.GetValue();
+    double betaPart = betaEff.GetError() / betaEff.GetValue();
+    double sqrtPart = sqrt(pow(yldPart,2) + pow(dkyPart,2) +
+                           pow(gammaPart,2) + pow(betaPart,2));
+    return(br*sqrtPart);
+}
+
+double ErrorCalculator::CalcEffErr(const map<string,Variable> &vars, 
                                   const Variable &energy) {
     default_random_engine generator;
     map<string, normal_distribution<double> > randDists;
@@ -25,7 +46,7 @@ double ErrorCalculator::GetEffErr(const map<string,Variable> &vars,
                                             it->second.GetError());
         randDists.insert(make_pair(it->first, dist));
     }
-    normal_distribution<double> eDist(energy.GetValue(),
+    normal_distribution<double> eDist(energy.GetValue()*1000.,
                                       energy.GetError());
 
     for(unsigned int i = 0; i < numSamples; i++) {
@@ -57,6 +78,53 @@ double ErrorCalculator::GetEffErr(const map<string,Variable> &vars,
     return(sqrt(var));
 }
 
+double ErrorCalculator::CalcEnergyErr(const Variable &sig, const Variable &mu) {
+    PhysConstants consts;
+    double c  = consts.GetConstant("c").GetValue()*(100/1e9); // cm / ns
+    double mn = consts.GetConstant("neutronMass").GetValue()/c/c; // MeV
+
+    double frac = 0.25;
+    double high = 0.5*mn*pow(50.5/(mu.GetValue()-sig.GetValue()*frac),2.);
+    double low  = 0.5*mn*pow(50.5/(mu.GetValue()+sig.GetValue()*frac),2.);
+    return(high-low);
+}
+
+double ErrorCalculator::CalcIntegratedYldErr(const double &fitYldErr, 
+                                             const double &fitSimp,
+                                             const double &infSimp){
+    double xErr = (fitYldErr/fitSimp) * infSimp;
+    return(sqrt(xErr*xErr+fitYldErr*fitYldErr));
+}
+
+double ErrorCalculator::CalcLogftErr(const Variable &br, const Variable &halfLife) {
+    double brPart = br.GetError() / br.GetValue() / log(10);
+    double hlPart = halfLife.GetError() / halfLife.GetValue() / log(10);
+    return(sqrt(pow(brPart,2)+pow(hlPart,2)));
+}
+
+double ErrorCalculator::CalcNumDkyErr(const double &numDky, 
+                                        const Variable &rawGammaCounts, 
+                                        const Variable &gammaEff, 
+                                        const Variable &gammaBr){
+    double areaPart = rawGammaCounts.GetError()/ rawGammaCounts.GetValue();
+    double effPart  = gammaEff.GetError() / gammaEff.GetValue();
+    double brPart  = gammaBr.GetError() / gammaBr.GetValue();
+    return(numDky*sqrt(pow(areaPart,2)+pow(effPart,2)+pow(brPart,2)));
+}
+
+double ErrorCalculator::CalcPnErr(const double &pn, 
+                                  vector<Neutron> &neutrons,
+                                  const Decay &dky) {
+    double yldPart;
+    for(auto &i : neutrons)
+        yldPart += pow(i.GetIntegratedYield().GetError()/ 
+                       i.GetIntegratedYield().GetValue(),2);
+    double ndkyPart = pow(dky.GetNumberDecays().GetError() / 
+                          dky.GetNumberDecays().GetValue(),2);
+    return(pn*sqrt(yldPart+ndkyPart));
+}
+                          
+//---------- CalcMean
 double ErrorCalculator::CalcMean(const vector<double> &mcVals) {
     double sum = 0;
     for(const auto &i : mcVals)
@@ -64,6 +132,7 @@ double ErrorCalculator::CalcMean(const vector<double> &mcVals) {
     return(sum / mcVals.size());        
 }
 
+//---------- CalcVariance
 double ErrorCalculator::CalcVariance(const vector<double> &mcVals,
                                      const double &mean) {
     double var = 0;
@@ -71,3 +140,4 @@ double ErrorCalculator::CalcVariance(const vector<double> &mcVals,
         var += pow(i-mean,2);
     return(var/mcVals.size());
 }
+

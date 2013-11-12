@@ -11,8 +11,6 @@
 
 #include <unistd.h>
 
-#include <PhysConstants.hpp>
-
 #include "EffCalculator.hpp"
 
 using namespace std;

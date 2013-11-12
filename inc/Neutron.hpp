@@ -6,6 +6,10 @@
 #ifndef __NEUTRON_HPP__
 #define __NEUTRON_HPP__
 
+#include <Variable.hpp>
+
+#include "EffCalculator.hpp"
+
 class Neutron {
 public:
     Neutron(){};
@@ -17,60 +21,54 @@ public:
     ~Neutron(){};
     
     //Gets For the CB variables
-    double GetAlpha(void){return(alph_);};
-    double GetN(void){return(n_);};
-    double GetSigma(void){return(sig_);};
+    Variable GetAlpha(void) {return{alph_};};
+    Variable GetN(void) {return(n_);};
+    Variable GetSigma(void){return(sig_);};
     //Gets Related to the Fit
-    double GetEnergy(void){return(en_);};
-    double GetEnergyErr(void){return(enErr_);};
-    double GetMu(void){return(mu_);};
-    double GetMuErr(void){return(muErr_);};
-    double GetRawYield(void){return(yld_);};
-    double GetRawYieldErr(void){return(yldErr_);};
-    double GetYield(void){return(yld_/eff_);};
-    double GetYieldErr(void){return(yldErr_/eff_);};
+    Variable GetEnergy(void){return(en_);};
+    Variable GetMu(void){return(mu_);};
+    Variable GetRawYield(void){return(yld_);};
+    Variable GetYield(void){return(AdjEff(yld_));};
     //Gets Related to the Integration
-    double GetIntegratedYield(void){return(intYld_/eff_);};
-    double GetIntegratedYieldErr(void){return(intYldErr_/eff_);};
-    double GetRawIntegratedYield(void){return(intYld_);};
-    double GetRawIntegratedYieldErr(void){return(intYldErr_);};
+    Variable GetIntegratedYield(void){return(AdjEff(intYld_));};
+    Variable GetRawIntegratedYield(void){return(intYld_);};
     //Gets Related to the B(GT)
-    double GetBgt(void){return(bgt_);};
-    double GetBranchingRatio(void){return(br_);};
-    double GetExcitationEnergy(void){return(ex_);};
-    double GetLogft(void){return(logft_);};
+    Variable GetBgt(void){return(bgt_);};
+    Variable GetBranchingRatio(void){return(br_);};
+    Variable GetExcitationEnergy(void){return(ex_);};
+    Variable GetLogft(void){return(logft_);};
     //Miscellaneous Gets
-    double GetDensitySigma(void){return(denSig_);};
-    double GetEfficiency(void){return(eff_);};
+    Variable GetEfficiency(void){return(eff_);};
 
     //Sets related to the parameterization of the CB
-    void SetAlpha(const double &a){alph_ = a;};
-    void SetN(const double &a){n_ = a;};
-    void SetSigma(const double &a){sig_ = a; CalcDensitySigma();};
+    void SetAlpha(const Variable &a){alph_ = a;};
+    void SetN(const Variable &a){n_ = a;};
+    void SetSigma(const Variable &a){sig_ = a; CalcEnergyErr();};
     //Sets related to the Integration
-    void SetIntegratedYield(const double &a){intYld_ = a;};
-    void SetIntegratedYieldErr(const double &a){intYldErr_ = a;};
+    void SetIntegratedYield(const Variable &a){intYld_ = a;};
     //Sets related to the B(GT) Calculation
-    void SetBgt(const double &a){bgt_ = a;};
-    void SetBranchingRatio(const double &a){br_ = a;};
-    void SetExitationEnergy(const double &a){ex_ = a;};
-    void SetLogft(const double &a){logft_ = a;};
+    void SetBgt(const Variable &a){bgt_ = a;};
+    void SetBranchingRatio(const Variable &a){br_ = a;};
+    void SetExitationEnergy(const Variable &a){ex_ = a;};
+    void SetLogft(const Variable &a){logft_ = a;};
 private:
+    //Instance of the efficiency and error calculators
+    EffCalculator eff;
+
     //Variables related to the CB
-    double alph_, n_, sig_;
+    Variable alph_, n_, sig_;
     //Variables related to the integration
-    double intYld_, intYldErr_;
+    Variable intYld_, intYldErr_;
     //Variables related to the B(GT)
-    double bgt_, br_, ex_, logft_;
+    Variable bgt_, br_, ex_, logft_;
     //Information Related to the Fit
-    double mu_, muErr_, en_, enErr_, yld_, yldErr_;
+    Variable mu_, muErr_, en_, enErr_, yld_, yldErr_;
     //Miscellaneous Information
-    double denSig_, eff_, gammaE_;
+    Variable denSig_, eff_, gammaE_;
 
     //Some Miscellaneous functions
     double CalcEnergy(const double &mu);
-    double CalcEnergyErr(const double &mu, const double &muErr,
-                         const double &en);
-    void CalcDensitySigma(void);
+    void CalcEnergyErr(void);
+    Variable AdjEff(const Variable &var);
 };
 #endif //__NEUTRON_HPP__

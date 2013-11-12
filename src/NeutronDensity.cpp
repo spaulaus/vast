@@ -15,38 +15,54 @@
 using namespace std;
 
 NeutronDensity::NeutronDensity(std::vector<Neutron> &neutrons, const double &len,
-                               const double &res, const double &ge) {
+                               const double &res, const Variable &ge) {
     len_     = len;
     res_     = res;
     neutrons_ = neutrons;
     
-    if(ge == 0)
-        CalcDensity(0.0, 1.0);
+    if(ge.GetValue() == 0)
+        CalcDensity(ge, Variable(1.0,0.0,""));
     else {
-        EffCalculator effGe("ge");
-        double geEff = effGe.GetEff(ge*1000.); //needs gamma energy in keV
-        CalcDensity(ge, geEff);
+        EffCalculator eff("ge");
+        CalcDensity(ge, eff.GetEff(ge));
     }
 }
 
-void NeutronDensity::CalcDensity(const double &ge, 
-                                 const double &geEff) {
-    SignalGenerator sig;
+void NeutronDensity::CalcDensity(const Variable &ge, const Variable &geEff) {
+    //---------- Three gaussians representing the error bands on the BR
+    SignalGenerator sig, sigLow, sigHigh;
     sig.SetSignalType("gaussian");
+    sigLow.SetSignalType("gaussian");
+    sigHigh.SetSignalType("gaussian");
 
     for(vector<Neutron>::iterator it = neutrons_.begin(); 
         it != neutrons_.end(); it++) {
-        
-        sig.SetAmplitude(it->GetBranchingRatio());
-        sig.SetSigma(it->GetDensitySigma());
-        sig.SetDelay(it->GetEnergy()+ge);
-        for(double i = 0; i < len_; i+=res_) {
-            double val = sig.GetSignalValue(i) / geEff;
-            map<double,double>::iterator en = density_.find(i);
-            if(en != density_.end())
-                en->second += val;
-            else
-                density_.insert(make_pair(i,val));
-        }
-    }
+        double br = it->GetBranchingRatio().GetValue();
+        double brErr = it->GetBranchingRatio().GetError();
+
+        sig.SetDelay(it->GetEnergy().GetValue()+ge.GetValue());
+        sig.SetSigma(it->GetEnergy().GetError());
+
+        vector<double> brList = {br-brErr,br,br+brErr};
+        for(auto const &i : brList) {
+            sig.SetAmplitude(i*res_);
+            
+            map<double,double> *tempMap;
+            if(i == br-brErr)
+                tempMap = &denLow_;
+            else if (i == br)
+                tempMap = &denMean_;
+            else if (i == br+brErr)
+                tempMap = &denHigh_;
+            
+            for(double j = 0; j < len_; j+=res_) {
+                double val = sig.GetSignalValue(j) / geEff.GetValue();
+                auto temp = tempMap->find(j);
+                if(temp != tempMap->end())
+                    temp->second += val;
+                else
+                    tempMap->insert(make_pair(j,val));
+            }//for(double i = 0; i < len_
+        }//for double i = br-brErr;
+    }//for vector<Neutron>::
 }

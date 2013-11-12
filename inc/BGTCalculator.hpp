@@ -5,10 +5,13 @@
  */
 #ifndef __BGTCALCULATOR_HPP__
 #define __BGTCALCULATOR_HPP__
-
 #include <map>
+#include <string>
+
+#include <Variable.hpp>
 
 #include "Decay.hpp"
+#include "ErrorCalculator.hpp"
 #include "Neutron.hpp"
 #include "NeutronDensity.hpp"
 
@@ -16,12 +19,13 @@ class BGTCalculator {
 public:
     BGTCalculator(){};
     BGTCalculator(std::map<double,double> &density, const Decay &decay,
-                  const double &betaEff, const double &omega,
-                  const double &eg = 0.0);
+                  const Variable &betaEff, const Variable &omega,
+                  const std::string &band = "",
+                  const Variable &eg = Variable(0.0,1.0,""));
                   
     BGTCalculator(Neutron &neutron, const Decay &decay,
-                  const double &betaEff, const double &omega,
-                  const double &eg = 0.0);
+                  const Variable &betaEff, const Variable &omega,
+                  const Variable &eg = Variable(0.0,0.0,""));
     ~BGTCalculator(){};
 
     std::map<double,double>* GetBgtMap(void){return(&bgtMap_);};
@@ -30,16 +34,18 @@ public:
 private:
     Decay decay_;
     Neutron neutron_; 
+    ErrorCalculator err;
 
-    double betaEff_, geEff_, eG_, eN_, f_, omega_, yld_; 
+    Variable betaEff_, geEff_, eG_, eN_, f_, omega_, yld_; 
+    std::string band_;
     std::map<double,double> density_, bgtMap_, logftMap_, sDensity_;
     
-    double CalcBgt(const double &en, const double &val,
+    Variable CalcBgt(const Variable &en, const Variable &val,
                    const bool &isIndv = true);
-    double CalcBranchingRatio(const double &yld);
-    double CalcF(const double &en);
-    double CalcLevelEnergy(const double &en);
-    double CalcLogft(const double &en, const double &val,
+    Variable CalcBranchingRatio(const Variable &yld);
+    double CalcF(const Variable &en);
+    Variable CalcLevelEnergy(const Variable &en);
+    Variable CalcLogft(const Variable &en, const Variable &val,
                      const bool &isIndv = true);
 
     void HandleNeutronDensity(const std::map<double,double> &density);

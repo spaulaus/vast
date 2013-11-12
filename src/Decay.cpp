@@ -5,8 +5,29 @@
  */
 
 #include "Decay.hpp"
+#include "ErrorCalculator.hpp"
 
-Decay::Decay(const double &z, const double&q, const double &sn, 
-             const double &t) : parZ_(z), q_(q), sn_(sn), t_(t) {
-    qbn_ = q - sn;
+Decay::Decay(const Variable &z, const Variable&q, const Variable &sn, 
+             const Variable &qbn, const Variable &t) : 
+    parZ_(z), q_(q), qbn_(qbn), sn_(sn), t_(t) {
+    
+    dauZ_ = parZ_;
+    dauZ_.SetValue(parZ_.GetValue()+1);
+}
+
+void Decay::SetGammaInfo(const Variable &rawG, const Variable &gEff,
+                         const Variable &br) {
+    rawG_=rawG; 
+    gEff_=gEff; 
+    gBr_=br;
+    CalcNumberDecays();
+}
+
+void Decay::CalcNumberDecays(void){
+    double numDky = rawG_.GetValue() / gEff_.GetValue() / gBr_.GetValue();
+         
+    ErrorCalculator err;
+    double numDkyErr = err.CalcNumDkyErr(numDky, rawG_, gEff_, gBr_);
+
+    numDecay_ = Variable(numDky, numDkyErr, "");
 }

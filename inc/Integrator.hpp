@@ -9,6 +9,8 @@
 #include <vector>
 #include <utility>
 
+#include <Variable.hpp>
+
 #include "Neutron.hpp"
 
 class Integrator{
@@ -18,8 +20,7 @@ public:
 
     double GetValue(const double &t) {return(CrystalBall(t));};
 private:
-    Neutron neutron_; 
-    double alpha_, mu_, n_, sigma_, yield_, yldErr_;
+    double alpha_, mu_, n_, sigma_;
 
     double CalcError(const double &fSimp, const double &uSimp);
 

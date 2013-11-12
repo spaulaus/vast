@@ -9,57 +9,32 @@
 
 #include <PhysConstants.hpp>
 
+#include "ErrorCalculator.hpp"
 #include "Neutron.hpp"
-#include "EffCalculator.hpp"
 
 using namespace std;
 
 Neutron::Neutron(const double &mu, const double &yld) {
-    EffCalculator eff("vandle");
-    en_        = CalcEnergy(mu);
-    enErr_     = 0.0;
-    eff_       = eff.GetSimRollingEff(en_*1000.);
-    intYld_    = 0.0;
-    intYldErr_ = 0.0;
-    mu_        = mu;
-    muErr_     = 0.0;
-    yld_       = yld;
-    yldErr_    = 0.0;
+    mu_        = Variable(mu, 0.0, "ns");
+    yld_       = Variable(yld,0.0,"counts");
+    en_        = Variable(CalcEnergy(mu), 0.0, "MeV");
+    eff_       = eff.GetSimRollingEff(en_);
 }
 
 Neutron::Neutron(const double &mu, const double &muErr, 
            const double &yld) {
-    EffCalculator eff("vandle");
-    en_        = CalcEnergy(mu); 
-    enErr_     = CalcEnergyErr(mu,muErr,en_); 
-    eff_       = eff.GetSimRollingEff(en_*1000.);
-    intYld_    = 0.0;
-    intYldErr_ = 0.0;
-    mu_        = mu;
-    muErr_     = muErr;
-    yld_       = yld;
-    yldErr_    = 0.0;
+    mu_        = Variable(mu, muErr, "ns");
+    yld_       = Variable(yld,0.0,"counts");
+    en_        = Variable(CalcEnergy(mu), 0.0, "MeV");
+    eff_       = eff.GetSimRollingEff(en_);
 }
 
 Neutron::Neutron(const double &mu, const double &muErr, 
            const double &yld, const double &yldErr) {
-    EffCalculator eff("vandle");
-    en_        = CalcEnergy(mu); 
-    enErr_     = CalcEnergyErr(mu,muErr,en_); 
-    eff_       = eff.GetSimRollingEff(en_*1000.);
-    intYld_    = 0.0;
-    intYldErr_ = 0.0;
-    mu_        = mu;
-    muErr_     = muErr;
-    yld_       = yld;
-    yldErr_    = yldErr;
-}
-
-void Neutron::CalcDensitySigma(void){
-    double sig  = sig_*0.25;
-    double high  = CalcEnergy(mu_-sig);
-    double low = CalcEnergy(mu_+sig);
-    denSig_ = high - low;
+    mu_        = Variable(mu, muErr, "ns");
+    yld_       = Variable(yld,yldErr,"counts");
+    en_        = Variable(CalcEnergy(mu), 0.0, "MeV");
+    eff_       = eff.GetSimRollingEff(en_);
 }
 
 double Neutron::CalcEnergy(const double &mu) {
@@ -69,7 +44,13 @@ double Neutron::CalcEnergy(const double &mu) {
     return(0.5*mn*pow(50.5/mu,2.)); // MeV
 }
 
-double Neutron::CalcEnergyErr(const double &mu, const double &muErr, 
-                              const double &en) {
-    return( en * sqrt((2*2.5/50.5) + (2*muErr/mu)) ); // MeV
+void Neutron::CalcEnergyErr(void) {
+    ErrorCalculator err;
+    en_.SetError(err.CalcEnergyErr(sig_,mu_));
+}
+
+Variable Neutron::AdjEff(const Variable &var) {
+    return(Variable(var.GetValue()/eff_.GetValue(), 
+                    var.GetError()/eff_.GetValue(),
+                    var.GetUnits()));
 }

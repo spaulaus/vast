@@ -7,23 +7,26 @@
 
 #include <cmath>
 
+#include "ErrorCalculator.hpp"
 #include "Integrator.hpp"
 
 using namespace std;
 
 Integrator::Integrator(Neutron &neutron, const pair<double,double> &range) {
-    alpha_ = neutron.GetAlpha();
-    mu_    = neutron.GetMu();
-    n_     = neutron.GetN();
-    sigma_ = neutron.GetSigma();
-    yield_ = neutron.GetRawYield();
-    yldErr_ = neutron.GetRawYieldErr();
-
+    alpha_ = neutron.GetAlpha().GetValue();
+    mu_    = neutron.GetMu().GetValue();
+    n_     = neutron.GetN().GetValue();
+    sigma_ = neutron.GetSigma().GetValue();
+    
+    Variable yld = neutron.GetRawYield();
+    
     double fSimp = AdaptiveSimpsons(range.first, range.second, 1.e-20, 30);
     double uSimp = AdaptiveSimpsons(range.second, 1.e8, 1.e-20, 30);
-    
-    neutron.SetIntegratedYield((yield_/fSimp)*uSimp + yield_);
-    neutron.SetIntegratedYieldErr(CalcError(fSimp,uSimp));
+    double intYld = (yld.GetValue()/fSimp)*uSimp + yld.GetValue();
+
+    ErrorCalculator err;
+    double intYldErr = err.CalcIntegratedYldErr(yld.GetError(), fSimp, uSimp);
+    neutron.SetIntegratedYield(Variable(intYld, intYldErr, "counts"));
 }
 
 double Integrator::AdaptiveSimpsons(const double &a, const double &b, // interval 
@@ -51,13 +54,6 @@ double Integrator::AdaptiveSimpsonsAux(const double &a,
     return( AdaptiveSimpsonsAux(a, c, epsilon/2, Sleft,  fa, fc, fd, bottom-1) + 
             AdaptiveSimpsonsAux(c, b, epsilon/2, Sright, fc, fb, fe, bottom-1) );
 }
-
-double Integrator::CalcError(const double &fSimp,
-                             const double &uSimp){
-    double xErr = (yldErr_/fSimp) * uSimp;
-    return(sqrt(xErr*xErr+yldErr_*yldErr_));
-}
-                          
 
 double Integrator::CrystalBall(const double &var){
     double t = (var-mu_)/sigma_;
