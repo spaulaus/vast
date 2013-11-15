@@ -21,7 +21,8 @@ set ylabel offset 1,0 "B(GT)"
 set arrow 1 from sn,0 to sn,0.06 @ARSTY
 set arrow 2 from qbeta,0 to qbeta,0.06 @ARSTY1
 set output '../pics/vast/working/working-bgt.eps'
-plot file0 u ($3+sn):8 w impulses lw 5 lc rgb prim3
+plot [][0:0.06] file0 u ($3+sn):8 w impulses lw 5 lc rgb prim3,\
+     '../results/vast/working/working.sens' u 1:4:5 w yerrorbars
 
 set ylabel offset 1,0 "Branching Ratio (/100 decays)"
 set arrow 1 from sn,0.0002 to sn,0.002 @ARSTY
@@ -47,4 +48,4 @@ set ylabel offset 1,0 "B(GT) / (0.001 MeV)"
 set arrow 1 from sn,0 to sn,0.00018 @ARSTY
 set arrow 2 from qbeta,0 to qbeta,0.00018 @ARSTY1
 set output '../pics/vast/working/working-nden-bgt.eps'
-plot file1 u 1:6:7 w filledcurve lc rgb comp5, '' u 1:5 w steps lc rgb prim3 lw 3
+plot [4:11][0:0.00018] file1 u 1:6:7 w filledcurve lc rgb comp5, '' u 1:5 w steps lc rgb prim3 lw 3

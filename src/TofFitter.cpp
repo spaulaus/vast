@@ -66,28 +66,6 @@ TofFitter::TofFitter(const vector<double> &peaks, const string &dir,
     StartRollin();
 }
 
-double TofFitter::CalcSigma(const double &tof){
-    double sM = -0.000121210451962825;
-    double sN = 0.0416568757021418;
-    double sO = 0.550158923590531;
-    return(sM*tof*tof+sN*tof+sO);
-}
-
-double TofFitter::CalcAlpha(const double &tof) {
-//Parameterization Parameters for Alpha 
-    double aI = 0.0130289072593045;
-    double aH = -0.641803483244778;
-    return(aI/tof/tof+aH);
-}
-
-double TofFitter::CalcN(const double &tof) {
-//Parameterization Parameters for N 
-    double nJ = 2.21591018795502e-06;
-    double nK = 0.00189178692442985;
-    double nL = 1.33190840921066;
-    return(nJ*tof*tof+nK*tof+nL);
-}
-
 void TofFitter::CheckFileExistance(void) {
     ifstream test(dataFile_.c_str());
     if(test.fail()) {
@@ -131,10 +109,6 @@ void TofFitter::PerformFit(void) {
      //Read in the data and set the variable to fit.
     RooRealVar tof("tof","tof", 0.0, rng_.first, rng_.second);
 
-    double binning = 0.5;
-    double wiggle = 200.0;
-    double yStart = 3.e3, yLow = 0., yHigh = 1.e8;
-    
     //Parameterization Parameters for Sigma 
     RooConstVar sM("sM","", -0.000121210451962825);
     RooConstVar sN("sN","", 0.0416568757021418);
@@ -153,10 +127,10 @@ void TofFitter::PerformFit(void) {
     
    for(unsigned int i = 0; i < yields_.size(); i++) {
         stringstream fSig, fAlph, fN;
-        RooRealVar *yield = new RooRealVar(yields_[i].c_str(), "", yStart, 
-                                     yLow, yHigh);
+        RooRealVar *yield = new RooRealVar(yields_[i].c_str(), "", yStart_, 
+                                     yLow_, yHigh_);
         RooRealVar *mu = new RooRealVar(mus_[i].c_str(),"",peaks_[i], 
-                      peaks_[i]-wiggle, peaks_[i]+wiggle);
+                      peaks_[i]-wiggle_, peaks_[i]+wiggle_);
         
         fSig << "sM*pow(" << mus_[i] << ",2)+sN*" << mus_[i] 
              << "+sO";
@@ -207,8 +181,9 @@ void TofFitter::PerformFit(void) {
             
             results << i << " " << mew.first << " " << mew.second << " " 
                     << y.first << " " << y.second << " " 
-                    << CalcSigma(mew.first) << " " << CalcAlpha(mew.first) 
-                    << " " << CalcN(mew.first) << endl;
+                    << par.CalcSigma(mew.first) << " " 
+                    << par.CalcAlpha(mew.first) 
+                    << " " << par.CalcN(mew.first) << endl;
         }
         results.close();
     }else {
@@ -223,10 +198,10 @@ void TofFitter::PerformFit(void) {
 
     //Do the plots
     RooPlot* frame = tof.frame();
-    frame = tof.frame(200.*binning);
+    frame = tof.frame((rng_.second-rng_.first)*binning_);
     frame->SetTitle("");
     //frame->SetAxisRange(0.,450.,"Y");
-    frame->SetAxisRange(0.,200.,"X");
+    frame->SetAxisRange(rng_.first,rng_.second,"X");
     frame->SetXTitle("Time-of-Flight (ns)");
     frame->SetYTitle("Events / 2 ns");
     frame->GetYaxis()->SetTitleOffset(1.2);
@@ -244,34 +219,6 @@ void TofFitter::PerformFit(void) {
     c->cd();
     frame->Draw();
     c->SaveAs(eps_.c_str());
-
-    hasConvergence_ = fitResult->statusCodeHistory(0) == 0;
-    hasHesseCalc_   = fitResult->statusCodeHistory(1) == 0;
-
-    if(hasConvergence_ && hasHesseCalc_) {
-        cout << "The Fit converged, and HESSE had no issues" << endl;
-        
-        ofstream results(output_.c_str());
-        results << "#Num Mu(ns) MuErr(ns) Yld YldErr Sigma Alpha N" << endl;
-        for(unsigned int i = 0; i < yields_.size(); i++) {
-            pair<double,double> mew=fit_.find(mus_[i])->second;
-            pair<double,double> y = fit_.find(yields_[i])->second;
-            
-            results << i << " " << mew.first << " " << mew.second << " " 
-                    << y.first << " " << y.second << " " 
-                    << CalcSigma(mew.first) << " " << CalcAlpha(mew.first) 
-                    << " " << CalcN(mew.first) << endl;
-        }
-        results.close();
-    }else {
-        if(!hasConvergence_) 
-            cout << endl << endl << "Oh, Jesus, the fit did not converge." 
-                 << endl;
-        if(!hasHesseCalc_)
-            cout << "Hesse FAILED to calculate things properly." 
-                 << endl << endl;
-        exit(1);
-    }
 }
 
 void TofFitter::PerformMcStudy(void) {

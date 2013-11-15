@@ -3,6 +3,7 @@
  *  \author S. V. Paulauskas
  *  \date 29 October 2013
  */
+#include <chrono>
 #include <iostream>
 #include <random>
 
@@ -34,7 +35,10 @@ double ErrorCalculator::CalcBrErr(const double &br, const Variable &yld, const V
 
 double ErrorCalculator::CalcEffErr(const map<string,Variable> &vars, 
                                   const Variable &energy) {
-    default_random_engine generator;
+    // obtain a seed from the system clock:
+    unsigned seed1 = chrono::system_clock::now().time_since_epoch().count();
+
+    mt19937_64 generator(seed1);
     map<string, normal_distribution<double> > randDists;
     vector<double> mcEffs;
 

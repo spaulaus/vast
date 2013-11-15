@@ -40,6 +40,9 @@ public:
     //Miscellaneous Gets
     Variable GetEfficiency(void){return(eff_);};
 
+    //Sets for the fitted variables
+    void SetMu(const Variable &a) {mu_ = a; CalcEnEff();};
+    void SetYld(const Variable &a) {yld_ = a;};
     //Sets related to the parameterization of the CB
     void SetAlpha(const Variable &a){alph_ = a;};
     void SetN(const Variable &a){n_ = a;};
@@ -49,7 +52,7 @@ public:
     //Sets related to the B(GT) Calculation
     void SetBgt(const Variable &a){bgt_ = a;};
     void SetBranchingRatio(const Variable &a){br_ = a;};
-    void SetExitationEnergy(const Variable &a){ex_ = a;};
+    void SetExcitationEnergy(const Variable &a){ex_ = a;};
     void SetLogft(const Variable &a){logft_ = a;};
 private:
     //Instance of the efficiency and error calculators
@@ -58,17 +61,19 @@ private:
     //Variables related to the CB
     Variable alph_, n_, sig_;
     //Variables related to the integration
-    Variable intYld_, intYldErr_;
+    Variable intYld_;
     //Variables related to the B(GT)
     Variable bgt_, br_, ex_, logft_;
     //Information Related to the Fit
-    Variable mu_, muErr_, en_, enErr_, yld_, yldErr_;
+    Variable mu_, en_, yld_;
     //Miscellaneous Information
-    Variable denSig_, eff_, gammaE_;
+    Variable eff_, gammaE_;
 
     //Some Miscellaneous functions
     double CalcEnergy(const double &mu);
-    void CalcEnergyErr(void);
+
     Variable AdjEff(const Variable &var);
+    void CalcEnEff(void);
+    void CalcEnergyErr(void);
 };
 #endif //__NEUTRON_HPP__

@@ -135,6 +135,6 @@ void BGTCalculator::HandleNeutronIndividual(Neutron &neutron) {
     Variable yld = neutron.GetIntegratedYield();
     neutron.SetBgt(CalcBgt(en,yld));
     neutron.SetBranchingRatio(CalcBranchingRatio(yld));
-    neutron.SetExitationEnergy(CalcLevelEnergy(en));
+    neutron.SetExcitationEnergy(CalcLevelEnergy(en));
     neutron.SetLogft(CalcLogft(en,yld));
 }

@@ -44,6 +44,11 @@ double Neutron::CalcEnergy(const double &mu) {
     return(0.5*mn*pow(50.5/mu,2.)); // MeV
 }
 
+void Neutron::CalcEnEff(void) {
+    en_        = Variable(CalcEnergy(mu_.GetValue()), 0.0, "MeV");
+    eff_       = eff.GetSimRollingEff(en_);
+}
+
 void Neutron::CalcEnergyErr(void) {
     ErrorCalculator err;
     en_.SetError(err.CalcEnergyErr(sig_,mu_));
@@ -54,3 +59,4 @@ Variable Neutron::AdjEff(const Variable &var) {
                     var.GetError()/eff_.GetValue(),
                     var.GetUnits()));
 }
+

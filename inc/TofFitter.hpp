@@ -10,7 +10,8 @@
 #include <string>
 #include <vector>
 
-#include <Neutron.hpp>
+#include "Neutron.hpp"
+#include "ParamCalculator.hpp"
 
 class TofFitter {
 public:
@@ -25,10 +26,11 @@ public:
     std::vector<Neutron> GetFitResults(void){return(neutrons_);};
 private:
     bool hasConvergence_, hasHesseCalc_;
-    double binning_, wiggle_;
+    static constexpr double binning_ = 0.5, wiggle_ = 200.;
     static constexpr double yStart_=3.e3, yLow_ = 0.0, yHigh_ = 1.e8;
     std::map<std::string,std::pair<double,double> > fit_;
     std::pair<double,double> rng_;
+    ParamCalculator par;
     std::string dataFile_, dir_, eps_, mod_, output_;
     std::vector<double> peaks_;
     std::vector<Neutron> neutrons_;
@@ -40,9 +42,5 @@ private:
     void PerformFit(void);
     void PerformMcStudy(void);
     void StartRollin(void);
-
-    double CalcAlpha(const double &tof);
-    double CalcN(const double &tof);
-    double CalcSigma(const double &tof);
 }; //class TofFitter
 #endif //ifndef __TOFFITTER_HPP__

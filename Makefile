@@ -23,17 +23,20 @@ EFFCALCULATORO   = EffCalculator.o
 ERRORCALCULATORO = ErrorCalculator.o
 FILECHECKERO     = FileChecker.o
 SIMTESTO         = simtest.o
-EXO              = ex.o
+#EXO              = ex.o
+EXO              = sensitivity.o
 INTEGRATORO      = Integrator.o
+LIMITFINDERO     = LimitFinder.o
 NEUTRONO         = Neutron.o
 NEUTRONDENSITYO  = NeutronDensity.o
+PARAMCALCULATORO = ParamCalculator.o
 SIMCONVOLUTERO   = SimConvoluter.o
 TOFFITTERO       = TofFitter.o
 
 #Make the object list
 OBJS =  $(BGTCALCULATORO) $(DECAYO) $(EFFCALCULATORO) $(ERRORCALCULATORO)
-OBJS += $(EXO) $(FILECHECKERO) $(INTEGRATORO) $(NEUTRONO)
-OBJS += $(NEUTRONDENSITYO) $(SIMCONVOLUTERO) $(TOFFITTERO)
+OBJS += $(EXO) $(FILECHECKERO) $(INTEGRATORO) $(LIMITFINDERO) $(NEUTRONO)
+OBJS += $(NEUTRONDENSITYO) $(PARAMCALCULATORO) $(SIMCONVOLUTERO) $(TOFFITTERO)
 
 #prefix the object directory
 OBJDIR = obj

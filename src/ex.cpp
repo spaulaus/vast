@@ -87,10 +87,12 @@ int main(int argc, char* argv[]) {
         ofstream outTheory(files[5]);
         for(vector<Neutron>::iterator it = singles.begin(); it != singles.end();
             it++) {
-            outTheory.setf(ios::fixed);
-            outTheory << setprecision(8) << setw(10) 
-                      << it->GetExcitationEnergy().GetValue() << "  " 
-                      << it->GetBgt().GetValue() << endl;
+            outTheory << it->GetExcitationEnergy().GetValue() << "  " 
+                      << it->GetBgt().GetValue() << " " 
+                      << it->GetEnergy().GetError();
+            auto itNext = it;
+            if(itNext++ != singles.end())
+                cout << endl;
         }
         outTheory.close();
     }//if(outputsBasic && outputsBgt)
