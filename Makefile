@@ -17,14 +17,15 @@ c++SrcSuf = cpp
 PROGRAM = vast
 
 #Define Objects
+#This file must contain your MAIN function
+MAINO              = ex.o
+
 BGTCALCULATORO   = BGTCalculator.o
 DECAYO           = Decay.o
 EFFCALCULATORO   = EffCalculator.o
 ERRORCALCULATORO = ErrorCalculator.o
 FILECHECKERO     = FileChecker.o
 SIMTESTO         = simtest.o
-#EXO              = ex.o
-EXO              = sensitivity.o
 INTEGRATORO      = Integrator.o
 LIMITFINDERO     = LimitFinder.o
 NEUTRONO         = Neutron.o
@@ -35,7 +36,7 @@ TOFFITTERO       = TofFitter.o
 
 #Make the object list
 OBJS =  $(BGTCALCULATORO) $(DECAYO) $(EFFCALCULATORO) $(ERRORCALCULATORO)
-OBJS += $(EXO) $(FILECHECKERO) $(INTEGRATORO) $(LIMITFINDERO) $(NEUTRONO)
+OBJS += $(MAINO) $(FILECHECKERO) $(INTEGRATORO) $(LIMITFINDERO) $(NEUTRONO)
 OBJS += $(NEUTRONDENSITYO) $(PARAMCALCULATORO) $(SIMCONVOLUTERO) $(TOFFITTERO)
 
 #prefix the object directory
@@ -67,5 +68,5 @@ $(OBJDIR)/%.o: %.cpp
 clean: 
 	@echo "Cleaning..."
 	@rm -f $(OBJDIR)/* $(PROGRAM) ./eff *~ src/*~ include/*~
-eff: src/eff.cpp $(EFFCALCULATORO) $(ERRORCALCULATORO)
+eff: src/eff.cpp $(EFFCALCULATORO) $(ERRORCALCULATORO) $(NEUTRONO)
 	$(CXX) $(CXXFLAGS) $(LDLIBS) $^ -o $@

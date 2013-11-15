@@ -7,6 +7,7 @@
 #include <string>
 #include <utility>
 
+#include <cmath>
 #include <cstdlib>
 
 #include <unistd.h>
@@ -50,6 +51,12 @@ int main(int argc, char* argv[]) {
     else
         cout << "You didn't specify a known type" << endl;
 
-    cout << "Eff for " << name << " = " << effRes.GetValue() << " +- " 
-         << effRes.GetError() << endl;
+    if(std::isnan(effRes.GetValue()))
+        cout << "The Efficiency calculation reported an efficiency of " 
+             << "NaN. " << endl << "This is usually a problem with the "
+             << "energy." << endl << "Make sure you entered it in MeV !!" 
+             << endl;
+    else
+        cout << "Eff for " << name << " = " << effRes.GetValue() << " +- " 
+             << effRes.GetError() << endl;
 }

@@ -41,7 +41,7 @@ Variable betaEff = Variable(0.23, 0.03, "/100"); // the error needs recalculated
 pair<Variable,Variable> effs = make_pair(betaEff,omega);
 
 int main(int argc, char* argv[]) {
-    bool doesFit = false;
+    bool doesFit = true;
     bool outputBasic = true;
     bool outputTheory = true;
     bool outputNdenBgt = true;
