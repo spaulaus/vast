@@ -28,8 +28,6 @@ Neutron LimitFinder::PerformFit(const double &edge, const double &yield){
     double c = consts.GetConstant("c").GetValue()*(100/1e9); //cm/ns
     double edg = (50.5/c)*sqrt(mass/(2*edge));
 
-    cout << edge << " " << edg << endl;
-    
     RooRealVar tof("tof","tof", 0.0, 0.0, 200.);
     
     //Parameterization Parameters for Sigma 

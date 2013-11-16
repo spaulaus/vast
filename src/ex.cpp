@@ -41,7 +41,7 @@ Variable betaEff = Variable(0.23, 0.03, "/100"); // the error needs recalculated
 pair<Variable,Variable> effs = make_pair(betaEff,omega);
 
 int main(int argc, char* argv[]) {
-    bool doesFit = true;
+    bool doesFit = false;
     bool outputBasic = true;
     bool outputTheory = true;
     bool outputNdenBgt = true;
@@ -85,14 +85,14 @@ int main(int argc, char* argv[]) {
     //---------- B(GT) for the simulations -------
     if(outputBasic && outputTheory) {
         ofstream outTheory(files[5]);
-        for(vector<Neutron>::iterator it = singles.begin(); it != singles.end();
-            it++) {
+        for(auto it = singles.begin(); it != singles.end(); it++) {
             outTheory << it->GetExcitationEnergy().GetValue() << "  " 
                       << it->GetBgt().GetValue() << " " 
                       << it->GetEnergy().GetError();
             auto itNext = it;
-            if(itNext++ != singles.end())
-                cout << endl;
+            itNext++;
+            if(itNext != singles.end())
+                outTheory << endl;
         }
         outTheory.close();
     }//if(outputsBasic && outputsBgt)
@@ -162,7 +162,7 @@ void ReadData(vector<Neutron> &nvec, const string &file) {
             }
         }
     } else{
-        cout << "Oh, Jesus! We could no open the file: " 
+        cerr << "Oh, Jesus! We could no open the file: " 
              << file << endl << "Please check the name and try again."
              << endl << endl;
         exit(1);
@@ -173,7 +173,7 @@ void ReadData(vector<Neutron> &nvec, const string &file) {
 void OutputBasics(vector<Neutron> &nvec, Decay &dky, const string &file) {
     ofstream out(file.c_str());
     if(out.fail()) {
-        cout << endl << endl 
+        cerr << endl << endl 
              << "Woah! Could not open up the output file. Check this  " 
              << file << endl << endl;
         exit(1);
