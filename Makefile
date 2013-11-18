@@ -18,7 +18,7 @@ PROGRAM = vast
 
 #Define Objects
 #This file must contain your MAIN function
-MAINO              = ex.o
+MAINO              = sensitivity.o
 
 BGTCALCULATORO   = BGTCalculator.o
 DECAYO           = Decay.o
