@@ -1,0 +1,14 @@
+Vandle Analysis Software Toolkit (VAST)
+---------------------------------------------
+
+Some prerequisites:
+pugixml >= 1.2
+ROOT+RooFit >= 5.99/03
+
+
+1. SETTING UP 
+  A) Config.xml
+     The idea here is that all of the major bits of the config file are 
+     handled by their respective classes. The exceptions are the Author,
+     Description, and Flags parts. I expect things are going to be tweaky
+     for a bit until things get going. 
