@@ -9,7 +9,7 @@ vpath %.o obj/
 #Set some of the compile options
 CXX = g++
 CXXFLAGS = -fPIC -g -std=c++11 -Wall $(CINCLUDEDIRS)
-LDLIBS = -ldl -lpthread -lPhysConstants -lSignalGenerator
+LDLIBS = -ldl -lpthread -lPhysConstants -lSignalGenerator -lpugixml
 CINCLUDEDIRS = -Iinc
 c++SrcSuf = cpp
 
@@ -18,9 +18,10 @@ PROGRAM = vast
 
 #Define Objects
 #This file must contain your MAIN function
-MAINO              = sensitivity.o
+MAINO            =cfgtst.o
 
 BGTCALCULATORO   = BGTCalculator.o
+CONFIGURATIONO   = Configuration.o
 DECAYO           = Decay.o
 EFFCALCULATORO   = EffCalculator.o
 ERRORCALCULATORO = ErrorCalculator.o
@@ -35,9 +36,10 @@ SIMCONVOLUTERO   = SimConvoluter.o
 TOFFITTERO       = TofFitter.o
 
 #Make the object list
-OBJS =  $(BGTCALCULATORO) $(DECAYO) $(EFFCALCULATORO) $(ERRORCALCULATORO)
-OBJS += $(MAINO) $(FILECHECKERO) $(INTEGRATORO) $(LIMITFINDERO) $(NEUTRONO)
-OBJS += $(NEUTRONDENSITYO) $(PARAMCALCULATORO) $(SIMCONVOLUTERO) $(TOFFITTERO)
+OBJS =  $(BGTCALCULATORO) $(CONFIGURATIONO) $(DECAYO) $(EFFCALCULATORO) 
+OBJS += $(ERRORCALCULATORO) $(MAINO) $(FILECHECKERO) $(INTEGRATORO) 
+OBJS += $(LIMITFINDERO) $(NEUTRONO) $(NEUTRONDENSITYO) $(PARAMCALCULATORO) 
+OBJS += $(SIMCONVOLUTERO) $(TOFFITTERO)
 
 #prefix the object directory
 OBJDIR = obj
@@ -67,6 +69,6 @@ $(OBJDIR)/%.o: %.cpp
 .PHONY: clean eff
 clean: 
 	@echo "Cleaning..."
-	@rm -f $(OBJDIR)/* $(PROGRAM) ./eff *~ src/*~ include/*~
+	@rm -f $(OBJDIR)/* $(PROGRAM) ./eff *~ src/*~ inc/*~
 eff: src/eff.cpp $(EFFCALCULATORO) $(ERRORCALCULATORO) $(NEUTRONO)
 	$(CXX) $(CXXFLAGS) $(LDLIBS) $^ -o $@

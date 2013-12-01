@@ -1,32 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Configuration>
-  <!-- This is an example configuration file based on a real experiment.
-       Copy this file and modify its content to setup your experiment. -KM
-       
-       I totally stole the tmplate of this from Krzysztof Miernik. 
-       Thanks,buddy! -SVP (see readme for more info)
-  -->
-  
-  <!-- Instructions: 
-       Put here your name, email and date
-  -->
+<!-- PUT COPYRIGHT INFO HERE -->
+
+<!-- This is an example configuration file based on a real experiment.
+     Copy this file and modify its content to setup your experiment. -KM
+
+     I totally stole the tmplate of this from Krzysztof Miernik. 
+     Thanks,buddy! -SVP (see readme for more info)
+-->
+
+<Configuration>   
+  <!-- Instructions: Put here your name, email and date -->
   <Author>
     <Name>S. V. Paulauskas</Name>
     <Email>stanpaulauskas@gmail.com</Email>
     <Date>November 2013</Date>
   </Author>
   
-  <!-- Instructions: 
-       Put short description of your experiment here.
-  -->
+  <!-- Instructions: Put short description of your experiment here. -->
   <Description>
     LeRIBSS 2012 VANDLE experiment, 2 Clovers, 2 Beta scitilators, MTC, 48 small 
     VANDLE modules
   </Description>
   
-  <!-- Instructions: 
-       This is the place to put some of the general information about the 
-       experiment. 
+  <!-- Instructions: This is the place to put some of the general information 
+       about the experiment. 
   -->
   <Experiment>
     <numBars value="9" error="0.0" unit=""/>
@@ -37,34 +34,31 @@
     <betaEff value="0.23" error="0.03" unit="/100"/>
   </Experiment>
   
-  <!-- Instructions:
-       This guy holds all of the information about the input files
-       I still want to organize this a little bit more.
-  -->
-  <PathHandler>
-    <InputFiles>
+  <!-- Instructions: These are the input/output files -->
+  <Files>
+    <!-- Instructions: These are the time of flight input files -->
+    <Input>
       <gsTof>data/tof/077cu-ban4-lower/077cu-ban4-lower.dat</gsTof>
       <g1Tof>data/tof/077cu-ban4-lower/077cu-ban4-lower02Plus.dat</g1Tof>
       <g2Tof>data/tof/077cu-ban4-lower/077cu-ban4-lower04Plus.dat</g2Tof>
-    </InputFiles>
+    </Input>
     
-    <!-- Instructions:
-         This guy holds all of the output file names (sometimes just the path)
-    -->
-    <OutputFiles>
+    <!-- Instructions: The output file names (sometimes just the path) -->
+    <Output>
       <!-- Files for the fitting -->
-      <gsFit path="results/tof/working/working.fit/>
-      <g1Fit path="results/tof/working/working-g1.fit/>
-      <g2Fit path="results/tof/working/working-g2.fit/>
+      <picFit> pics/tof/working/</picFit>
+      <gsFit> results/tof/working/working.fit</gsFit>
+      <g1Fit> results/tof/working/working-g1.fit</g1Fit>
+      <g2Fit> results/tof/working/working-g2.fit</g2Fit>
       <!-- Files for the B(GT) -->
-      <neutrons path="results/vast/working/working.dat"/>
-      <cgm path="results/vast/working/working.mgb"/>
-      <density path="results/vast/working/working.bgt"/>
-      <sensitivity path="results/vast/working/working.sens"/>
-    </OutputFiles>
-  </PathHandler>
+      <neutrons>results/vast/working/working.dat</neutrons>
+      <cgm>results/vast/working/working.mgb</cgm>
+      <density>results/vast/working/working.bgt</density>
+      <sensitivity>results/vast/working/working.sens</sensitivity>
+    </Output>
+  </Files>
   
-  <!-- Instructions:
+  <!-- Instructions: 
        This has all the information about the decay of interest
   -->
   <Decay>
@@ -99,9 +93,7 @@
     <outputDensity value="true"/>
   </Flags>
   
-  <!-- Instructions:
-       How about some fitting information?
-  -->
+  <!-- Instructions: How about some fitting information? -->
   <Fitting>
     <peaks>
       <pk0  value="24.0"/>
