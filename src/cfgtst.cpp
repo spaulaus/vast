@@ -38,5 +38,7 @@ int main() {
 
     cout << endl << "Outputting info from the FitHandler: " << endl;
     FitHandler fitInfo = cfg.ReadFit();
-    
+    vector<double> temp = fitInfo.GetSnglPeaks();
+    for(const auto it : temp)
+        cout << it << endl;
 }

@@ -18,7 +18,7 @@ PROGRAM = vast
 
 #Define Objects
 #This file must contain your MAIN function
-MAINO            =cfgtst.o
+MAINO            = ex.o
 
 BGTCALCULATORO   = BGTCalculator.o
 CONFIGURATIONO   = Configuration.o

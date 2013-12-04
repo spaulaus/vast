@@ -14,12 +14,16 @@ public:
     ~FitHandler(){};
 
     std::pair<double,double> GetRange(void){return(rng_);};
-    std::vector<double> GetPeaks(void){return(peaks_);};
+    std::vector<double> GetSnglPeaks(void){return(snglPeaks_);};
+    std::vector<double> GetGate1Peaks(void){return(g1Peaks_);};
+    std::vector<double> GetGate2Peaks(void){return(g2Peaks_);};
 
     void SetRange(const std::pair<double,double> &a) {rng_ = a;};
-    void SetPeaks(const std::vector<double> &a) {peaks_ = a;};
+    void SetSnglPeaks(const std::vector<double> &a) {snglPeaks_ = a;};
+    void SetGate1Peaks(const std::vector<double> &a) {g1Peaks_ = a;};
+    void SetGate2Peaks(const std::vector<double> &a) {g2Peaks_ = a;};
 private:
     std::pair<double,double> rng_;
-    std::vector<double> peaks_;
+    std::vector<double> snglPeaks_, g1Peaks_, g2Peaks_;
 };
 #endif //__FITHANDLER_HPP__

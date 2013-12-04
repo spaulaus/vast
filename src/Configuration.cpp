@@ -19,7 +19,6 @@ Configuration::Configuration(const string &file) {
     
     if(result) {
         cout << "Fuck yeah, we opened that bitch" << endl;
-        //Get the Configuration node
         cfg_ = doc_.child("Configuration");
     } else {
         cout << "We had errors with the config file. " << endl
@@ -49,24 +48,32 @@ Experiment Configuration::ReadExperiment(void) {
 
 FileHandler Configuration::ReadFiles(void) {
     FileHandler fhandle;
-    pugi::xml_node files = cfg_.child("Files");
-    for(pugi::xml_node ionode : files.children("Input"))
-        for(pugi::xml_node attr : ionode.children())
-            fhandle.SetInputNames(attr.name(), attr.child_value());
-    for(pugi::xml_node ionode : files.children("Output"))
-        for(pugi::xml_node attr : ionode.children())
-            fhandle.SetOutputNames(attr.name(), attr.child_value());
+    pugi::xml_node inode = cfg_.child("Files").child("Input");
+    pugi::xml_node onode = cfg_.child("Files").child("Output");
+
+    for(pugi::xml_node attr : inode.children())
+        fhandle.SetInputNames(attr.name(), attr.child_value());
+    for(pugi::xml_node attr : onode.children())
+        fhandle.SetOutputNames(attr.name(), attr.child_value());
     return(fhandle);
 }
 
 FitHandler Configuration::ReadFit(void) {
     FitHandler fit;
     pugi::xml_node ft = cfg_.child("Fitting");
-    vector<double> peaks;
+    vector<double> snglPeaks, g1Peaks, g2Peaks;
     for(pugi::xml_node pks : ft.child("peaks").child("sngl").children())
-        peaks.push_back(pks.attribute("value").as_double());
-    fit.SetPeaks(peaks);
+        snglPeaks.push_back(pks.attribute("value").as_double());
+    fit.SetSnglPeaks(snglPeaks);
 
+    for(pugi::xml_node pks : ft.child("peaks").child("g1").children())
+        g1Peaks.push_back(pks.attribute("value").as_double());
+    fit.SetGate1Peaks(g1Peaks);
+    
+    for(pugi::xml_node pks : ft.child("peaks").child("g2").children())
+        g2Peaks.push_back(pks.attribute("value").as_double());
+    fit.SetGate2Peaks(g2Peaks);
+    
     double low = 
         ft.child("range").child("low").attribute("value").as_double();
     double high = 
@@ -77,8 +84,7 @@ FitHandler Configuration::ReadFit(void) {
 
 FlagHandler Configuration::ReadFlags(void) {
     FlagHandler flags;
-    pugi::xml_node node = cfg_.child("Flags");
-    for(pugi::xml_node chld : node.children())
+    for(pugi::xml_node chld : cfg_.child("Flags").children())
         flags.SetFlag(chld.name(), chld.attribute("value").as_bool());
     return(flags);
 }

@@ -13,6 +13,7 @@
 
 #include <Variable.hpp>
 
+#include "Configuration.hpp"
 #include "BGTCalculator.hpp"
 #include "Decay.hpp"
 #include "Integrator.hpp"
@@ -38,53 +39,44 @@ double numBars = 9;
 Variable omega = Variable(numBars*0.0061,0.0,""); //solid angle from Sergey's sim
 //double omega = numBars*4.727e-3; // the calculation for the solid angle
 Variable betaEff = Variable(0.23, 0.03, "/100"); // the error needs recalculated.
-pair<Variable,Variable> effs = make_pair(betaEff,omega);
 
 int main(int argc, char* argv[]) {
-    bool doesFit = false;
-    bool outputBasic = true;
-    bool outputTheory = true;
-    bool outputNdenBgt = true;
-    //---------- SET THE DECAY INFORMATION HERE ---------
-    //ParentZ, Q(MeV), Sn(MeV), Qbetan(MeV), T1/2(s)
-    Decay decay(Variable(29,0.0,""),Variable(10.490,0.500,"MeV"),
-                Variable(4.5575,0.00025,"MeV"), Variable(5.720,0.015,"MeV"),
-                Variable(0.4679,0.00021, "s")); 
-    //RawNumGammas, eff_gamma, absBr
-    decay.SetGammaInfo(Variable(351222,14751.324,"counts"),
-                       Variable(0.0668422,0.003,"/100"),
-                       Variable(0.191, 0.006, "/100")); 
+    Configuration cfg("Config.xml");
+    FileHandler fls = cfg.ReadFiles();
+    Experiment exp = cfg.ReadExperiment();
+
+    FlagHandler flags = cfg.ReadFlags();
+    bool basic = flags.GetFlag("basic");
 
     //---------- SET FIT INFORMATION AND PERFORM FIT HERE ----------
-    pair<double,double> fitRange = make_pair(0.,200.0);
-    if(doesFit) {
-        //Set the information for the peaks
-        vector<double> peaks ={24., 30., 38.128, 40, 44.917,
-                               50.181, 56.835, 65.151, 70.826, 80.,
-                               87.198, 94.690, 100., 104.69, 110.0, 115.,
-                               135.0};
+    FitHandler fit = cfg.ReadFit();
+    pair<double,double> fitRange = fit.GetRange();
+    if(flags.GetFlag("doFit")) {
         //peaklist, directory (without data modifier), filename(without .dat), 
         //modifier for file name, fitRange, isTesting
-        TofFitter fitter(peaks, files[0], files[1], files[2], fitRange, true);
+        TofFitter fitter(fit.GetSnglPeaks(), files[0], files[1], 
+                         files[2], fit.GetRange(), true);
     }//if(doesFit)
+
+    Decay decay = cfg.ReadDecay();
 
     //---------- SET THE NEUTRON INFORMATION AND OUTPUT ----------
     vector<Neutron> singles;
-    if(outputBasic) {
-        ReadData(singles, files[3]);
+    if(basic) {
+        ReadData(singles, fls.GetOutputName("gsFit"));
         for(vector<Neutron>::iterator it = singles.begin(); it!= singles.end();
             it++) {
             //---------- INTEGRATE THE NEUTRON PEAKS HERE ----------
             Integrator integrator(*it, fitRange);
             //---------- Calculate the B(GT) for the Line ---------
-            BGTCalculator bgt(*it, decay, betaEff, omega);
+            BGTCalculator bgt(*it, decay, exp.GetBetaEff(), omega);
         }
-        OutputBasics(singles, decay, files[4]);
+        OutputBasics(singles, decay, fls.GetOutputName("neutrons"));
     }//if(outputsBasic)
 
     //---------- B(GT) for the simulations -------
-    if(outputBasic && outputTheory) {
-        ofstream outTheory(files[5]);
+    if(basic && flags.GetFlag("theory")) {
+        ofstream outTheory(fls.GetOutputName("cgm"));
         for(auto it = singles.begin(); it != singles.end(); it++) {
             outTheory << it->GetExcitationEnergy().GetValue() << "  " 
                       << it->GetBgt().GetValue() << " " 
@@ -98,7 +90,7 @@ int main(int argc, char* argv[]) {
     }//if(outputsBasic && outputsBgt)
     
     //---------- Calculate the B(GT) Using the Neutron Density ---------
-    if(outputBasic && outputNdenBgt) {
+    if(basic && flags.GetFlag("density")) {
         double res = 0.001; // MeV
         NeutronDensity nden(singles, decay.GetQBetaN().GetValue(), res);
         
@@ -121,7 +113,7 @@ int main(int argc, char* argv[]) {
         auto bgtMapHigh = *ndenBgtHigh.GetBgtMap();
         auto bgtMapHighSden = *ndenBgtHigh.GetSDensity();
         
-        ofstream outNDenBgt(files[6]);
+        ofstream outNDenBgt(fls.GetOutputName("density"));
         outNDenBgt << "#Ex(MeV) BR BR(LOW) BR(HIGH) B(GT) B(GT)(LOW)" 
                    << " B(GT)(HIGH)" << endl;
         for(auto it = bgtMap.begin(); it != bgtMap.end(); it++) {

@@ -24,6 +24,8 @@
   <Description>
     LeRIBSS 2012 VANDLE experiment, 2 Clovers, 2 Beta scitilators, 
     MTC, 48 small VANDLE modules
+
+    This is setup for the 77Cu analysis currently.
   </Description>
   
   <!-- This is the place to put some of the general information 
@@ -91,14 +93,14 @@
     <zd> </zd>
   </Decay>
   
-  <!-- Some handy flags to control program flow and work. The program will 
+  <!-- Some handy flags to control program flow. The program will 
        recgonize any flags that are added here. 
   -->
   <Flags>
     <doFit value="true"/>
-    <outputBasic value="true"/>
-    <outputTheory value="true"/>
-    <outputDensity value="true"/>
+    <basic value="false"/>
+    <theory value="false"/>
+    <density value="false"/>
   </Flags>
   
   <!-- How about some fitting information? -->
@@ -126,12 +128,17 @@
         <pk16 value="135.0"/>
       </sngl>
 
-      <!-- The peaks for gamma 1 gated spectrum (not implemented yet)-->
+      <!-- The peaks for gamma 1 gated spectrum -->
       <g1>
+        <pk0 value ="20.0"/>
+        <pk1 value ="50.0"/>
+        <pk2 value ="120.0"/>
       </g1>
 
-      <!-- peaks for gamma 2 gated spectrum (not implemented yet) -->
+      <!-- peaks for gamma 2 gated spectrum -->
       <g2>
+        <pk0 value ="30.0"/>
+        <pk1 value ="60.0"/>
       </g2>
     </peaks>
     
@@ -140,6 +147,26 @@
       <high value="200.0"/>
     </range>
 
-    
+    <!-- Parameterization for the fitted parameters -->
+    <alpha>
+      <aI value="0.0130289072593045"/>
+      <aH value="-0.641803483244778"/>
+    </alpha>
+
+    <sigma>
+      <sM value="-0.000121210451962825"/>
+      <sN value="0.0416568757021418"/>
+      <sO value="0.550158923590531"/>
+    </sigma>
+
+    <n>
+      <nJ value="2.21591018795502e-06"/>
+      <nK value="0.00189178692442985"/>
+      <nL value="1.33190840921066"/>
+    </n>
   </Fitting>
+
+  <Density>
+    <res value="0.001"/>
+  </Density>
 </Configuration>
