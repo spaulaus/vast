@@ -15,7 +15,7 @@ Decay::Decay(const Variable &z, const Variable&q, const Variable &sn,
     dauZ_.SetValue(parZ_.GetValue()+1);
 }
 
-void Decay::SetGammaInfo(const Variable &rawG, const Variable &gEff,
+void Decay::SetNormInfo(const Variable &rawG, const Variable &gEff,
                          const Variable &br) {
     rawG_=rawG; 
     gEff_=gEff; 

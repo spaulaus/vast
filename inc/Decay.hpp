@@ -24,8 +24,14 @@ public:
     Variable GetQValue(void) {return(q_);};
     Variable GetQBetaN(void) {return(qbn_);};
 
-    void SetGammaInfo(const Variable &rawG, const Variable &gEff,
+    void SetNormInfo(const Variable &rawG, const Variable &gEff,
                       const Variable &br);
+    void SetHalfLife(const Variable &a){t_ = a;};
+    void SetNeutronBR(const Variable &a){pn_ = a;};
+    void SetNeutronSepEnergy(const Variable &a){sn_ = a;};
+    void SetParentZ(const Variable &a){parZ_ = a;};
+    void SetQValue(const Variable &a){q_ = a;};
+    void SetQBetaN(const Variable &a){qbn_ = a;};
 
 private:
     Variable gBr_, dauZ_, numDecay_, parZ_, pn_, 

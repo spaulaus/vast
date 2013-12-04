@@ -6,23 +6,27 @@
 
      I totally stole the tmplate of this from Krzysztof Miernik. 
      Thanks,buddy! -SVP (see readme for more info)
+
+     NOTE: The program only recognizes the information that is currently 
+     listed in the nodes (Author, Experiment, Decay, etc.), except where 
+     otherwise noted.
 -->
 
 <Configuration>   
-  <!-- Instructions: Put here your name, email and date -->
+  <!-- your name, email and date -->
   <Author>
     <Name>S. V. Paulauskas</Name>
     <Email>stanpaulauskas@gmail.com</Email>
     <Date>November 2013</Date>
   </Author>
   
-  <!-- Instructions: Put short description of your experiment here. -->
+  <!-- Short description of the experiment here. -->
   <Description>
-    LeRIBSS 2012 VANDLE experiment, 2 Clovers, 2 Beta scitilators, MTC, 48 small 
-    VANDLE modules
+    LeRIBSS 2012 VANDLE experiment, 2 Clovers, 2 Beta scitilators, 
+    MTC, 48 small VANDLE modules
   </Description>
   
-  <!-- Instructions: This is the place to put some of the general information 
+  <!-- This is the place to put some of the general information 
        about the experiment. 
   -->
   <Experiment>
@@ -32,18 +36,22 @@
     <!-- This one is from just a straight calculation -->
     <!-- <omegaPerBar value="4.727e-3" error="0.0" unit=""/> -->
     <betaEff value="0.23" error="0.03" unit="/100"/>
+    <numClovers value="2" error="0.0" unit=""/>
   </Experiment>
   
-  <!-- Instructions: These are the input/output files -->
+  <!-- These are the input/output files. The program only
+       recognizes the Input/Output nodes for reading. However, 
+       anything added under them will be read into the program.
+  -->
   <Files>
-    <!-- Instructions: These are the time of flight input files -->
+    <!-- These are the input files -->
     <Input>
       <gsTof>data/tof/077cu-ban4-lower/077cu-ban4-lower.dat</gsTof>
       <g1Tof>data/tof/077cu-ban4-lower/077cu-ban4-lower02Plus.dat</g1Tof>
       <g2Tof>data/tof/077cu-ban4-lower/077cu-ban4-lower04Plus.dat</g2Tof>
     </Input>
     
-    <!-- Instructions: The output file names (sometimes just the path) -->
+    <!-- The output file names (sometimes just the path) -->
     <Output>
       <!-- Files for the fitting -->
       <picFit> pics/tof/working/</picFit>
@@ -58,16 +66,14 @@
     </Output>
   </Files>
   
-  <!-- Instructions: 
-       This has all the information about the decay of interest
-  -->
+  <!-- This has all the information about the decay of interest. -->
   <Decay>
     <!-- Some of the basic information -->
-    <z value="29" error="0.0" unit=""/>
-    <q value="10.490" error="0.5" unit="MeV"/>
-    <sn value="4.5575" error="0.00025" unit="MeV"/>
-    <qbn value="5.720" error="0.015" unit="MeV"/>
-    <t12 value="0.4679" error="0.00021" unit="s"/>
+    <z value='29' error='0.0' unit=""/>
+    <q value='10.490' error='0.5' unit="MeV"/>
+    <sn value='4.5575' error='0.00025' unit="MeV"/>
+    <qbn value='5.720' error='0.015' unit="MeV"/>
+    <t12 value='0.4679' error='0.00021' unit="s"/>
     
     <gn> <!-- Information about the normalization gamma -->
       <area value="351222" error="14751" unit="counts"/>
@@ -76,15 +82,17 @@
       <abr value="0.191" error="0.006" unit="/100"/>
     </gn>
     
-    <g1> <!-- Gating gamma number 1 -->
+    <g1> <!-- Gating gamma number 1 (not implemented yet)-->
     </g1>
     
-    <g2> <!-- Gating gamma number 2 -->
+    <g2> <!-- Gating gamma number 2 (not implemented yet)-->
     </g2>
+
+    <zd> </zd>
   </Decay>
   
-  <!-- Instructions:
-       Setting some of the flags for the various types of things one can do
+  <!-- Some handy flags to control program flow and work. The program will 
+       recgonize any flags that are added here. 
   -->
   <Flags>
     <doFit value="true"/>
@@ -93,30 +101,45 @@
     <outputDensity value="true"/>
   </Flags>
   
-  <!-- Instructions: How about some fitting information? -->
+  <!-- How about some fitting information? -->
   <Fitting>
+    <!-- the peaks to use in the fitting of the tof -->
     <peaks>
-      <pk0  value="24.0"/>
-      <pk1  value="30.0"/>
-      <pk2  value="38.128"/>
-      <pk3  value="40.0"/>
-      <pk4  value="44.917"/>
-      <pk5  value="50.181"/>
-      <pk6  value="56.835"/>
-      <pk7  value="65.151"/>
-      <pk8  value="70.826"/>
-      <pk9  value="80.0"/>
-      <pk10 value="87.198"/>
-      <pk11 value="94.690"/>
-      <pk12 value="100.0"/>
-      <pk13 value="104.69"/>
-      <pk14 value="110.0"/>
-      <pk15 value="115.0"/>
-      <pk16 value="135.0"/>
+      <!-- peaks for the singles fitting -->
+      <sngl>
+        <pk0  value="24.0"/>
+        <pk1  value="30.0"/>
+        <pk2  value="38.128"/>
+        <pk3  value="40.0"/>
+        <pk4  value="44.917"/>
+        <pk5  value="50.181"/>
+        <pk6  value="56.835"/>
+        <pk7  value="65.151"/>
+        <pk8  value="70.826"/>
+        <pk9  value="80.0"/>
+        <pk10 value="87.198"/>
+        <pk11 value="94.690"/>
+        <pk12 value="100.0"/>
+        <pk13 value="104.69"/>
+        <pk14 value="110.0"/>
+        <pk15 value="115.0"/>
+        <pk16 value="135.0"/>
+      </sngl>
+
+      <!-- The peaks for gamma 1 gated spectrum (not implemented yet)-->
+      <g1>
+      </g1>
+
+      <!-- peaks for gamma 2 gated spectrum (not implemented yet) -->
+      <g2>
+      </g2>
     </peaks>
+    
     <range>
       <low value="0.0"/>
       <high value="200.0"/>
     </range>
+
+    
   </Fitting>
 </Configuration>

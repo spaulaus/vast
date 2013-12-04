@@ -5,6 +5,7 @@
  */
 #include <iostream>
 #include <map>
+#include <vector>
 
 #include <pugixml.hpp>
 #include <Variable.hpp>
@@ -18,58 +19,115 @@ Configuration::Configuration(const string &file) {
     
     if(result) {
         cout << "Fuck yeah, we opened that bitch" << endl;
+        //Get the Configuration node
+        cfg_ = doc_.child("Configuration");
     } else {
         cout << "We had errors with the config file. " << endl
              << "Error Description: " << result.description() << endl;
     }
 }
 
-Decay Configuration::ReadDecay() {
-    Decay decay;
+Experiment Configuration::ReadExperiment(void) {
+    Experiment exp;
+    string nodeName = "Experiment";
+    pugi::xml_node expInfo = cfg_.child(nodeName.c_str());
 
-    //Get the File information
-    pugi::xml_node cfg = doc_.child("Configuration");
-    for(pugi::xml_node files : cfg.children("Files")) {
-        cout << "Files:" << endl;
-        for(pugi::xml_node ionode: files.children()) {
-            cout << "   " << ionode.name() << ":" << endl;
-
-            for(pugi::xml_node attr: ionode.children())
-                cout << " " << attr.name() << " = " << attr.child_value() << endl;
-        }
-        cout << endl;
-
-        for(pugi::xml_node dky : cfg.children("Decay")) {
-            cout << "Decay:" << endl;
-            //The First level of nodes
-            for(pugi::xml_node node1: dky.children()) {
-                string name = node1.name();
-                Variable tmp;
-                cout << "   " << node1.name() << ":";
-                //Attributes of the first level nodes
-                for(pugi::xml_attribute attr : node1.attributes()) {
-                    string temp = attr.name();
-                    if(temp == "value")
-                        tmp.SetValue(atof(attr.value()));
-                    else if(temp == "error")
-                        tmp.SetError(atof(attr.value()));
-                    else if(temp == "unit")
-                        tmp.SetUnits(attr.value());
-                    cout << attr.name() << " = " << attr.value() << "   ";
-                }
-                if(tmp.GetValue() != 0.0)
-                    decay.insert(make_pair(name,tmp));
-                cout << endl;
-                //Loop over the second level nodes
-                for(pugi::xml_node node2: node1.children()) {
-                    cout << "      " << node2.name() << "  ";
-                    //Loop over the attributes of the sec lvl nodes
-                    for(pugi::xml_attribute attr : node2.attributes())
-                        cout << attr.name() << " = " << attr.value() << " " ;
-                    cout << endl;
-                }
-            }
-        }
+    for(pugi::xml_node node : expInfo.children()) {
+        string name = node.name();
+        Variable temp = NodeToVar(node);
+        if(name == "betaEff") 
+            exp.SetBetaEff(temp);
+        else if(name == "numBars")
+            exp.SetNumBars(temp);
+        else if(name == "omegaPerBar")
+            exp.SetOmegaPerBar(temp);
+        else
+            SpitWarning(nodeName, name);
     }
-    return(Decay());
+    return(exp);
+}
+
+FileHandler Configuration::ReadFiles(void) {
+    FileHandler fhandle;
+    pugi::xml_node files = cfg_.child("Files");
+    for(pugi::xml_node ionode : files.children("Input"))
+        for(pugi::xml_node attr : ionode.children())
+            fhandle.SetInputNames(attr.name(), attr.child_value());
+    for(pugi::xml_node ionode : files.children("Output"))
+        for(pugi::xml_node attr : ionode.children())
+            fhandle.SetOutputNames(attr.name(), attr.child_value());
+    return(fhandle);
+}
+
+FitHandler Configuration::ReadFit(void) {
+    FitHandler fit;
+    pugi::xml_node ft = cfg_.child("Fitting");
+    vector<double> peaks;
+    for(pugi::xml_node pks : ft.child("peaks").child("sngl").children())
+        peaks.push_back(pks.attribute("value").as_double());
+    fit.SetPeaks(peaks);
+
+    double low = 
+        ft.child("range").child("low").attribute("value").as_double();
+    double high = 
+        ft.child("range").child("high").attribute("value").as_double();
+    fit.SetRange(make_pair(low,high));
+    return(fit);
+}
+
+FlagHandler Configuration::ReadFlags(void) {
+    FlagHandler flags;
+    pugi::xml_node node = cfg_.child("Flags");
+    for(pugi::xml_node chld : node.children())
+        flags.SetFlag(chld.name(), chld.attribute("value").as_bool());
+    return(flags);
+}
+
+Decay Configuration::ReadDecay(void) {
+    Decay decay;
+    string nodeName = "Decay";
+    pugi::xml_node dky = cfg_.child(nodeName.c_str());
+    
+    for(pugi::xml_node node1 : dky.children()) {
+        string name = node1.name();
+        Variable temp = NodeToVar(node1);
+        if(name == "z")
+            decay.SetParentZ(temp);
+        else if (name == "q")
+            decay.SetQValue(temp);
+        else if (name == "sn")
+            decay.SetNeutronSepEnergy(temp);
+        else if (name == "qbn")
+            decay.SetQBetaN(temp);
+        else if (name == "t12")
+            decay.SetHalfLife(temp);
+        else if (name == "gn") {
+            Variable area = NodeToVar(node1.child("area"));
+            Variable eff = NodeToVar(node1.child("eff"));
+            Variable abr = NodeToVar(node1.child("abr"));
+            decay.SetNormInfo(area,eff,abr);
+        } else if (name == "g1") {
+            //unused for now
+        } else if (name == "g2") {
+            //unused for now
+        } else
+            SpitWarning(nodeName,name);
+    }
+    return(decay);
 } 
+
+Variable Configuration::NodeToVar(const pugi::xml_node &node) {
+    Variable var = Variable(node.attribute("value").as_double(),
+                            node.attribute("error").as_double(),
+                            node.attribute("unit").value());
+    return(var);
+}
+
+void Configuration::SpitWarning(const string &node, 
+                                const string &name) {
+    cerr << endl << "WARNING!!!!  " 
+         << "You put something in the " << node 
+         << " node that confused the shit out of me." << endl 
+         << "If you need access to the information in " 
+         << name << "; add it yourself." << endl << endl;
+}
