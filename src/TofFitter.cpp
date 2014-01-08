@@ -28,41 +28,20 @@
 using namespace std;
 using namespace RooFit;
 
-TofFitter::TofFitter(const vector<double> &peaks, const string &dir, 
-                     const string &file, const pair<double,double> &range,
-                     const bool &isTest)  {
-    peaks_ = peaks;
-    rng_ = range;
-    dataFile_ ="data/tof/"+dir+"/"+file+".dat";
-    if(isTest) {
-        dir_ = "working/";
-        eps_ = "pics/tof/working/working.eps";
-        output_ = "results/tof/working/working.fit";
-    }else {
-        dir_ = dir;
-        eps_ = "pics/tof/"+dir+file+".eps";
-        output_ = "results/tof/"+dir+file+".fit";
-    }
-    StartRollin();
-}
+TofFitter::TofFitter(const FitHandler &fit, const FileHandler &fls) {
+    fit_ = fit;
+    fls_ = fls;
 
-TofFitter::TofFitter(const vector<double> &peaks, const string &dir, 
-                     const string &file, const string &mod, 
-                     const pair<double,double> &range,
-                     const bool &isTest)  {
-    peaks_ = peaks;
-    rng_ = range;
-    dataFile_ ="data/tof/"+dir+"/"+file+".dat";
-    if(isTest) {
-        dir_ = "working/";
-        eps_ = "pics/tof/working/working.eps";
-        output_ = "results/tof/working/working.fit";
-    }else {
-        dir_ = dir;
-        mod_ = mod;
-        eps_ = "pics/tof/"+dir+"/"+file+mod+".eps";
-        output_ = "results/tof/"+dir+"/"+file+mod+".fit";
-    }
+    binning_ = fit.GetBinning();
+    peaks_ = fit.GetSnglPeaks();
+    rng_ = fit.GetRange();
+    wiggle_ = fit.GetWiggle();
+
+    dataFile_ = fls.GetInputName("gsTof");
+    eps_ = fls.GetOutputName("picGs");
+    picDir_ = fls.GetOutputName("picDir");
+    output_ = fls.GetOutputName("gsFit");
+    
     StartRollin();
 }
 
@@ -169,21 +148,21 @@ void TofFitter::PerformFit(void) {
         RooArgList finals = fitResult->floatParsFinal();
         for(unsigned int i = 0; i < yields_.size()*2; i++) {
             RooRealVar tmp = *((RooRealVar*)finals.at(i));
-            fit_.insert(make_pair(tmp.GetName(), 
+            fitRes_.insert(make_pair(tmp.GetName(), 
                                   make_pair(tmp.getValV(), tmp.getError())));
         }
         
         ofstream results(output_.c_str());
         results << "#Num Mu(ns) MuErr(ns) Yld YldErr Sigma Alpha N" << endl;
         for(unsigned int i = 0; i < yields_.size(); i++) {
-            pair<double,double> mew=fit_.find(mus_[i])->second;
-            pair<double,double> y = fit_.find(yields_[i])->second;
+            pair<double,double> mew=fitRes_.find(mus_[i])->second;
+            pair<double,double> y = fitRes_.find(yields_[i])->second;
             
             results << i << " " << mew.first << " " << mew.second << " " 
                     << y.first << " " << y.second << " " 
-                    << par.CalcSigma(mew.first) << " " 
-                    << par.CalcAlpha(mew.first) 
-                    << " " << par.CalcN(mew.first) << endl;
+                    << par_.CalcSigma(mew.first) << " " 
+                    << par_.CalcAlpha(mew.first) 
+                    << " " << par_.CalcN(mew.first) << endl;
         }
         results.close();
     }else {
@@ -244,10 +223,10 @@ void TofFitter::PerformMcStudy(void) {
         stringstream fAlph, fN, fSig;
         
         RooRealVar *yield = new RooRealVar(yields_[i].c_str(), "", 
-                                           fit_.find(yields_[i])->second.first, 
+                                           fitRes_.find(yields_[i])->second.first, 
                                            0.0, 1.e8);
         RooConstVar *mu = new RooConstVar(mus_[i].c_str(),"",
-                                          fit_.find(mus_[i])->second.first);
+                                          fitRes_.find(mus_[i])->second.first);
         
         fSig << "sM*pow(" << mus_[i] << ",2)+sN*" << mus_[i] << "+sO";
         RooFormulaVar *sigma = new RooFormulaVar(sigmas_[i].c_str(), 
@@ -295,7 +274,7 @@ void TofFitter::PerformMcStudy(void) {
         cc->cd(4); frame4->GetYaxis()->SetTitleOffset(1.4); frame4->Draw();
         
         stringstream name;
-        name << "pics/tof/"+dir_+"/mcStudy" << mod_ << "/" 
+        name << picDir_+"/mcStudy" << mod_ << "/" 
              << yields_.at(i) <<".jpg";
         cc->SaveAs(name.str().c_str());
     }

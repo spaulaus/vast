@@ -13,14 +13,16 @@ public:
     Experiment(){};
     ~Experiment(){};
 
-    Variable GetBetaEff(void){return(betaEff_);};
-    Variable GetNumBars(void){return(numBars_);};
-    Variable GetOmegaPerBar(void){return(omegaPerBar_);};
+    Variable GetBetaEff(void) const {return(betaEff_);};
+    Variable GetDensityRes(void) const {return (denRes_);};
+    Variable GetNumBars(void) const {return(numBars_);};
+    Variable GetOmegaPerBar(void) const {return(omegaPerBar_);};
 
     void SetBetaEff(const Variable &a) {betaEff_ = a;};
+    void SetDensityRes(const Variable &a) {denRes_ = a;};
     void SetNumBars(const Variable &a) {numBars_ = a;};
     void SetOmegaPerBar(const Variable &a) {omegaPerBar_ = a;};
 private:
-    Variable betaEff_, numBars_, omegaPerBar_;
+    Variable betaEff_, denRes_, numBars_, omegaPerBar_;
 };
 #endif //__EXPERIMENT_HPP__

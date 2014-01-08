@@ -14,17 +14,17 @@
 #include "ErrorCalculator.hpp"
 #include "Neutron.hpp"
 #include "NeutronDensity.hpp"
+#include "Experiment.hpp"
 
 class BGTCalculator {
 public:
     BGTCalculator(){};
     BGTCalculator(std::map<double,double> &density, const Decay &decay,
-                  const Variable &betaEff, const Variable &omega,
-                  const std::string &band = "",
+                  const Experiment &exp, const std::string &band = "",
                   const Variable &eg = Variable(0.0,1.0,""));
                   
     BGTCalculator(Neutron &neutron, const Decay &decay,
-                  const Variable &betaEff, const Variable &omega,
+                  const Experiment &exp,
                   const Variable &eg = Variable(0.0,0.0,""));
     ~BGTCalculator(){};
 

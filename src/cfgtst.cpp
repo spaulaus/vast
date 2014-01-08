@@ -34,7 +34,7 @@ int main() {
     cout << endl << "Outputting info from the FlagHandler : " << endl;
     FlagHandler flags = cfg.ReadFlags();
     cout << "doFit = " << flags.GetFlag("doFit") << endl
-         << "outputDensity = " << flags.GetFlag("outputDensity") << endl;
+         << "outputDensity = " << flags.GetFlag("density") << endl;
 
     cout << endl << "Outputting info from the FitHandler: " << endl;
     FitHandler fitInfo = cfg.ReadFit();

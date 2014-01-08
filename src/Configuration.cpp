@@ -40,6 +40,8 @@ Experiment Configuration::ReadExperiment(void) {
             exp.SetNumBars(temp);
         else if(name == "omegaPerBar")
             exp.SetOmegaPerBar(temp);
+        else if(name =="denRes")
+            exp.SetDensityRes(temp);
         else
             SpitWarning(nodeName, name);
     }
@@ -73,7 +75,11 @@ FitHandler Configuration::ReadFit(void) {
     for(pugi::xml_node pks : ft.child("peaks").child("g2").children())
         g2Peaks.push_back(pks.attribute("value").as_double());
     fit.SetGate2Peaks(g2Peaks);
-    
+
+    fit.SetBinning(ft.child("binning").attribute("value").as_double());
+    fit.SetPeakList(ft.child("pkList").attribute("value").as_string());
+    fit.SetWiggle(ft.child("wiggle").attribute("value").as_double());
+
     double low = 
         ft.child("range").child("low").attribute("value").as_double();
     double high = 

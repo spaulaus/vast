@@ -13,8 +13,8 @@ public:
     FileHandler(){};
     ~FileHandler(){};
 
-    std::string GetInputName(const std::string &name);
-    std::string GetOutputName(const std::string &name);
+    std::string GetInputName(const std::string &name) const;
+    std::string GetOutputName(const std::string &name) const;
 
     void SetInputNames(const std::string &name, 
                  const std::string &val);
@@ -23,6 +23,6 @@ public:
 private:
     std::map<std::string, std::string> input_, output_;
     
-    void EndError(const std::string &name);
+    void EndError(const std::string &name) const;
 };
 #endif //__FILEHANDLER_HPP__

@@ -19,6 +19,7 @@ PROGRAM = vast
 #Define Objects
 #This file must contain your MAIN function
 MAINO            = ex.o
+#MAINO            = cfgtst.o
 
 BGTCALCULATORO   = BGTCalculator.o
 CONFIGURATIONO   = Configuration.o
@@ -27,20 +28,22 @@ EFFCALCULATORO   = EffCalculator.o
 ERRORCALCULATORO = ErrorCalculator.o
 FILECHECKERO	 = FileChecker.o
 FILEHANDLERO     = FileHandler.o
+FITHANDLERO	 = FitHandler.o
 SIMTESTO         = simtest.o
 INTEGRATORO      = Integrator.o
 LIMITFINDERO     = LimitFinder.o
 NEUTRONO         = Neutron.o
 NEUTRONDENSITYO  = NeutronDensity.o
+OUTPUTHANDLERO   = OutputHandler.o
 PARAMCALCULATORO = ParamCalculator.o
 SIMCONVOLUTERO   = SimConvoluter.o
 TOFFITTERO       = TofFitter.o
 
 #Make the object list
 OBJS =  $(BGTCALCULATORO) $(CONFIGURATIONO) $(DECAYO) $(EFFCALCULATORO) 
-OBJS += $(ERRORCALCULATORO) $(MAINO) $(FILECHECKERO) $(FILEHANDLERO) 
+OBJS += $(ERRORCALCULATORO) $(MAINO) $(FILECHECKERO) $(FILEHANDLERO) $(FITHANDLERO)
 OBJS += $(INTEGRATORO) $(LIMITFINDERO) $(NEUTRONO) $(NEUTRONDENSITYO) 
-OBJS += $(PARAMCALCULATORO) $(SIMCONVOLUTERO) $(TOFFITTERO)
+OBJS += $(OUTPUTHANDLERO) $(PARAMCALCULATORO) $(SIMCONVOLUTERO) $(TOFFITTERO)
 
 #prefix the object directory
 OBJDIR = obj

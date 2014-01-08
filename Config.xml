@@ -11,8 +11,7 @@
      listed in the nodes (Author, Experiment, Decay, etc.), except where 
      otherwise noted.
 -->
-
-<Configuration>   
+<Configuration>
   <!-- your name, email and date -->
   <Author>
     <Name>S. V. Paulauskas</Name>
@@ -25,7 +24,7 @@
     LeRIBSS 2012 VANDLE experiment, 2 Clovers, 2 Beta scitilators, 
     MTC, 48 small VANDLE modules
 
-    This is setup for the 77Cu analysis currently.
+    This is setup for the 77Cu analysis.
   </Description>
   
   <!-- This is the place to put some of the general information 
@@ -38,12 +37,14 @@
     <!-- This one is from just a straight calculation -->
     <!-- <omegaPerBar value="4.727e-3" error="0.0" unit=""/> -->
     <betaEff value="0.23" error="0.03" unit="/100"/>
-    <numClovers value="2" error="0.0" unit=""/>
+    <denRes value="0.001" error="0.0" unit="MeV"/>
   </Experiment>
   
   <!-- These are the input/output files. The program only
        recognizes the Input/Output nodes for reading. However, 
        anything added under them will be read into the program.
+       
+       NOTE: Blank spaces are hazardous to your health..err program.
   -->
   <Files>
     <!-- These are the input files -->
@@ -56,10 +57,11 @@
     <!-- The output file names (sometimes just the path) -->
     <Output>
       <!-- Files for the fitting -->
-      <picFit> pics/tof/working/</picFit>
-      <gsFit> results/tof/working/working.fit</gsFit>
-      <g1Fit> results/tof/working/working-g1.fit</g1Fit>
-      <g2Fit> results/tof/working/working-g2.fit</g2Fit>
+      <picDir>pics/tof/working/</picDir>
+      <picGs>pics/tof/working/working.eps</picGs>
+      <gsFit>results/tof/working/working.fit</gsFit>
+      <g1Fit>results/tof/working/working-g1.fit</g1Fit>
+      <g2Fit>results/tof/working/working-g2.fit</g2Fit>
       <!-- Files for the B(GT) -->
       <neutrons>results/vast/working/working.dat</neutrons>
       <cgm>results/vast/working/working.mgb</cgm>
@@ -70,7 +72,7 @@
   
   <!-- This has all the information about the decay of interest. -->
   <Decay>
-    <!-- Some of the basic information -->
+    <!-- z of the parent -->
     <z value='29' error='0.0' unit=""/>
     <q value='10.490' error='0.5' unit="MeV"/>
     <sn value='4.5575' error='0.00025' unit="MeV"/>
@@ -89,18 +91,16 @@
     
     <g2> <!-- Gating gamma number 2 (not implemented yet)-->
     </g2>
-
-    <zd> </zd>
   </Decay>
   
-  <!-- Some handy flags to control program flow. The program will 
+  <!-- Some flags to control program flow. The program will 
        recgonize any flags that are added here. 
   -->
   <Flags>
-    <doFit value="true"/>
-    <basic value="false"/>
-    <theory value="false"/>
-    <density value="false"/>
+    <doFit value="false"/>
+    <basic value="true"/>
+    <theory value="true"/>
+    <density value="true"/>
   </Flags>
   
   <!-- How about some fitting information? -->
@@ -141,13 +141,25 @@
         <pk1 value ="60.0"/>
       </g2>
     </peaks>
+
+    <!-- The Peak List to Use in the fit 
+         recognizes : sngl,g1,g2
+    -->
+    <pkList value="sngl"/>
     
+    <!-- The fitting range -->
     <range>
       <low value="0.0"/>
       <high value="200.0"/>
     </range>
 
-    <!-- Parameterization for the fitted parameters -->
+    <!-- The Binning for the picture -->
+    <binning value="0.5" />
+    
+    <!-- How much can the peaks move -->
+    <wiggle value="200." />
+
+    <!-- Parameterization for the fitted parameters (not quite implemented)-->
     <alpha>
       <aI value="0.0130289072593045"/>
       <aH value="-0.641803483244778"/>
@@ -165,8 +177,4 @@
       <nL value="1.33190840921066"/>
     </n>
   </Fitting>
-
-  <Density>
-    <res value="0.001"/>
-  </Density>
 </Configuration>

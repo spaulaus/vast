@@ -9,22 +9,22 @@
 
 using namespace std;
 
-string FileHandler::GetInputName(const string &name) {
+string FileHandler::GetInputName(const string &name) const {
     auto it = input_.find(name);
     if(it == input_.end())
         EndError(name);
     return(it->second);
 }
 
-string FileHandler::GetOutputName(const string &name) {
+string FileHandler::GetOutputName(const string &name) const {
     auto it = output_.find(name);
     if(it == output_.end())
         EndError(name);
     return(it->second);
 }
 
-void FileHandler::EndError(const string &name){
-    cerr << "We could not find the requested file name: " 
+void FileHandler::EndError(const string &name) const {
+    cerr << "In File Handler: We could not find the requested file name: " 
          << name << endl << "This is a major issue with me. "
          << "I am going to give up." << endl;
     exit(2);

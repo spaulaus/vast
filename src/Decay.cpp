@@ -10,9 +10,6 @@
 Decay::Decay(const Variable &z, const Variable&q, const Variable &sn, 
              const Variable &qbn, const Variable &t) : 
     parZ_(z), q_(q), qbn_(qbn), sn_(sn), t_(t) {
-    
-    dauZ_ = parZ_;
-    dauZ_.SetValue(parZ_.GetValue()+1);
 }
 
 void Decay::SetNormInfo(const Variable &rawG, const Variable &gEff,

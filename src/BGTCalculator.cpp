@@ -14,30 +14,30 @@ using namespace std;
 
 //Constructor for using the Neutron Density
 BGTCalculator::BGTCalculator(map<double,double> &density, const Decay &decay,
-                             const Variable &betaEff, const Variable &omega, 
-                             const string &band, const Variable &eg) {
+                             const Experiment &exp, const string &band, 
+                             const Variable &eg) {
     eG_ = eg;
     decay_ = decay;
     density_ = density;
-    betaEff_ = betaEff;
-    omega_ = omega;
+    betaEff_ = exp.GetBetaEff();
+    omega_ = exp.GetOmegaPerBar()*exp.GetNumBars();
     band_ = band;
     HandleNeutronDensity(density);
 }
 
 //Constructor for using the Neutron Class
 BGTCalculator::BGTCalculator(Neutron &neutron, const Decay &decay,
-                             const Variable &betaEff, const Variable &omega,
-                             const Variable &eg) {
+                             const Experiment &exp, const Variable &eg) {
     eG_ = eg;
     if(eg.GetValue() != 0.0) {
         EffCalculator effGe("ge");
         geEff_ = effGe.GetEff(eg); //needs gamma energy in keV
     }else
         geEff_ = Variable(1.0,0.0,"");
+
     decay_ = decay;
-    betaEff_ = betaEff;
-    omega_ = omega;
+    betaEff_ = exp.GetBetaEff();
+    omega_ = exp.GetOmegaPerBar()*exp.GetNumBars();
     HandleNeutronIndividual(neutron);
 }
 

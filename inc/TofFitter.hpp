@@ -10,28 +10,29 @@
 #include <string>
 #include <vector>
 
+#include "FileHandler.hpp"
+#include "FitHandler.hpp"
 #include "Neutron.hpp"
 #include "ParamCalculator.hpp"
 
 class TofFitter {
 public:
-    TofFitter(const std::vector<double> &peaks, const std::string &dir, 
-              const std::string &file, const std::pair<double,double> &range,
-              const bool &isTest = false);
-    TofFitter(const std::vector<double> &peaks, const std::string &dir, 
-              const std::string &file, const std::string &mod, 
-              const std::pair<double,double> &range, const bool &isTest = false);
+    TofFitter(const FitHandler &fit, const FileHandler &fls);
     ~TofFitter(){};
 
     std::vector<Neutron> GetFitResults(void){return(neutrons_);};
 private:
+    ParamCalculator par_;
+    FitHandler fit_;
+    FileHandler fls_;
+
     bool hasConvergence_, hasHesseCalc_;
-    static constexpr double binning_ = 0.5, wiggle_ = 200.;
     static constexpr double yStart_=3.e3, yLow_ = 0.0, yHigh_ = 1.e8;
-    std::map<std::string,std::pair<double,double> > fit_;
+    double binning_, wiggle_;
+    std::map<std::string,std::pair<double,double> > fitRes_;
     std::pair<double,double> rng_;
-    ParamCalculator par;
-    std::string dataFile_, dir_, eps_, mod_, output_;
+
+    std::string dataFile_, picDir_, eps_, mod_, output_;
     std::vector<double> peaks_;
     std::vector<Neutron> neutrons_;
     std::vector<std::string> components_, yields_, mus_, 

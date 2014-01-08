@@ -14,6 +14,9 @@ public:
     double CalcAlpha(const double &tof);
     double CalcN(const double &tof);
     double CalcSigma(const double &tof);
+
+private:
+    double aI_, aH_, nJ_, nK_, nL_, sM_, sN_, sO;
 };
 
 #endif //__PARAMCALCULATOR_HPP_
