@@ -1,0 +1,274 @@
+\chapter{October}
+\label{ch:oct}
+\section{10-28-2013}
+\label{sec:10282013}
+\subsection{Intro}
+This is the first entry into the logbook. For more information about the work 
+that has been done thus far one should check out the October 2013 section of 
+the \iso{Cu}{77} logbook. 
+
+\subsection{Error Propagation}
+We need to get the error propagation going properly for the various 
+calculations that are going down. This error will need to be carried around 
+for all of the various parameters that have it. Either from the literature or 
+from the experimental data themselves. There are a few parameters for which 
+we will ignore the error: the speed of light and the rest mass of the neutron. 
+These two are experimentally determined pretty well. 
+
+\section{10-29-2013}
+\label{sec:10292013}
+We are continuing with the error propagation stuff, we will be working on the 
+sensitivity limit stuff after this is completed. 
+
+\subsection{Future plans}
+We need to get an xml setup file prepared, and integrate the pugixml codes. 
+This will make setting all of the various file names/paths/etc. easier. It 
+will also allow one to make changes to the setups without having to recompile 
+the code. I would also like to get thing setup so that the ROOT libraries are 
+only linked if they have to be. This is a quick and easy switch in the Makefile.
+
+\subsection{Errors}
+The error on $\mu$ and yield are provided by the fit. I need to include 
+errors on the $\sigma$ from that fit as well, which need to come from the 
+fit to the parameterization of $\sigma$. We are gonig to make a convention that 
+the errors are all called $\rho$ for this, there are too many $\sigma$'s 
+floating around to keep track of things properly.
+
+We need to start tracking the error in the calculations from the highest level 
+and work our way down. Maybe an ErrorCalculator class will be helpful for 
+handling these things. I can just pass it the variables that need to be 
+calculated. The multiplication by any constants can happen in the class itself.
+The error class just needs to know the final variable the power if 
+using multiplication, and the general process?
+
+\subsection{Summary of Errors - From Bevington}
+This is a summary of the information contained at the end of Chapter 2 of 
+\cite{bevington2003}.
+
+\noindent \textbf{Covariance:} 
+\begin{equation}
+\sigma_{uv}^2 = \langle(u-\bar{u})(v-\bar{v})\rangle
+\end{equation}
+
+\noindent \textbf{Propagation of errors: Assume $x=f(u,v)$:}
+\begin{equation}
+\sigma^2_x = \sigma_u^2\left(\pdiff{x}{u}{}\right)^2 +
+   \sigma_v^2\left(\pdiff{x}{v}{}\right)^2 + 
+   2\sigma_{uv}^2\left(\pdiff{x}{u}{}\pdiff{x}{v}{}\right)
+\end{equation}
+For $u$ and $v$ uncorrelated, $\sigma_{uv}^2 = 0$.
+
+\noindent \textbf{Specific Formulas:}
+\begin{table}[h]
+  \begin{center}
+    \begin{tabular}{l c}
+      $x=au+bv$ & $\sigma_x^2 = a^2\sigma_u^2+b^2\sigma_v^2 + 2ab\sigma_{uv}^2$ \\
+      $x=auv$ & $\frac{\sigma_x^2}{x^2} = \frac{\sigma_u^2}{u^2} + 
+         \frac{\sigma_v^2}{v^2}+2\frac{\sigma_{uv}^2}{uv} $ \\
+      $x=\frac{au}{v}$ & $\frac{\sigma_x^2}{x^2} = \frac{\sigma_u^2}{u^2} + 
+         \frac{\sigma_v^2}{v^2}-2\frac{\sigma_{uv}^2}{uv} $ \\
+      $x=au^b$ & $\frac{\sigma_x}{x} = b\frac{\sigma_u}{u}$ \\
+      $x=ae^{bu}$ & $\frac{\sigma_x}{x} = b\sigma_u$ \\
+      $x=a^{bu}$ & $\frac{\sigma_x}{x} = (b \mathrm{ln} a) \sigma_u$ \\
+      $x=a\mathrm{ln}(bu)$ & $\sigma_x = ab\frac{\sigma_u}{u}$ \\
+      $x=a \cos(bu)$ & $\sigma_x = -\sigma_uab\sin(bu)$ \\
+      $x=a \sin(bu)$ & $\sigma_x = \sigma_uab\cos(bu)$ \\
+    \end{tabular}
+  \end{center}
+  \caption{Specific formulas for error propagation}
+  \label{tbl:errFormulas}
+\end{table}
+
+Now I no longer have to look all this stuff up. 
+
+\section{10-31-2013 - Happy Halloween!!}
+\label{sec:10312013}
+\subsection{Analysis Workflow}
+I am going to detail here the process from start to finish of analyzing the 
+VANDLE data. 
+\begin{enumerate}
+\item Calibrate the gamma spectra for the scan code, using files from the 
+  calibration sources. This calibration may need to be done using gamma 
+  rays from the ldfs that one wantts to analyze. 
+\item Calculate the effiency ($\epsilon_\gamma(E_\gamma)$) of the clovers. 
+  This needs to be done with the calibrated source data. Currently this 
+  information resides in a spreadsheet titled ``efficiency.ods ``.
+\item Use the gamma singles spectrum to determine the most intense (clean) 
+  $\gamma$ for which the abolute branching ratio (ABR$_\gamma$) is known. 
+  Take care to find a gamma line that does not have a component of direct 
+  implantation in the beam. Fit this gamma line to obtain the intensity 
+  of the $\gamma$ in singles, A$_\gamma$.
+\item Calculate the absolute number of $\beta$ decays using the information 
+  from the previous points.
+  \begin{equation}
+    N_{dky} = \frac{A_\gamma}{\epsilon_\gamma(E_\gamma)ABR_\gamma}
+    \label{eqn:numDecays}
+  \end{equation}
+\item Calculate the efficiency of the $\beta$ detectors, $\epsilon_\beta$.
+  To determine this take the ratio of $\gamma$s from the $\beta$-n 
+  daughter in the $\gamma$ singles and $\beta$-gated spectra. This number 
+  needs to be determined a little bit more preciesly, but for now this 
+  is going to be good enough. One may consider taking an average if more 
+  than one line from the beta delayed neutron daughter is found.
+  \begin{equation}
+    \epsilon_\beta(E_\gamma) = \frac{A_{gated}}{A_{singles}}
+    \label{eqn:betaEff}
+  \end{equation}
+\item Calculate or take from simulation the solid angle coverage of 
+  VANDLE. We are currently using a value of 0.0061 for a single bar, 
+  which comes from Sergey's simulation. A calculation of this number 
+  provides a value of 0.004727. This parameter will be treated as a constant.
+\item Calculate the VANDLE efficiency, $\epsilon_{v}(E_n)$. These values can 
+  either be taken from the Ohio or Cf data, or determined as a function of the 
+  banana curve using GEANT4. Currently, we are using the form of the 
+  efficiency from GEANT4 in the calculations, and will be treating the error of 
+  the efficiency as constant for now. We should find the relative error in the 
+  simulation from the comparison with the Ohio data, and then figure out the 
+  percentage that its off as a function of energy.
+\item Determine the reoslution of the start detector. This should be 
+  parameterized in terms of the ToF. The parameterization of this variable 
+  will have error associated with it, but the error shall be ignored for now. 
+  The parameterization currently in use comes from a spreadsheet by Miguel and 
+  is titled ``VANDLE\_bar\_QDC\_calibratio\_test.ods''.
+\item Convolute the neutron response curve from GEANT4 with a Gaussian that has 
+  a resolution given from the previous point.
+\item Repeat the previous point for N response curves. This will allow one to 
+  parameterize $\alpha$, n, and $\sigma_{ToF}$ as a function of $\mu$.
+\item Perform a fit to the $\alpha$,n,$\sigma_{ToF}$ vs. $\mu$ curves to 
+  parameterize them in terms of $\mu$.
+\item Perform the deconvolution of the neutron spectrum using a CB PDF that 
+  has $\alpha$,n,$\sigma_{ToF}$ given by the previous point. The only free 
+  parameters in this fit will be $\mu_i$ and y$_i$. The errors fro these two 
+  parameters will be taken from the fit itself. Currently, the error on 
+  the parameterization steps is ignored.
+\item Convert the $\mu_i$s into E$_i$:
+  \begin{equation}
+    E_i(\mu_i) = \frac{1}{2}m_n \left(\frac{d}{\mu_ic}\right)^2
+    \label{eqn:kinE}
+  \end{equation}
+\item Calculate the full neutron yield, y$_i'$, by integrating the CB from 
+  [0,$\infty$]. In practice, the calculation is performed by integrating 
+  the CB from [fitLow, fitHigh] this provides the normalization of the integral,
+  and then from [fitHigh,$\infty$]. The error is calculated assuming that the 
+  precision of the numeric integral is much smaller than the error on the yield, 
+  which is going to be the case for all of the cases studied.
+  \begin{equation}
+    y_i' = \frac{y_i}{\int_{fitLow}^{fitHigh}CB}\int_{fitHigh}^{\infty}CB + y_i
+    \label{eqn:fullYld}
+  \end{equation}
+\item Calculate the branching ratio of the neutron lines, BR$_i$. You only need 
+  to include the gamma efficiency if the BR$_i$ is calculated for the gamma 
+  gated neutron spectrum.
+  \begin{equation}
+    BR_i = \frac{y_i'}{N_{dky} \Omega \epsilon_\beta \epsilon_\gamma \epsilon_v}
+    \label{eqn:brCalc}
+  \end{equation}
+\item Calculate the log(ft)$_i$. The error on the f is going to be swamped by the 
+  error on the t$_{1/2}$ and the BR$_i$. 
+  \begin{equation}
+    log(ft)_i = \log\left(\frac{f t_{1/2}}{BR_i}\right)
+    \label{eqn:logft}
+  \end{equation}
+\item Calculate the B(GT)$_i$ for each of the neutron lines:
+  \begin{equation}
+    B(GT)_i = \frac{D*BR_i}{(g_a/g_v)^2f t_{1/2}}
+    \label{eqn:bgt}
+  \end{equation}
+\item Calculate the neutron density by spreading the BR$_i$ using a Gaussian 
+  distribution. The mean of the distribution will be the $\mu_i$, the variance 
+  will be given by 
+  \begin{equation}
+    \sigma_{Ei} = E_i(\mu_i - 0.25\sigma_{i}') - E_i(\mu_i + 0.25\sigma_{i}').
+    \label{eqn:bgtWidth}
+  \end{equation}
+  The amplitude will be given by the amplitude of the BR$_i$, which is 
+  scaled according to the sampling resolution so that the total Gaussian 
+  area is independent of the step size.
+\item Convert the neutron density spectrum into B(GT). The error of the point 
+  heights will be given by the equations in the next section. 
+\item Repeat steps 12 - 19 with the gamma gated neutron spectra if the statistics
+  allow for it.
+\end{enumerate}
+
+\subsection{Summary of Parameters with Error}
+\begin{enumerate}
+\item The error in the beta efficiency, $\epsilon_\beta$:
+  \begin{equation}
+    \left(\frac{\sigma_{\epsilon\beta}}{\epsilon_\beta}\right)^2 = 
+    \left(\frac{\sigma_{Agated}}{A_{gated}}\right)^2 + 
+    \left(\frac{\sigma_{Asngl}}{A_{sngl}}\right)^2
+    \label{eqn:errBeta}
+  \end{equation}
+\item The error in the location of the gamma energies, E$_\gamma$ is given 
+  simply by statistics. The 3.3 is the 99.9\% level of confidence for a 
+  normal distribution.
+  \begin{equation}
+    \sigma_{\gamma}^2 = \frac{3.3 * FWHM}{2\sqrt{2N_{binsFit}\ln{2}}}
+    \label{eqn:errGammaEn}
+  \end{equation}
+\item The error on the gamma efficiency, $\epsilon_\gamma$ will be approximated 
+  using the MC techniques that Michael taught me. The distribution is a 
+  log-normal distribution and the variance is described as
+  \begin{equation}
+    VAR = (e^{\sigma^2} - 1) e^{2\mu+\sigma^2}
+    \label{eqn:logNormalVariance}
+  \end{equation}
+  Where the $\mu$ is the sample average, and the sample variance, $\sigma^2$,
+  is defined as
+    \begin{equation}
+    \sigma_y^2 = \frac{1}{n}\sum_{i=1}^n(y_i-\mu)^2
+    \label{eqn:sampleVariance}
+  \end{equation}
+\item Error on the number of decays, N$_{dky}$
+  \begin{equation}
+    \left(\frac{\sigma_{dky}}{N_{dky}}\right)^2 = 
+    \left(\frac{\sigma_{A\gamma}}{A_\gamma}\right)^2 + 
+    \left(\frac{\sigma_{\epsilon\gamma}}{\epsilon_\gamma}\right)^2 +
+    \left(\frac{\sigma_{ABR\gamma}}{ABR_\gamma}\right)^2
+    \label{eqn:errNdky}
+  \end{equation}
+\item Error on the neutron energies, E$_i$. This equation takes into account 
+  the error from interaction point, and the timing resolutions from the 
+  $\beta$, see \cite{kornilov2009}.
+  \begin{equation}
+    \sigma_{Ei} = E_i(\mu_i - 0.25\sigma'_i) - E_i(\mu_i + 0.25\sigma'_i)
+    \label{eqn:errEnergy}
+  \end{equation}
+\item Error on the integrated neutron yields, y$_i'$
+  \begin{equation}
+    \sigma_{y'}^2 = \frac{\sigma_{y} \int_{fitHigh}^{\infty}CB}{\int_{fitLow}^{fitHigh}CB}
+    + \sigma_y^2
+    \label{eqn:errIntYield}
+  \end{equation}
+\item Error on the integrated neutron yields adjusted for efficiency, y$_i''$
+  \begin{equation}
+    \left(\frac{\sigma_{yi''}}{y_i''}\right)^2 = 
+    \left(\frac{\sigma_{\epsilon V}}{\epsilon_V}\right)^2 + 
+    \left(\frac{\sigma_{yi'}}{y_i'}\right)^2
+    \label{eqn:errIntYieldEff}
+  \end{equation}
+\item Error on the Branching Ratio, BR$_i$. The error for $\epsilon_V$ is not include 
+  because it is included as part of the calculation for the integrated neutron yield.
+  \begin{equation}
+    \left(\frac{\sigma_{BRi}}{BR_i}\right)^2 = 
+    \left(\frac{\sigma_{yi''}}{y_i''}\right)^2 + 
+    \left(\frac{\sigma_{dky}}{N_{dky}}\right)^2 +
+    \left(\frac{\sigma_{\epsilon\gamma}}{\epsilon_\gamma}\right)^2 +
+    \left(\frac{\sigma_{\epsilon\beta}}{\epsilon_\beta}\right)^2
+    \label{eqn:errBR}
+  \end{equation}
+\item Error on the B(GT), this is only the error on the amplitude of the points, 
+  not the error on the width.
+  \begin{equation}
+    \left(\frac{\sigma_{BGT}}{BGT}\right)^2 = 
+    \left(\frac{\sigma_{BR}}{BR}\right)^2 + 
+    \left(\frac{\sigma_{t1/2}}{t_{1/2}}\right)^2
+    \label{eqn:errBGT}
+  \end{equation}
+\item Error on the log(ft)
+  \begin{equation}
+    \sigma_{lotft}^2 = \left(\frac{\sigma_{BR}}{BR\ln(10)}\right)^2 +
+    \left(\frac{\sigma_{t1/2}}{t_{1/2}\ln(10)}\right)^2
+    \label{eqn:errLogFT}
+  \end{equation}
+\end{enumerate}

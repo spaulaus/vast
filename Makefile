@@ -73,6 +73,6 @@ $(OBJDIR)/%.o: %.cpp
 .PHONY: clean eff
 clean: 
 	@echo "Cleaning..."
-	@rm -f $(OBJDIR)/* $(PROGRAM) ./eff *~ src/*~ inc/*~
+	@rm -f $(OBJDIR)/*.o $(PROGRAM) ./eff *~ src/*~ inc/*~
 eff: src/eff.cpp $(EFFCALCULATORO) $(ERRORCALCULATORO) $(NEUTRONO)
 	$(CXX) $(CXXFLAGS) $(LDLIBS) $^ -o $@
