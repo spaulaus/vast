@@ -21,6 +21,8 @@ public:
     Configuration(const std::string &file);
     ~Configuration(void){};
 
+    pugi::xml_document *GetDocument(void){return(&doc_);};
+
     Decay ReadDecay(void);
     Experiment ReadExperiment(void);
     FileHandler ReadFiles(void);
@@ -29,7 +31,7 @@ public:
 private:
     pugi::xml_document doc_;
     pugi::xml_node cfg_;
-    std::string file_;
+    std::string file_;    
 
     Variable NodeToVar(const pugi::xml_node &node);
     void SpitWarning(const std::string &node, 

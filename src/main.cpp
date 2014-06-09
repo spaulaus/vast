@@ -28,12 +28,6 @@ void ReadData(vector<Neutron> &nvec, const string &file);
 void OutputBasics(vector<Neutron> &nvec, Decay &dky, 
                   const string &file);
 
-vector<string> files = {"077cu-ban4-lower", "077cu-ban4-lower", "-8b", 
-                        "results/tof/working/working.fit", 
-                        "results/vast/working/working.dat",
-                        "results/vast/working/working.mgb",
-                        "results/vast/working/working.bgt"};
-
 int main(int argc, char* argv[]) {
     Configuration cfg("Config.xml");
     FileHandler fls = cfg.ReadFiles();

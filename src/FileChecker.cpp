@@ -1,5 +1,6 @@
 #include <fstream>
 #include <iostream>
+#include <string>
 
 #include <cstdio>
 
@@ -21,28 +22,26 @@ FileChecker::FileChecker(const string &flag, const string &name){
 }
 
 void FileChecker::CheckDirExistance(const string &name) {
-    ofstream test(name.c_str());
+    string temp = name+"out.temp";
+    ofstream test(temp.c_str());
     if(test.fail()) {
-        cout << endl << endl 
-             << "Holy fuck!!! We couldn't open the following file for " 
-             << "i/o operations. This is an issue with me." << endl 
-             << "What I got was " << name
-             << "  You may consider the option that the path does not" 
-             << "exist" << endl << endl;
+        cout << "Holy fuck!!! We couldn't open the following directory for " 
+             << "i/o operations : " << endl << "\"" << name << "\"." << endl
+             << "This is an issue with me." << endl << endl;
         exit(1);
     }
     test.close();
+    //this may be system specific, I don't like using it but 
+    //not really anything better that I can think of
+    remove(temp.c_str());
 }
 
 void FileChecker::CheckFileExistance(const string &name) {
     ifstream test(name.c_str());
     if(test.fail()) {
-        cout << endl << endl 
-             << "Holy fuck!!! We couldn't open the following file for " 
-             << "i/o operations. This is an issue with me." << endl 
-             << "What I got was " << name
-             << "  You may consider the option that the path does not" 
-             << "exist" << endl << endl;
+        cout << "Holy fuck!!! We couldn't open the following file for " 
+             << "i/o operations : " << endl << "\"" << name << "\"." << endl
+             << "This is an issue with me." << endl << endl;
         exit(1);
     }
     test.close();

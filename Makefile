@@ -18,9 +18,7 @@ PROGRAM = vast
 
 #Define Objects
 #This file must contain your MAIN function
-MAINO            = ex.o
-#MAINO            = cfgtst.o
-
+MAINO            = main.o
 BGTCALCULATORO   = BGTCalculator.o
 CONFIGURATIONO   = Configuration.o
 DECAYO           = Decay.o
@@ -75,4 +73,6 @@ clean:
 	@echo "Cleaning..."
 	@rm -f $(OBJDIR)/*.o $(PROGRAM) ./eff *~ src/*~ inc/*~
 eff: src/eff.cpp $(EFFCALCULATORO) $(ERRORCALCULATORO) $(NEUTRONO)
+	$(CXX) $(CXXFLAGS) $(LDLIBS) $^ -o $@
+sim: src/simtest.cpp $(FILECHECKERO) $(SIMCONVOLUTERO)
 	$(CXX) $(CXXFLAGS) $(LDLIBS) $^ -o $@

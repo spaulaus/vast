@@ -28,8 +28,7 @@ Configuration::Configuration(const string &file) {
 
 Experiment Configuration::ReadExperiment(void) {
     Experiment exp;
-    string nodeName = "Experiment";
-    pugi::xml_node expInfo = cfg_.child(nodeName.c_str());
+    pugi::xml_node expInfo = cfg_.child("Experiment");
 
     for(pugi::xml_node node : expInfo.children()) {
         string name = node.name();
@@ -43,7 +42,7 @@ Experiment Configuration::ReadExperiment(void) {
         else if(name =="denRes")
             exp.SetDensityRes(temp);
         else
-            SpitWarning(nodeName, name);
+            SpitWarning("Experiment", name);
     }
     return(exp);
 }
@@ -139,7 +138,7 @@ void Configuration::SpitWarning(const string &node,
                                 const string &name) {
     cerr << endl << "WARNING!!!!  " 
          << "You put something in the " << node 
-         << " node that confused the shit out of me." << endl 
+         << " node that has confused the shit out of me." << endl 
          << "If you need access to the information in " 
          << name << "; add it yourself." << endl << endl;
 }

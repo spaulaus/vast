@@ -2,23 +2,29 @@
 #define __SIMCONVOLUTER_HPP__
 
 #include <fstream>
+#include <map>
 #include <string>
 #include <vector>
 #include <utility>
 
+#include <TFile.h>
+
+#include "Configuration.hpp"
+
 class SimConvoluter {
 public:
-    SimConvoluter(const std::vector<std::string> &names, 
-                  const std::string &dir, const std::pair<double,double> &rng);
+    SimConvoluter(){};
+    SimConvoluter(const std::string &cfg);
     ~SimConvoluter(){};
 private:
-    std::pair<double,double> rng_;
-    std::string dir_, header_;
-    std::vector<std::string> names_;
+    std::map<double, std::string> energies_;
+    std::pair<double,double> rng_, convRng_;
+    std::string inputDir_, outputDir_, convHists_, simHists_, fitFile_, convFile_;
+    double flightPath_;
+    std::string header_ = "#Energy(keV) ToF(ns) sigma sigmaErr alpha alphaErr n nErr";
 
     double CalcBetaRes(const double &tof);
-    
-    void FitMc(const std::string &name, const double &mu, const double &sigma, 
+    void FitMc(const double &en, const double &mu, const double &sigma, 
                    const double &alpha, const double &n, std::ofstream &convOut);
     void FitSim(void);
 };
