@@ -98,9 +98,9 @@ void SimConvoluter::FitMc(const double &en, const double &mu,
     convOut << header_ << endl;
 
     //---------- DO THE CONVOLUTION AND RECALCULATE THE PARAMETERS -------
-    double simLow  = mu - convRng_.first;
-    double simHigh = mu + convRng_.second;
-    RooRealVar simTof("simTof", "tof for the simulation", 0.0, rng_.first, rng_.second, "ns");
+    double simLow  = mu - rng_.first;
+    double simHigh = mu + rng_.second;
+    RooRealVar simTof("simTof", "tof for the simulation", 0.0, 4000., "ns");
     simTof.setBins(1e5,"cache");
     
     //Set the information for the resolution model
@@ -170,10 +170,9 @@ void SimConvoluter::FitSim(void) {
 
     TFile f((outputDir_+simHists_).c_str(), "RECREATE");
 
-    RooRealVar tof("tof","tof", rng_.first, rng_.second);
+    RooRealVar tof("tof","tof", 0., 4000.);
     RooPlot* frame = tof.frame();
-    frame->SetName("3000");
-    frame = tof.frame(rng_.second*0.5);
+    frame = tof.frame(2000);
     frame->SetTitle("");
     frame->SetXTitle("Time-of-Flight (ns)");
     frame->SetYTitle("Events / 2 ns");
@@ -189,59 +188,60 @@ void SimConvoluter::FitSim(void) {
         double mass = consts.GetConstant("neutronMass").GetValue(); //MeV/c^2
         double c = consts.GetConstant("c").GetValue()*(100/1e9); //cm/ns
         double peak = (flightPath_/c)*sqrt(mass/(2*it.first/1000.));
-        double wiggle = 300.;
         
         //Read in the data and set the variable to fit.
-        double low = peak-20.;
-        double high = peak+1500.;
+        double low = peak-rng_.first;
+        double high = peak+rng_.second;
         RooDataSet *data = RooDataSet::read(inputName.c_str(), 
                                             RooArgList(tof));
-        data->SetNameTitle(it.second.c_str(),it.second.c_str());
-        //data->Write();
-        
+
+        //Setup the CB to fit
         RooRealVar yield("yield", "", 1.e4, 0., 1.e7);
-        RooRealVar mu("mu","", peak, peak-wiggle, peak+wiggle);
+        RooRealVar mu("mu","", peak, peak-300., peak+300.);
         RooRealVar sigma("sigma", "", 2., 0, 20.);
         RooRealVar alpha("alpha", "", -1., -10., 0.);
         RooRealVar n("n", "", 2., 0., 20.);
-        
         RooCBShape cb("cb", "", tof, mu, sigma, alpha, n);
         
+        //marry the CB with the yield
         RooAddPdf model("model", it.second.c_str(), RooArgList(cb), RooArgList(yield));
         
-        RooFitResult* fit = model.fitTo(*data, NumCPU(3), Save(), 
-                    Range(low, high));
+        //Perform the fit and store the results in the "fitResult" variable
+        RooFitResult* fitResult = model.fitTo(*data, NumCPU(3), Save(), 
+                                              Range(low, high));
         
-        //Do the plots
-        // data->Write();
-        //model.Write();
         data->plotOn(frame,Name("data"));
         model.plotOn(frame,Name("model"));
         
-        TCanvas* canv = new TCanvas("c","",0,0,700,500);
+        stringstream canvName;
+        canvName << "sim" << it.first;
+        TCanvas* canv = new TCanvas(canvName.str().c_str(),"",0,0,700,500);
         canv->cd();
         frame->Draw();
-        //canv->SaveAs("temp.eps");
-        canv->Write("3000");
+        canv->Write(canvName.str().c_str());
         delete canv;
+        frame->remove("data");
+        frame->remove("model");
         
-        // if(fit->statusCodeHistory(0) == 0) {
-        //     cout << endl << endl << "The Fit to the simulated data" << it.second 
-        //          << "  keV.dat converged successufully, proceeding with fit "
-        //          << "to convoluted function." << endl << endl;
-        // simOut << setprecision(6) 
-        //        << it.first << " " << mu.getValV() << " " 
-        //        << sigma.getValV() << " " << sigma.getError() << " "
-        //        << alpha.getValV() << " " << alpha.getError() << " " 
-        //        << n.getValV() << " " << n.getError() << " " << endl;
-        //     FitMc(it.first, mu.getValV(), sigma.getValV(), alpha.getValV(), n.getValV(), 
-        //           convOut);
-        // } else {
-        //     cout << endl << endl << "Oh, Jesus, the fit to the simulated data for " 
-        //          << it.second << "keV.dat did not converge!!" << endl;
-        //     simOut.close();
-        //     exit(1);
-        // }
+        if(fitResult->statusCodeHistory(0) == 0) {
+            cout << endl << endl << "The Fit to the simulated data" << it.second 
+                 << "  keV.dat converged successufully, proceeding with fit "
+                 << "to convoluted function." << endl << endl;
+            simOut << setprecision(6) 
+                   << it.first << " " << mu.getValV() << " " 
+                   << sigma.getValV() << " " << sigma.getError() << " "
+                   << alpha.getValV() << " " << alpha.getError() << " " 
+                   << n.getValV() << " " << n.getError() << " " << endl;
+            // FitMc(it.first, mu.getValV(), sigma.getValV(), alpha.getValV(), n.getValV(), 
+            //       convOut);
+            FitMc(it.first, mu.getValV(), sigma.getValV(), alpha.getValV(), n.getValV(), 
+                  convOut);
+        } else {
+            cerr << endl << endl << "Oh, Jesus, the fit to the simulated data for " 
+                 << it.second << "keV.dat did not converge!!" << endl;
+            simOut.close();
+            exit(1);
+        }
     }//for(const auto &it : energies_)
     simOut.close();
     convOut.close();

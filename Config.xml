@@ -87,10 +87,10 @@
       <e5  file="0600keV.txt" energy="600"/>
       <e6  file="0800keV.txt" energy="800"/>
       <e7  file="1000keV.txt" energy="1000"/>
+      -->
       <e8  file="1200keV.txt" energy="1200"/>
       <e9  file="1800keV.txt" energy="1800"/>
       <e10 file="2000keV.txt" energy="2000"/>
-      -->
       <e11 file="3000keV.txt" energy="3000"/>
        <!-- 
       <e12 file="4000keV.txt" energy="4000"/>
@@ -107,10 +107,10 @@
       <fitData>fitParms.dat</fitData>
     </output>
 
-    <!-- The fitting range -->
+    <!-- The fitting range as measured from the peak position-->
     <range>
-      <low value="0.0"/>
-      <high value="4000.0"/>
+      <low value="20"/>
+      <high value="1480.0"/>
     </range>
     
     <convRange>
