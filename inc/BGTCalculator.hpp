@@ -28,6 +28,7 @@ public:
                   const Variable &eg = Variable(0.0,0.0,""));
     ~BGTCalculator(){};
 
+    /*! Return the map containing the B(GT) */
     std::map<double,double>* GetBgtMap(void){return(&bgtMap_);};
     std::map<double,double>* GetLogftMap(void){return(&logftMap_);};
     std::map<double,double>* GetSDensity(void){return(&sDensity_);};
