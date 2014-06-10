@@ -7,8 +7,7 @@
 #include <vector>
 #include <utility>
 
-#include <TFile.h>
-#include <RooAddPdf.h>
+//#include <TFile.h>
 
 #include "Configuration.hpp"
 
@@ -25,9 +24,8 @@ private:
     std::string header_ = "#Energy(keV) ToF(ns) sigma sigmaErr alpha alphaErr n nErr";
 
     double CalcBetaRes(const double &tof);
-    void FitMc(const double &en, const RooFit::RooAddPdf &model, std::ofstream &convOut);
-    // void FitMc(const double &en, const double &mu, const double &sigma, 
-    //            const double &alpha, const double &n, std::ofstream &convOut);
+    void FitMc(const double &en, const double &mu, const double &sigma, 
+               const double &alpha, const double &n, std::ofstream &convOut);
     void FitSim(void);
 };
 #endif //#ifndef __SIMCONVOLUTER_HPP__

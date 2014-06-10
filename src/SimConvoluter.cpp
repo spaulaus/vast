@@ -60,12 +60,6 @@ SimConvoluter::SimConvoluter(const std::string &cfg) {
                          base.child("range").
                          child("high").attribute("value").as_double());
 
-        //Read in the range for the fitting
-        convRng_ = make_pair(base.child("convRange").
-                         child("low").attribute("value").as_double(),
-                         base.child("convRange").
-                         child("high").attribute("value").as_double());
-        
         //Read in all the energies for fitting and their associated filenames
         for(auto en : base.child("energies").children())
             energies_.insert(make_pair(en.attribute("energy").as_double(),
@@ -129,37 +123,39 @@ void SimConvoluter::FitMc(const double &en, const double &mu,
     
     RooFitResult *mcFit = model1.fitTo(*mcData, NumCPU(3), Save(), 
                                        Range(simLow, simHigh));
-    //Do the plots
-    RooPlot* frame1 = simTof.frame();
-    frame1 = simTof.frame(rng_.second);
-    frame1->SetTitle("");
-    frame1->SetXTitle("Time-of-Flight (ns)");
-    frame1->SetYTitle("Events/ns");
-    frame1->GetYaxis()->SetTitleOffset(1.2);
-    frame1->SetAxisRange(simLow,simHigh,"X");        
-    
-    mcData->plotOn(frame1, Name("mcData"));
-    model1.plotOn(frame1,Name("model1"));
-    
-    //frame1->Write();
-
-    // TCanvas* c1 = new TCanvas("c1","",0,0,700,500);
-    // c1->cd();
-    // frame1->Draw();
-    // c1->Write("test.eps");
-    
-    convOut << setprecision(6) 
-            << en << " " << zMu.getValV() << " " 
-            << zSigma.getValV() << " " << zSigma.getError() << " "
-            << zAlpha.getValV() << " " << zAlpha.getError() << " " 
-            << zN.getValV() << " " << zN.getError() << " " << endl;
-    
     if(mcFit->statusCodeHistory(0) == 0) {
+        //Do the plots
+        RooPlot* frame1 = simTof.frame();
+        frame1 = simTof.frame(rng_.second);
+        frame1->SetTitle("");
+        frame1->SetXTitle("Time-of-Flight (ns)");
+        frame1->SetYTitle("Events/ns");
+        frame1->GetYaxis()->SetTitleOffset(1.2);
+        frame1->SetAxisRange(simLow,simHigh,"X");        
+        
+        mcData->plotOn(frame1, Name("mcData"));
+        model1.plotOn(frame1,Name("model1"));
+        
+        stringstream canvName;
+        canvName << "conv" << en;
+        TCanvas* canv = new TCanvas(canvName.str().c_str(),"",0,0,700,500);
+        canv->cd();
+        frame1->Draw();
+        canv->Write(canvName.str().c_str());
+        delete canv;
+        
+        convOut << setprecision(6) 
+                << en << " " << zMu.getValV() << " " 
+                << zSigma.getValV() << " " << zSigma.getError() << " "
+                << zAlpha.getValV() << " " << zAlpha.getError() << " " 
+                << zN.getValV() << " " << zN.getError() << " " << endl;
+        cout << endl << endl << "The fit to the convoluted spectrum converged " 
+             << " successfully." << endl;
+    }else {
         cout << endl << endl << "Oh, Jesus, the fit did not converge for the " 
              << "simulation to the " << en << " keV" << " case." << endl;
         exit(1);
-    }else
-        cout << endl << endl << "The fit converged successfully." << endl;
+    }
 }
 
 void SimConvoluter::FitSim(void) {
@@ -177,7 +173,6 @@ void SimConvoluter::FitSim(void) {
     frame->SetXTitle("Time-of-Flight (ns)");
     frame->SetYTitle("Events / 2 ns");
     frame->GetYaxis()->SetTitleOffset(1.2);
-    //frame->Write();
 
     for(const auto it : energies_) {
         string inputName = inputDir_ + it.second;
@@ -209,21 +204,21 @@ void SimConvoluter::FitSim(void) {
         //Perform the fit and store the results in the "fitResult" variable
         RooFitResult* fitResult = model.fitTo(*data, NumCPU(3), Save(), 
                                               Range(low, high));
-        
-        data->plotOn(frame,Name("data"));
-        model.plotOn(frame,Name("model"));
-        
-        stringstream canvName;
-        canvName << "sim" << it.first;
-        TCanvas* canv = new TCanvas(canvName.str().c_str(),"",0,0,700,500);
-        canv->cd();
-        frame->Draw();
-        canv->Write(canvName.str().c_str());
-        delete canv;
-        frame->remove("data");
-        frame->remove("model");
-        
+
         if(fitResult->statusCodeHistory(0) == 0) {
+            data->plotOn(frame,Name("data"));
+            model.plotOn(frame,Name("model"));
+            
+            stringstream canvName;
+            canvName << "sim" << it.first;
+            TCanvas* canv = new TCanvas(canvName.str().c_str(),"",0,0,700,500);
+            canv->cd();
+            frame->Draw();
+            canv->Write(canvName.str().c_str());
+            delete canv;
+            frame->remove("data");
+            frame->remove("model");
+            
             cout << endl << endl << "The Fit to the simulated data" << it.second 
                  << "  keV.dat converged successufully, proceeding with fit "
                  << "to convoluted function." << endl << endl;
@@ -232,14 +227,13 @@ void SimConvoluter::FitSim(void) {
                    << sigma.getValV() << " " << sigma.getError() << " "
                    << alpha.getValV() << " " << alpha.getError() << " " 
                    << n.getValV() << " " << n.getError() << " " << endl;
-            // FitMc(it.first, mu.getValV(), sigma.getValV(), alpha.getValV(), n.getValV(), 
-            //       convOut);
             FitMc(it.first, mu.getValV(), sigma.getValV(), alpha.getValV(), n.getValV(), 
                   convOut);
         } else {
             cerr << endl << endl << "Oh, Jesus, the fit to the simulated data for " 
                  << it.second << "keV.dat did not converge!!" << endl;
             simOut.close();
+            f.Close();
             exit(1);
         }
     }//for(const auto &it : energies_)
