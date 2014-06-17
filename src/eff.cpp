@@ -16,6 +16,7 @@
 
 using namespace std;
 
+///The main function for the efficiency calculation
 int main(int argc, char* argv[]) {
     int opt = -1;
     double temp, temp1 = 0.;

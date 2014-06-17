@@ -3,6 +3,7 @@
 
 #include <string>
 
+///A class that checks if a file or directory exists on the filesystem.
 class FileChecker {
 public:
     FileChecker(const std::string &flag, const std::string &name);

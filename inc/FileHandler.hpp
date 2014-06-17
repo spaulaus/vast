@@ -8,6 +8,7 @@
 #include <map>
 #include <string>
 
+///A class to handle the input and output filenames
 class FileHandler {
 public:
     FileHandler(){};

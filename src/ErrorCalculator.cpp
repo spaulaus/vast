@@ -14,7 +14,7 @@
 using namespace std;
 
 double ErrorCalculator::CalcBgtErr(const double &bgt, const Variable &br, 
-                  const Variable &halfLife) {
+                                   const Variable &halfLife) {
     double brPart = br.GetError() / br.GetValue();
     double hlPart = halfLife.GetError() / halfLife.GetValue();
     double sqrtPart = sqrt(pow(brPart,2)+pow(hlPart,2));
@@ -22,8 +22,7 @@ double ErrorCalculator::CalcBgtErr(const double &bgt, const Variable &br,
 }
 
 double ErrorCalculator::CalcBrErr(const double &br, const Variable &yld, const Variable &ndky,
-                     const Variable &gammaEff, const Variable &betaEff)
-{
+                                  const Variable &gammaEff, const Variable &betaEff) {
     double yldPart = yld.GetError() / yld.GetValue();
     double dkyPart = ndky.GetError() / ndky.GetValue();
     double gammaPart = gammaEff.GetError() / gammaEff.GetValue();
@@ -34,10 +33,9 @@ double ErrorCalculator::CalcBrErr(const double &br, const Variable &yld, const V
 }
 
 double ErrorCalculator::CalcEffErr(const map<string,Variable> &vars, 
-                                  const Variable &energy) {
-    // obtain a seed from the system clock:
+                                   const Variable &energy) {
     unsigned seed1 = chrono::system_clock::now().time_since_epoch().count();
-
+    
     mt19937_64 generator(seed1);
     map<string, normal_distribution<double> > randDists;
     vector<double> mcEffs;
@@ -144,4 +142,3 @@ double ErrorCalculator::CalcVariance(const vector<double> &mcVals,
         var += pow(i-mean,2);
     return(var/mcVals.size());
 }
-

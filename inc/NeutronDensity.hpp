@@ -13,12 +13,13 @@
 
 #include "Neutron.hpp"
 
+/// A class that contains information about the neutron density.
 class NeutronDensity {
 public:
     NeutronDensity(){};
-   NeutronDensity(std::vector<Neutron> &neutrons, const double &len,
-                  const double &res, 
-                  const Variable &ge = Variable(0.0,0.0,""));
+    NeutronDensity(std::vector<Neutron> &neutrons, const double &len,
+                   const double &res, 
+                   const Variable &ge = Variable(0.0,0.0,""));
     ~NeutronDensity(){};
     
     std::map<double,double>* GetDensity(void){return(&denMean_);};

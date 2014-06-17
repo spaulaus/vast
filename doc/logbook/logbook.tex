@@ -1,19 +1,20 @@
 \documentclass[10pt]{logbook}
-\usepackage{wrapfig}
-\usepackage{multirow}
 \usepackage{handystuff}
 
-\title{VANDLE Analysis Software Toolkit}
-\author{S. V. Paulauskas}
-\date{Updated: \today}
+\settitle{VANDLE Analysis Software Toolkit}{Development Logbook}
+\setauthor{S. V. Paulauskas}{spaulaus@utk.edu}
+\setstartdate{October 1, 2013}
 
 \begin{document}
+\addToPDFBookmarks{0}{Title}{a}
 \maketitle
 
-\addToPDFBookmarks{0}{Table of Contents}{rootNode}
+\addToPDFBookmarks{0}{Table of Contents}{b}
+\renewcommand{\contentsname}{Table of Contents}
 \tableofcontents
 
-\addToTOC{List of Figures} 
+\setcounter{page}{2}
+\addToTOC{List of Figures}
 \listoffigures
 
 \addToTOC{List of Tables}
@@ -21,6 +22,9 @@
 
 \part{2013}
 \include{2013/10-oct}
+
+\part{2014}
+\include{2014/06-jun}
 
 \addToTOC{References}
 \bibliographystyle{naturemag}

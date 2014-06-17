@@ -8,6 +8,7 @@
 
 #include <Variable.hpp>
 
+///A class that describes the various components of the experimental setup
 class Experiment {
 public:
     Experiment(){};

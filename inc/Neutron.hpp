@@ -10,6 +10,7 @@
 
 #include "EffCalculator.hpp"
 
+///A class that contains all of the information for a neutron peak
 class Neutron {
 public:
     Neutron(){};

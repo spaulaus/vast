@@ -13,6 +13,7 @@
 
 #include "Neutron.hpp"
 
+///A class that uses and Adaptive Simpsons method to integrate the neutron peaks
 class Integrator{
 public:
     Integrator(Neutron &neutron, const std::pair<double,double> &range);

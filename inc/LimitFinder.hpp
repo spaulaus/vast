@@ -8,6 +8,7 @@
 
 #include "Neutron.hpp"
 
+///A class that calculates the sensitivity limit of the detectors 
 class LimitFinder {
 public:
     LimitFinder(){};

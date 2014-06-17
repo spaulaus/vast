@@ -6,6 +6,7 @@
 #ifndef __PARAMCALCULATOR_HPP_
 #define __PARAMCALCULATOR_HPP_
 
+///A class to calculate the parameterized alpha, n, and sigma for CBs
 class ParamCalculator {
 public:
     ParamCalculator(){};

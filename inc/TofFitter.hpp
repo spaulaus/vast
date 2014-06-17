@@ -15,6 +15,7 @@
 #include "Neutron.hpp"
 #include "ParamCalculator.hpp"
 
+///A class that handles fitting of the neutron time-of-flight spectra
 class TofFitter {
 public:
     TofFitter(const FitHandler &fit, const FileHandler &fls);

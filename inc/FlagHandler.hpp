@@ -8,6 +8,7 @@
 #include <map>
 #include <string>
 
+///A class that handles the various flags for program control
 class FlagHandler {
 public:
     FlagHandler(){};
@@ -15,7 +16,7 @@ public:
     
     //Don't normally do this (bad practice, but lazy and it's simple stuff)
     bool GetFlag(const std::string &name){
-        auto it = flags_.find(name);
+        const auto it = flags_.find(name);
         if(it == flags_.end()) 
             EndError(name);
         return(it->second);

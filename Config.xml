@@ -140,8 +140,8 @@
   <Flags>
     <doFit value="false"/>
     <basic value="true"/>
-    <theory value="true"/>
-    <density value="true"/>
+    <theory value="false"/>
+    <density value="false"/>
   </Flags>
   
   <!-- How about some fitting information? -->

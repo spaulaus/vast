@@ -19,6 +19,8 @@ PROGRAM = vast
 #Define Objects
 #This file must contain your MAIN function
 MAINO            = main.o
+
+#The core files that are necessary for the analysis
 BGTCALCULATORO   = BGTCalculator.o
 CONFIGURATIONO   = Configuration.o
 DECAYO           = Decay.o
@@ -27,25 +29,38 @@ ERRORCALCULATORO = ErrorCalculator.o
 FILECHECKERO	 = FileChecker.o
 FILEHANDLERO     = FileHandler.o
 FITHANDLERO	 = FitHandler.o
-SIMTESTO         = simtest.o
 INTEGRATORO      = Integrator.o
 LIMITFINDERO     = LimitFinder.o
 NEUTRONO         = Neutron.o
 NEUTRONDENSITYO  = NeutronDensity.o
 OUTPUTHANDLERO   = OutputHandler.o
 PARAMCALCULATORO = ParamCalculator.o
-SIMCONVOLUTERO   = SimConvoluter.o
 TOFFITTERO       = TofFitter.o
+
+#This guy controls the fitting to the simulation data
+SIMTESTO         = simtest.o
+SIMCONVOLUTERO   = SimConvoluter.o
+
+#The standalone efficiency program
+EFFICIENCYO = eff.o
 
 #Make the object list
 OBJS =  $(BGTCALCULATORO) $(CONFIGURATIONO) $(DECAYO) $(EFFCALCULATORO) 
 OBJS += $(ERRORCALCULATORO) $(MAINO) $(FILECHECKERO) $(FILEHANDLERO) $(FITHANDLERO)
 OBJS += $(INTEGRATORO) $(LIMITFINDERO) $(NEUTRONO) $(NEUTRONDENSITYO) 
-OBJS += $(OUTPUTHANDLERO) $(PARAMCALCULATORO) $(SIMCONVOLUTERO) $(TOFFITTERO)
+OBJS += $(OUTPUTHANDLERO) $(PARAMCALCULATORO) $(TOFFITTERO)
+
+#Objects for the compiling of the simulation stuff
+SIMOBJS = $(SIMCONVOLUTERO) $(SIMTESTO) $(FILECHECKERO)
+
+#Objects for compiling the standalone efficiency program
+EFFOBJS = $(EFFICIENCYO) $(EFFCALCULATORO) $(ERRORCALCULATORO) $(NEUTRONO)
 
 #prefix the object directory
 OBJDIR = obj
 OBJS_W_DIR = $(addprefix $(OBJDIR)/,$(OBJS))
+SIMOBJS_W_DIR = $(addprefix $(OBJDIR)/,$(SIMOBJS))
+EFFOBJS_W_DIR = $(addprefix $(OBJDIR)/,$(EFFOBJS))
 
 #Add the ROOT config stuff to the compilation
 ROOTCONFIG   := root-config
@@ -68,11 +83,11 @@ $(PROGRAM): $(OBJS_W_DIR)
 $(OBJDIR)/%.o: %.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-.PHONY: clean eff
+.PHONY: clean eff sim
 clean: 
 	@echo "Cleaning..."
-	@rm -f $(OBJDIR)/*.o $(PROGRAM) ./eff *~ src/*~ inc/*~
-eff: src/eff.cpp $(EFFCALCULATORO) $(ERRORCALCULATORO) $(NEUTRONO)
+	@rm -f $(OBJDIR)/*.o $(PROGRAM) ./eff ./sim *~ src/*~ inc/*~
+eff: $(EFFOBJS_W_DIR)
 	$(CXX) $(CXXFLAGS) $(LDLIBS) $^ -o $@
-sim: src/simtest.cpp $(FILECHECKERO) $(SIMCONVOLUTERO)
+sim: $(SIMOBJS_W_DIR)
 	$(CXX) $(CXXFLAGS) $(LDLIBS) $^ -o $@

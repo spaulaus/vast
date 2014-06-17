@@ -18,7 +18,7 @@
  * \brief Class to calculate the convoluted simulations from Sergey
  * \author S. V. Paulauskas
  * \date November 01 2013
- * \modified June 09 2014
+ * \par Modified June 09 2014
  */
 #ifndef __SIMCONVOLUTER_HPP__
 #define __SIMCONVOLUTER_HPP__
@@ -31,6 +31,7 @@
 
 #include "Configuration.hpp"
 
+///A class to perform the analysis and convolution of the simulated data. 
 class SimConvoluter {
 public:
     /*! The default constructor */

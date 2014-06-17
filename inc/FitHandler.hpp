@@ -9,6 +9,7 @@
 #include <utility>
 #include <vector>
 
+///A class that handles the input fitting information for the neutron spectra
 class FitHandler {
 public:
     FitHandler(){};

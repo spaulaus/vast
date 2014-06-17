@@ -1,4 +1,4 @@
-/** \file ex.cpp
+/** \file main.cpp
  *  \brief Just a simple code to test and play with the classes
  *  \author S. V. Paulauskas
  *  \date 04 September 2013
@@ -24,10 +24,13 @@
 
 using namespace std;
 
+///A function to read the data from an input file
 void ReadData(vector<Neutron> &nvec, const string &file);
+///A function to output the basic information from the neutrons
 void OutputBasics(vector<Neutron> &nvec, Decay &dky, 
                   const string &file);
 
+///The main program function
 int main(int argc, char* argv[]) {
     Configuration cfg("Config.xml");
     FileHandler fls = cfg.ReadFiles();

@@ -1,4 +1,4 @@
-/** \file BGTCaluclator.cpp
+/** \file BGTCalculator.cpp
  *  \brief A Class to calculate the B(GT) and log(ft) for a given energy
  *  \author S. V. Paulauskas
  *  \date 04 September 2013

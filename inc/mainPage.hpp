@@ -1,41 +1,65 @@
-/** \file doxygenMainPage.hpp
- *\brief Dummy file for Doxygen structure
+/** \file mainPage.hpp
+ *\brief This file is used by doxygen to setup the main page of the project webpage
  */
 
-/** \mainpage Pixie16 Analysis 
+/** \mainpage V.A.S.T.
 
   \author S. V. Paulauskas
   \version code : v0.6.0 \n
   manual : beta v1
 
-  Contact : stanpaulauskasATgmailDOTcom
-    
+  \par Contact 
+  stanpaulauskasATgmailDOTcom
 
+  \copyright S. V. Paulauskas 2013-2014
+
+  \par License 
+  GNU Public License v 3.0
+  \par
+  This program is free software: you can redistribute it and/or modify  
+  it under the terms of the GNU General Public License as published by  
+  the Free Software Foundation, version 3.0 License.
+  \par
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+  \par
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>. }
+
+  \section links Helpful Links
+  - \subpage intro
+  - \subpage \dep
+  - \subpage \config
+  - \subpage getStart
+*/
+
+/*! \page intro Introduction
+  \par
   This manual documents the workings of the Vandle Analysis Software Toolkit 
   (V.A.S.T.). This thing is in no way comprehensive or complete. However, I will 
   do my best to make sure that it's in some way useful.
+*/
 
-  I have blatantly stolen some pieces of this manual from the pixie_scan codes 
-  developed at The University of Tennessee at Knoxville, which was written in 
-  large part by S. N. Liddick and D. Miller.
+/*! \page dep Dependencies
+  There are several dependencies that one should have downloaded and installed before 
+  they use this program. Here is a list of them and where they can be downloaded.
+
+  - ROOT: A Data Analysis Framework
+  - Variable 
+  - Constants : 
+*/
+
+/*! \page getStart Getting Started
+  Under Construction
+*/
+
+/*! \page config Configuration
+  \par
+  Working on getting the configuration file loaded in here
   
-  To start you off here is some information about the \subpage introduction
-*/
-
-/* \page introduction Introduction
-  There are two main files which control the pixie16 analysis flow,
-  PixieStd.cpp and DetectorDriver.cpp both of which are located
-  in the src directory.  The functions in PixieStd.cpp reconstruct a
-  complete data spill from the pixie16 modules and, for each spill, 
-  create a list of channels that triggered.  The list is then sorted
-  according to time and those channels which occur close to each other
-  in time are grouped together into events.  The event is then passed
-  into DetectorDriver.cpp for processing.
-
-  DetectorDriver.cpp receives each event and calibrates the energy for
-  each channel in the event.  The raw and calibrated energies are plotted
-  if the appropriate damm spectra have been created in DeclareHistogram.cpp.
-  Lastly, experiment specific analysis is performed. Experiment specific
-  analysis for generic MTC and RMS experiments remains unimplemented in the
-  current version.
-*/
+  \code{.xml}
+  class Cpp {};
+  \endcode
+ */

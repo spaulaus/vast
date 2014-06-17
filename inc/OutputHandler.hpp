@@ -14,6 +14,7 @@
 #include "Experiment.hpp"
 #include "Neutron.hpp"
 
+///A class that handles outputting information from the various classes 
 class OutputHandler {
 public:
     OutputHandler(){};
