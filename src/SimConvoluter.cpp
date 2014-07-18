@@ -80,10 +80,11 @@ SimConvoluter::SimConvoluter(const std::string &cfg) {
 
 double SimConvoluter::CalcBetaRes(const double &tof) {
     //These parameters are from Miguel's spreadsheet
+    //We need to convert from FWHM to sigma!!
     if(tof <= 42.5)
-        return(0.071824559*tof+1.5544112228);
+        return((0.071824559*tof+1.5544112228)/(2*sqrt(2*log(2))));
     else
-        return(0.0168145157*tof+3.7803929763);
+        return((0.0168145157*tof+3.7803929763)/(2*sqrt(2*log(2))));
 }
 
 void SimConvoluter::FitMc(const double &en, const double &mu, 

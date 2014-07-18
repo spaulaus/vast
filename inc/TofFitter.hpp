@@ -18,9 +18,17 @@
 ///A class that handles fitting of the neutron time-of-flight spectra
 class TofFitter {
 public:
+    /*! Default constructor */
+    TofFitter(){};
+    /*! Perform the fit to the TOF spectrum 
+      \param[in] fit : The parameters for the fitting
+      \param[in] fls : the files that will be used for the fitting
+    */
     TofFitter(const FitHandler &fit, const FileHandler &fls);
+    /*! Default destructor */
     ~TofFitter(){};
 
+    /*! Get the vector of fitted neutrons */
     std::vector<Neutron> GetFitResults(void){return(neutrons_);};
 private:
     ParamCalculator par_;

@@ -16,9 +16,17 @@
 ///A class that uses and Adaptive Simpsons method to integrate the neutron peaks
 class Integrator{
 public:
+    /*! Default Constructor */
+    Integrator(){};
+    /*! Constructor taking arguments to perform integration on 
+     \param[in] neutron : the neutron event of interest
+     \param[in] range   : the fitting range used for the neutron event
+    */
     Integrator(Neutron &neutron, const std::pair<double,double> &range);
+    /*! Default destructor */
     ~Integrator(){};
 
+    /*! Return the value of the CrystalBall function at a given TOF */
     double GetValue(const double &t) {return(CrystalBall(t));};
 private:
     double alpha_, mu_, n_, sigma_;

@@ -11,9 +11,15 @@
 ///A class that calculates the sensitivity limit of the detectors 
 class LimitFinder {
 public:
+    /*! Default Constructor */
     LimitFinder(){};
+    /*! Default Destructor */
     ~LimitFinder(){};
 
+    /*! Perform the fit used to calculate the sensitivity limit 
+      \param[in] edge  : The energy at which to perform the fit 
+      \param[in] yield : The the yield of the neutron peak
+    */
     Neutron PerformFit(const double &edge, const double &yield);
 };
 #endif //__LIMITFINDER_HPP_

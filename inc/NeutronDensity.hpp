@@ -16,14 +16,25 @@
 /// A class that contains information about the neutron density.
 class NeutronDensity {
 public:
+    /*! Default Constructor */
     NeutronDensity(){};
+    /*! Constructor taking the vector of neutrons and other info 
+      \param[in] neutrons : the vector of neutron peaks
+      \param[in] len      : the length of the vector for the density
+      \param[in] res      : the resolution of the density 
+      \param[in] ge       : the energy of the gamma for gamma gated peaks 
+    */
     NeutronDensity(std::vector<Neutron> &neutrons, const double &len,
                    const double &res, 
                    const Variable &ge = Variable(0.0,0.0,""));
+    /*! Default destructor */
     ~NeutronDensity(){};
     
+    /*! Returns the neutron density */
     std::map<double,double>* GetDensity(void){return(&denMean_);};
+    /*! Returns the lower bound of the neutron density error band */
     std::map<double,double>* GetDensityLow(void){return(&denLow_);};
+    /*! returns the upper bound of the neutron density error band */
     std::map<double,double>* GetDensityHigh(void){return(&denHigh_);};
 private:
     double len_, res_;

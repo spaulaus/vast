@@ -13,47 +13,79 @@
 ///A class that contains all of the information for a neutron peak
 class Neutron {
 public:
+    /*! Default Constructor */
     Neutron(){};
+    /*! Constructor assuming no errors 
+      \param[in] mu  : the mean for the neutron peak
+      \param[in] yld : the raw yield of the neutron peak 
+    */
     Neutron(const double &mu, const double &yld);
+    /*! Constructor with error on the mean
+      \param[in] mu    : the mean for the neutron peak
+      \param[in] muErr : the error on the mean 
+      \param[in] yld   : the raw yield of the neutron peak 
+    */
     Neutron(const double &mu, const double &muErr, 
          const double &yld);
+    /*! Constructor with error on both mean and yield
+      \param[in] mu  :   the mean for the neutron peak
+      \param[in] muErr  : the error on the mean 
+      \param[in] yld    : the raw yield of the neutron peak 
+      \param[in] yldErr : the error on the yield
+    */
     Neutron(const double &mu, const double &muErr, 
          const double &yld, const double &yldErr);
+    /*! Default destructor */
     ~Neutron(){};
     
-    //Gets For the CB variables
+    /*! Return the CB parameter alpha */
     Variable GetAlpha(void) {return{alph_};};
+    /*! Return the CB parameter n */
     Variable GetN(void) {return(n_);};
+    /*! Return the CB parameter sigma */
     Variable GetSigma(void){return(sig_);};
-    //Gets Related to the Fit
+    /*! Return the energy related to the neutron peak */
     Variable GetEnergy(void){return(en_);};
+    /*! Return the fitted mean of the neutron peak */
     Variable GetMu(void){return(mu_);};
+    /*! Return the fitted yield of the neutron peak */
     Variable GetRawYield(void){return(yld_);};
+    /*! Return the efficiency adjusted yield */
     Variable GetYield(void){return(AdjEff(yld_));};
-    //Gets Related to the Integration
+    /*! Return the efficiency adjusted integrated yield */
     Variable GetIntegratedYield(void){return(AdjEff(intYld_));};
+    /*! Return the raw integrated yield */
     Variable GetRawIntegratedYield(void){return(intYld_);};
-    //Gets Related to the B(GT)
+    /*! Return the B(GT) for the peak */
     Variable GetBgt(void){return(bgt_);};
+    /*! Return the Branching ratio for the peak */
     Variable GetBranchingRatio(void){return(br_);};
+    /*! Return the excitation energy of the peak */
     Variable GetExcitationEnergy(void){return(ex_);};
+    /*! Return the log(ft) of the peak */
     Variable GetLogft(void){return(logft_);};
-    //Miscellaneous Gets
+    /*! Return the efficiency of the peak */
     Variable GetEfficiency(void){return(eff_);};
 
-    //Sets for the fitted variables
+    /*! Set the mean of the CB for the peak */
     void SetMu(const Variable &a) {mu_ = a; CalcEnEff();};
+    /*! Set the yield of the CB */
     void SetYld(const Variable &a) {yld_ = a;};
-    //Sets related to the parameterization of the CB
+    /*! Set the alpha parameter of the CB */
     void SetAlpha(const Variable &a){alph_ = a;};
+    /*! Set the n parameter for the CB */
     void SetN(const Variable &a){n_ = a;};
+    /*! Set the sigma for the CB */
     void SetSigma(const Variable &a){sig_ = a; CalcEnergyErr();};
-    //Sets related to the Integration
+    /*! Set the integrated yield */
     void SetIntegratedYield(const Variable &a){intYld_ = a;};
-    //Sets related to the B(GT) Calculation
+    /*! Set the B(GT) */
     void SetBgt(const Variable &a){bgt_ = a;};
+    /*! Set the branching ratio */
     void SetBranchingRatio(const Variable &a){br_ = a;};
+    /*! Set the Excitation energy */
     void SetExcitationEnergy(const Variable &a){ex_ = a;};
+    /*! Set the log(ft) */
     void SetLogft(const Variable &a){logft_ = a;};
 private:
     //Instance of the efficiency and error calculators
