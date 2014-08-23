@@ -26,9 +26,6 @@ using namespace std;
 
 ///A function to read the data from an input file
 void ReadData(vector<Neutron> &nvec, const string &file);
-///A function to output the basic information from the neutrons
-void OutputBasics(vector<Neutron> &nvec, Decay &dky, 
-                  const string &file);
 
 ///The main program function
 int main(int argc, char* argv[]) {
@@ -60,14 +57,15 @@ int main(int argc, char* argv[]) {
             BGTCalculator bgt(*it, decay, exp);
         }
         output.OutputBasics(singles, decay, exp, fls.GetOutputName("neutrons"));
-        
+
         //---------- Output B(GT) for the simulations -------
         if(flags.GetFlag("theory"))
             output.OutputTheory(singles, fls.GetOutputName("cgm"));
-                
-        //---------- Calculate the B(GT) Using the Neutron Density ---------
+        
+        //---------- Calculate the Neutron Density and B(GT) ---------
         if(flags.GetFlag("density"))
             output.OutputDensity(singles, decay, exp, fls.GetOutputName("density"));
+        
     }//if(basic)
 }
 

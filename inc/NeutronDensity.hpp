@@ -31,11 +31,11 @@ public:
     ~NeutronDensity(){};
     
     /*! Returns the neutron density */
-    std::map<double,double>* GetDensity(void){return(&denMean_);};
+    const std::map<double,double>* GetDensity(void) const {return(&denMean_);};
     /*! Returns the lower bound of the neutron density error band */
-    std::map<double,double>* GetDensityLow(void){return(&denLow_);};
+    const std::map<double,double>* GetDensityLow(void) const {return(&denLow_);};
     /*! returns the upper bound of the neutron density error band */
-    std::map<double,double>* GetDensityHigh(void){return(&denHigh_);};
+    const std::map<double,double>* GetDensityHigh(void) const {return(&denHigh_);};
 private:
     double len_, res_;
     std::map<double,double> denMean_, denLow_, denHigh_;

@@ -29,7 +29,7 @@ NeutronDensity::NeutronDensity(std::vector<Neutron> &neutrons, const double &len
 }
 
 void NeutronDensity::CalcDensity(const Variable &ge, const Variable &geEff) {
-    //---------- Three gaussians representing the error bands on the BR
+    //---------- Three gaussians representing the error bands and the value
     SignalGenerator sig, sigLow, sigHigh;
     sig.SetSignalType("gaussian");
     sigLow.SetSignalType("gaussian");

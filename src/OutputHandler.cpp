@@ -58,7 +58,6 @@ void OutputHandler::OutputDensity(vector<Neutron> &nvec, Decay &dky,
                                   Experiment &exp, const string &file) {
     NeutronDensity nden(nvec, dky.GetQBetaN().GetValue(), 
                         exp.GetDensityRes().GetValue());
-    
     auto ndenRes = *nden.GetDensity();
     auto ndenLow = *nden.GetDensityLow();
     auto ndenHigh = *nden.GetDensityHigh();

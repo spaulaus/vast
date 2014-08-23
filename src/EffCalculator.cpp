@@ -30,18 +30,30 @@ Variable EffCalculator::GetEff(const Variable &energy) {
 }
 
 Variable EffCalculator::GetSimRollingEff(const Variable &energy) {
-    //From Sergey's eff_var_thresh; we currently assume 0 error.
-    //Expects neutron energy in MeV
+    //Expects neutron energy in keV
     double en = energy.GetValue() * 1000.;
-    double a = 29508.583014511;
-    double b = -360.519617657447;
-    double c = -0.0020863546616623;
-    double d = 19.665798880457;
-    double eff = (a/(en-b))+c*en+d;
-    if(eff > 100.)
-        return(Variable(1.0, 0.0, " / 100"));
-    else
-        return(Variable(eff/100., 0.0, " / 100"));
+
+    //From Sergey's eff_var_thresh; we currently assume 0 error.
+     // double a = 29508.583014511;
+     // double b = -360.519617657447;
+     // double c = -0.0020863546616623;
+     // double d = 19.665798880457;
+     // double eff = (a/(en-b))+c*en+d;
+
+     // if(eff > 100.)
+     //     return(Variable(1.0, 0.0, " / 100"));
+     // else
+     //     return(Variable(eff/100., 0.0, " / 100"));
+
+    //The parameterization of the simulation results from Miguel's 
+    //values sent to Sergey on 03-12-2014
+    Variable a = Variable(-3.449922e-10, 1.561986e-10, "");
+    Variable b = Variable(4.477057e-06 ,1.692577e-06,"");
+    Variable c = Variable(-2.302741e-02 ,5.748920e-03,""); 
+    Variable d = Variable(5.416032e+01 ,6.028794e+00,"");
+    double eff = a.GetValue()*pow(en,3) + b.GetValue()*pow(en,2) +
+        c.GetValue()*en+d.GetValue();
+    return(Variable(eff/100.,0.0," / 100"));
 }
 
 void EffCalculator::SetVariables(const string &type) {
