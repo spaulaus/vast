@@ -13,12 +13,11 @@
 
 #include <Variable.hpp>
 
-#include "Configuration.hpp"
 #include "BGTCalculator.hpp"
+#include "Configuration.hpp"
 #include "Decay.hpp"
 #include "Integrator.hpp"
 #include "Neutron.hpp"
-#include "NeutronDensity.hpp"
 #include "OutputHandler.hpp"
 #include "TofFitter.hpp"
 

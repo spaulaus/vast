@@ -198,6 +198,7 @@ void TofFitter::PerformFit(void) {
     c->cd();
     frame->Draw();
     c->SaveAs(eps_.c_str());
+    delete(c);
 }
 
 void TofFitter::PerformMcStudy(void) {
@@ -277,6 +278,7 @@ void TofFitter::PerformMcStudy(void) {
         name << picDir_+"/mcStudy" << mod_ << "/" 
              << yields_.at(i) <<".jpg";
         cc->SaveAs(name.str().c_str());
+        delete(cc);
     }
 }
 

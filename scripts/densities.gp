@@ -7,7 +7,7 @@ set terminal postscript eps enhanced color solid "NimbusSanL-Regu,18"
 
 sn=4.558
 qbeta=10.490
-res=0.001
+res=0.5
 
 set xrange[4:11]
 set x2tics ("S_n" sn, "Q_{/StandardSymL b}" qbeta)
@@ -45,5 +45,4 @@ set ylabel offset 1,0 "B(GT) / (0.001 MeV)"
 set arrow 1 from sn,0 to sn,0.00018 @ARSTY
 set arrow 2 from qbeta,0 to qbeta,0.00018 @ARSTY1
 set output '../pics/vast/working/working-nden-bgt.eps'
-plot [4:11][0:0.07] file1 u ($1+0.25):5:6:7 w yerrorbars lc rgb comp5 ps 0.0 lw 3, '' u 1:5 w steps lc rgb prim3 lw 3, @SENS
-#plot [4:11][0:0.06] file1 u 1:6:7 w filledcurve lc rgb comp5, '' u 1:5 w steps lc rgb prim3 lw 3, @SENS
+plot [4:11][0:0.06] file1 u ($1+res*0.5):5:6:7 w yerrorbars lc rgb comp5 ps 0.0 lw 3, '' u 1:5 w steps lc rgb prim3 lw 3, @SENS
