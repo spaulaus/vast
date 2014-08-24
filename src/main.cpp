@@ -1,5 +1,5 @@
 /** \file main.cpp
- *  \brief Just a simple code to test and play with the classes
+ *  \brief The main workhorse for the code.
  *  \author S. V. Paulauskas
  *  \date 04 September 2013
  */
