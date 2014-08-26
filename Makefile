@@ -90,7 +90,7 @@ $(PROGRAM): $(OBJS_W_DIR)
 $(OBJDIR)/%.o: %.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-.PHONY: clean eff sim sens
+.PHONY: clean eff sim sens doc
 clean: 
 	@echo "Cleaning..."
 	@rm -f $(OBJDIR)/*.o $(PROGRAM) ./eff ./sim ./sens *~ src/*~ inc/*~
@@ -100,3 +100,5 @@ sim: $(SIMOBJS_W_DIR)
 	$(CXX) $(CXXFLAGS) $(LDLIBS) $^ -o $@
 sens: $(SENSOBJS_W_DIR)
 	$(CXX) $(CXXFLAGS) $(LDLIBS) $^ -o $@
+doc: doc/Doxyfile
+	@doxygen $^
