@@ -97,7 +97,8 @@ Neutron LimitFinder::PerformFit(const double &edge, const double &yield){
         pk.SetSigma(Variable(par.CalcSigma(mew.GetValue()), 0.0, "ns"));
         pk.SetAlpha(Variable(par.CalcAlpha(mew.GetValue()), 0.0, ""));
         pk.SetN(Variable(par.CalcN(mew.GetValue()), 0.0, ""));
-
+        
+        delete(fitResult);
         return(pk);
     }else {
         if(!hasConvergence) 
@@ -106,6 +107,8 @@ Neutron LimitFinder::PerformFit(const double &edge, const double &yield){
         if(!hasHesseCalc)
             cerr << "Hesse FAILED to calculate things properly." 
                  << endl << endl;
+        
+        delete(fitResult);
         exit(1);
     }
 }
