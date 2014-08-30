@@ -9,6 +9,7 @@
 #include <string>
 #include <utility>
 
+#include <Decay.hpp>
 #include <Variable.hpp>
 
 ///A class that calculates the efficiency of the detectors in the analysis.
@@ -16,11 +17,13 @@ class EffCalculator{
 public:
     /*! Default constructor */
     EffCalculator(){};
+
     /*! Constructor taking the type of efficiency to calculate
      * \param[in] type : The type of detector for the efficiency calculation. It can 
      * either be "vandle" or "ge". 
      */
     EffCalculator(const std::string &type){SetVariables(type);};
+
     /*!  Default destructor */
     ~EffCalculator(){};
 
@@ -28,12 +31,21 @@ public:
      * \param[in] energy : The energy in keV for the ge and MeV for vandle
      */
     Variable GetEff(const Variable &energy);
+
     /*! Return the efficiency that was simulated by Sergey following the rolling
      * threshold of the banana gate. We are currently assuming zero error on this 
      * calculation. 
      * \param[in] energy : expects the energy in MeV */
     Variable GetSimRollingEff(const Variable &energy);
     
+    /*! Return the beta efficiency calculated from Q_eff. The parameter ex should 
+     * also include the gamma ray energy if the neutron state is in coincidence
+     * with a gamma line.
+     * \param[in] ex  : The excitation energy of the daughter state
+     * \param[in] dky : decay information for calculation of Q_eff
+     */
+    Variable GetBetaEff(const Variable &energy, const Decay &dky);
+
     /*! A method to set the detector type for the efficiency calculation. 
      * \param[in] type : The detector type, either "ge" or "vandle". */
     void SetEfficiencyType(const std::string &type) {SetVariables(type);};

@@ -7,6 +7,7 @@
 
 #include <cmath>
 
+#include "Decay.hpp"
 #include "EffCalculator.hpp"
 #include "ErrorCalculator.hpp"
 
@@ -26,7 +27,7 @@ Variable EffCalculator::GetEff(const Variable &energy) {
     double eff = exp(pow(pow(xPart, -g) + pow(yPart, -g), -1/g) ) /100.;
 
     ErrorCalculator err;
-    return(Variable(eff,err.CalcEffErr(vals_,energy)," / 100"));
+    return(Variable(eff,err.CalcEffErr(vals_,energy),"/100"));
 }
 
 Variable EffCalculator::GetSimRollingEff(const Variable &energy) {
@@ -53,7 +54,15 @@ Variable EffCalculator::GetSimRollingEff(const Variable &energy) {
     Variable d = Variable(5.416032e+01 ,6.028794e+00,"");
     double eff = a.GetValue()*pow(en,3) + b.GetValue()*pow(en,2) +
         c.GetValue()*en+d.GetValue();
-    return(Variable(eff/100.,0.0," / 100"));
+    return(Variable(eff/100.,0.0,"/100"));
+}
+
+Variable EffCalculator::GetBetaEff(const Variable &energy, const Decay &dky) {
+    Variable qeff = dky.GetQBetaN() - energy;
+    qeff = Variable(qeff.GetValue()*1000., qeff.GetError()*1000., "keV");
+    double a = 0.0000237963;
+    double b = 0.1767496566;
+    return(Variable(a*qeff.GetValue()+b, a*qeff.GetError()+b, "/100"));
 }
 
 void EffCalculator::SetVariables(const string &type) {
