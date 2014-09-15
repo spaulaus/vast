@@ -1,1 +1,22 @@
 \chapter{September}
+\workday{09-15-2014}
+\subsection{New Efficiency Curve}
+I am now working with the efficiency curve from Sergey that has fixed errors in 
+the light counting for the previous versions. I provided this data to Sergey 
+from my 077cu.ban, Banana 4. These efficiency values are much more conservative
+than the previous ones, since I had to taken into account a potential isomer
+contaminent in the high energy (low ToF) side of things. 
+
+The current issue is that he has only calculated the points for 1.5-5 MeV, as 
+of 09-10-2014. I am assuming that he did this because those were the most 
+relevant regions for Miguel's data. However, I require the 0.1 - 1 MeV region 
+for my data. I have requested (today) that he perform the calculations for the 
+lower energies. I feel that this is one of those prime exmaples where it would 
+be nice for the rest of the collaboration to at least have access to the codes
+that way I could run these things myself in a plug-and-play type application. 
+For now, this means that all of my points below 1.5 MeV are extrapolations.
+
+Well our first run with the new efficiency reports a negative P$_n$. This...
+doesn't make too much sense. It was a misordering of the coefficients for 
+the fit. They are defined inconsistently between the gnuplot script and the 
+method in VAST.

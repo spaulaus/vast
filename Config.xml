@@ -96,6 +96,9 @@
     </Output>
   </Files>
 
+  <!-- This is the section where we hold all of the information about 
+       the simulation. 
+  -->
   <Simulation>
     <!-- These are the simulation data -->
     <inputBase>data/ilyushkin/8keVee-06-06-2014/</inputBase>
@@ -126,15 +129,13 @@
       <fitData>fitParms.dat</fitData>
     </output>
 
-    <!-- The fitting range as measured from the peak position-->
+    <!-- The fitting range as measured from the peak position. Units are ns.-->
     <range>
       <low value="20"/>
       <high value="1480.0"/>
     </range>
   </Simulation>
 
-
-  
   <!-- Some flags to control program flow. The program will 
        recgonize any flags that are added here. 
   -->
