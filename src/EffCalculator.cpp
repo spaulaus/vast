@@ -32,19 +32,45 @@ Variable EffCalculator::GetEff(const Variable &energy) {
 
 Variable EffCalculator::GetSimRollingEff(const Variable &energy) {
     //Expects neutron energy in keV
-    double en = energy.GetValue() * 1000.;
+    double en = energy.GetValue();
+
+    Variable a = Variable(4.04653,0.0,"");
+    Variable b = Variable(.01304, 0.0,"");
+    Variable c = Variable(0.0, 0.0, "");
+    Variable d = Variable(2.24198, 0.0, "");
+    Variable  e = Variable(-1.10895, 0.0, "");
+    Variable  f = Variable(-0.162596, 0.0, "");
+    Variable  g = Variable(50., 0.0, "");
+    Variable  e1 = Variable(0.3, 0.0, "MeV");
+    Variable e2 = Variable(4.0, 0.0, "MeV");
+    
+    double x = log(en/e1.GetValue());
+    double y = log(en/e2.GetValue());
+
+    double xPart = a.GetValue() + b.GetValue()*x + 
+        c.GetValue()*x*x;
+    double yPart = d.GetValue() + e.GetValue()*y + 
+        f.GetValue()*y*y;
+
+    double eff = exp(pow(pow(xPart, -g.GetValue()) + 
+                         pow(yPart, -g.GetValue()), -1/g.GetValue()) ) /100.;
+
+    ErrorCalculator err;
+    return(Variable(eff,0.0,"/100"));
+
+
 
     //From Sergey's eff_var_thresh; we currently assume 0 error.
-     // double a = 29508.583014511;
-     // double b = -360.519617657447;
-     // double c = -0.0020863546616623;
-     // double d = 19.665798880457;
-     // double eff = (a/(en-b))+c*en+d;
+    // double a = 29508.583014511;
+    // double b = -360.519617657447;
+    // double c = -0.0020863546616623;
+    // double d = 19.665798880457;
+    // double eff = (a/(en-b))+c*en+d;
 
-     // if(eff > 100.)
-     //     return(Variable(1.0, 0.0, " / 100"));
-     // else
-     //     return(Variable(eff/100., 0.0, " / 100"));
+    // if(eff > 100.)
+    //     return(Variable(1.0, 0.0, " / 100"));
+    // else
+    //     return(Variable(eff/100., 0.0, " / 100"));
 
     //The parameterization of the simulation results from Miguel's 
     //values sent to Sergey on 03-12-2014
@@ -59,13 +85,13 @@ Variable EffCalculator::GetSimRollingEff(const Variable &energy) {
     //my 077cu.ban banana number 4, he provided these to me on 09-10-2014 
     //and the calculation only went through 1.5 MeV, points below that are 
     //extrapolation.
-    Variable a = Variable(-0.409366, 0.2148, ""); 
-    Variable b = Variable(-2.25262, 1.407, "");
-    Variable c = Variable(24.6331, 2.112, "");
-    double eff = a.GetValue()*pow(en/1000.,2) +
-        b.GetValue()*en/1000.+c.GetValue();
+    // Variable a = Variable(-0.409366, 0.2148, ""); 
+    // Variable b = Variable(-2.25262, 1.407, "");
+    // Variable c = Variable(24.6331, 2.112, "");
+    // double eff = a.GetValue()*pow(en/1000.,2) +
+    //     b.GetValue()*en/1000.+c.GetValue();
 
-    return(Variable(eff/100.,0.0,"/100"));
+    // return(Variable(eff/100.,0.0,"/100"));
 }
 
 Variable EffCalculator::GetBetaEff(const Variable &energy, const Decay &dky) {

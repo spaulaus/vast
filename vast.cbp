@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="vast" />
+		<Option platforms="Unix;" />
+		<Option makefile_is_custom="1" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="master">
+				<Option platforms="Unix;" />
+				<Option output="vast" prefix_auto="1" extension_auto="1" />
+				<Option object_output="/home/vincent/sandbox/vast/.objs" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+				<MakeCommands>
+					<Build command="$make" />
+					<CompileFile command="$make -f $makefile $file" />
+					<Clean command="$make clean" />
+					<DistClean command="$make -f $makefile distclean$target" />
+					<AskRebuildNeeded command="$make -q -f $makefile $target" />
+					<SilentBuild command="$make &gt; $(CMD_NULL)" />
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+		</Compiler>
+		<Unit filename="Config.xml" />
+		<Unit filename="Makefile" />
+		<Unit filename="README" />
+		<Unit filename="TODO" />
+		<Unit filename="doc/Doxyfile" />
+		<Unit filename="inc/BGTCalculator.hpp" />
+		<Unit filename="inc/Configuration.hpp" />
+		<Unit filename="inc/Decay.hpp" />
+		<Unit filename="inc/EffCalculator.hpp" />
+		<Unit filename="inc/ErrorCalculator.hpp" />
+		<Unit filename="inc/Experiment.hpp" />
+		<Unit filename="inc/FileChecker.hpp" />
+		<Unit filename="inc/FileHandler.hpp" />
+		<Unit filename="inc/FitHandler.hpp" />
+		<Unit filename="inc/FlagHandler.hpp" />
+		<Unit filename="inc/Integrator.hpp" />
+		<Unit filename="inc/LimitFinder.hpp" />
+		<Unit filename="inc/Neutron.hpp" />
+		<Unit filename="inc/NeutronDensity.hpp" />
+		<Unit filename="inc/OutputHandler.hpp" />
+		<Unit filename="inc/ParamCalculator.hpp" />
+		<Unit filename="inc/SimConvoluter.hpp" />
+		<Unit filename="inc/TofFitter.hpp" />
+		<Unit filename="inc/mainPage.hpp" />
+		<Unit filename="scripts/plot.C">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/BGTCalculator.cpp" />
+		<Unit filename="src/Configuration.cpp" />
+		<Unit filename="src/Decay.cpp" />
+		<Unit filename="src/EffCalculator.cpp" />
+		<Unit filename="src/ErrorCalculator.cpp" />
+		<Unit filename="src/FileChecker.cpp" />
+		<Unit filename="src/FileHandler.cpp" />
+		<Unit filename="src/FitHandler.cpp" />
+		<Unit filename="src/Integrator.cpp" />
+		<Unit filename="src/LimitFinder.cpp" />
+		<Unit filename="src/Neutron.cpp" />
+		<Unit filename="src/NeutronDensity.cpp" />
+		<Unit filename="src/OutputHandler.cpp" />
+		<Unit filename="src/ParamCalculator.cpp" />
+		<Unit filename="src/SimConvoluter.cpp" />
+		<Unit filename="src/TofFitter.cpp" />
+		<Unit filename="src/cfgtst.cpp" />
+		<Unit filename="src/eff.cpp" />
+		<Unit filename="src/main.cpp" />
+		<Unit filename="src/sensitivity.cpp" />
+		<Unit filename="src/simtest.cpp" />
+		<Extensions>
+			<DoxyBlocks>
+				<comment_style block="3" line="1" />
+				<doxyfile_project output_directory="doc" />
+				<doxyfile_build />
+				<doxyfile_warnings warn_if_undocumented="1" />
+				<doxyfile_output html_help="1" />
+				<doxyfile_dot />
+				<general />
+			</DoxyBlocks>
+			<code_completion />
+			<envvars />
+			<lib_finder disable_auto="1" />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
