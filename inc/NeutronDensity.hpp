@@ -1,4 +1,4 @@
-/** \file NeutronDensity.hpp
+/*! \file NeutronDensity.hpp
  *  \brief A class that contains information about the neutron density.
  *  \author S. V. Paulauskas
  *  \date 07 September 2013
@@ -13,28 +13,28 @@
 
 #include "Neutron.hpp"
 
-/// A class that contains information about the neutron density.
+//! A class that contains information about the neutron density.
 class NeutronDensity {
 public:
     /*! Default Constructor */
     NeutronDensity(){};
-    /*! Constructor taking the vector of neutrons and other info 
+    /*! Constructor taking the vector of neutrons and other info
       \param[in] neutrons : the vector of neutron peaks
       \param[in] len      : the length of the vector for the density
-      \param[in] res      : the resolution of the density 
-      \param[in] ge       : the energy of the gamma for gamma gated peaks 
+      \param[in] res      : the resolution of the density
+      \param[in] ge       : the energy of the gamma for gamma gated peaks
     */
     NeutronDensity(std::vector<Neutron> &neutrons, const double &len,
-                   const double &res, 
+                   const double &res,
                    const Variable &ge = Variable(0.0,0.0,""));
     /*! Default destructor */
     ~NeutronDensity(){};
-    
-    /*! Returns the neutron density */
+
+    /*! \return Returns the neutron density */
     const std::map<double,double>* GetDensity(void) const {return(&denMean_);};
-    /*! Returns the lower bound of the neutron density error band */
+    /*! \return Returns the lower error bar for the neutron density */
     const std::map<double,double>* GetDensityLow(void) const {return(&denLow_);};
-    /*! returns the upper bound of the neutron density error band */
+    /*! \return Returns the upper error bar for the neutron density */
     const std::map<double,double>* GetDensityHigh(void) const {return(&denHigh_);};
 private:
     double len_, res_;

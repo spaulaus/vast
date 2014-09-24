@@ -16,22 +16,30 @@ public:
     /*! Default Destructor */
     ~Experiment(){};
 
-    /*! Returns the beta efficiency */
+    /*! \returns the beta efficiency */
     Variable GetBetaEff(void) const {return(betaEff_);};
-    /*! Returns the resolution of the neutron density spikes */
+    /*! \returns the resolution of the neutron density spikes */
     Variable GetDensityRes(void) const {return (denRes_);};
-    /*! Returns the number of bars in the experiment (analysis) */
+    /*! \returns the number of bars in the experiment (analysis) */
     Variable GetNumBars(void) const {return(numBars_);};
-    /*! Returns the solid angle covered by a single bar */
+    /*! \returns the solid angle covered by a single bar */
     Variable GetOmegaPerBar(void) const {return(omegaPerBar_);};
 
-    /*! Set the efficiency of the beta detector */
+    /*! Set the efficiency of the beta detector
+    *   \param[in] a the beta efficiency
+    */
     void SetBetaEff(const Variable &a) {betaEff_ = a;};
-    /*! Set the resolution of the density spikes */
+    /*! Set the resolution of the density spikes
+    *   \param[in] a The resolution
+    */
     void SetDensityRes(const Variable &a) {denRes_ = a;};
-    /*! Set the number of bars in the experiment (analysis)*/
+    /*! Set the number of bars in the experiment (analysis)
+    *   \param[in] a The number of bars
+    */
     void SetNumBars(const Variable &a) {numBars_ = a;};
-    /*! Set the solid angle covered by a single bar */
+    /*! Set the solid angle covered by a single bar
+    *   \param[in] a The solid angle
+    */
     void SetOmegaPerBar(const Variable &a) {omegaPerBar_ = a;};
 private:
     Variable betaEff_, denRes_, numBars_, omegaPerBar_;

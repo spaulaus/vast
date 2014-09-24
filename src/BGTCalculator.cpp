@@ -13,9 +13,9 @@
 using namespace std;
 
 //Constructor for using the Neutron Density
-BGTCalculator::BGTCalculator(map<double,double> &density, const Decay &decay,
-                             const Experiment &exp, const string &band, 
-                             const Variable &eg) {
+BGTCalculator::BGTCalculator(std::map<double, double> &density,
+                             const Decay &decay, const Experiment &exp,
+                             const std::string &band, const Variable &eg) {
     eG_ = eg;
     decay_ = decay;
     density_ = density;
@@ -59,13 +59,13 @@ Variable BGTCalculator::CalcBgt(const Variable &en, const Variable &val,
         halfLife = hl.GetValue()+hl.GetError();
     else
         halfLife = hl.GetValue();
-        
+
     double bgt = coeff/ CalcF(en) /(halfLife/br.GetValue());
     return(Variable(bgt,err.CalcBgtErr(bgt,br,hl),""));
 }
 
-Variable BGTCalculator::CalcBranchingRatio(const Variable &yld) { 
-    double br = yld.GetValue() / decay_.GetNumberDecays().GetValue() / 
+Variable BGTCalculator::CalcBranchingRatio(const Variable &yld) {
+    double br = yld.GetValue() / decay_.GetNumberDecays().GetValue() /
         omega_.GetValue() / betaEff_.GetValue() / geEff_.GetValue();
     return(Variable(br,err.CalcBrErr(br,yld,decay_.GetNumberDecays(),
                                      geEff_,betaEff_), "/100"));
@@ -76,41 +76,41 @@ double BGTCalculator::CalcF(const Variable &en) {
     //--------- This routine is adapted from the original basic --------
     //--------- code written by J. Kantele; energies in keV     --------
     //------------------------------------------------------------------
-    double betaEp = (decay_.GetQValue().GetValue()*1000.) - 
+    double betaEp = (decay_.GetQValue().GetValue()*1000.) -
         CalcLevelEnergy(en).GetValue()*1000.;
     double z = decay_.GetDaughterZ().GetValue();
 
-    double coeff[4][4] = { {-17.2, 7.9015, -2.54, 0.28482,}, 
-                           {3.31368, -2.06273, 0.703822, -0.075039,}, 
+    double coeff[4][4] = { {-17.2, 7.9015, -2.54, 0.28482,},
+                           {3.31368, -2.06273, 0.703822, -0.075039,},
                            {-0.364018, 0.387961, -0.142528, 0.016,},
                            {0.0278071, -0.026519, 0.0098854, -0.00113772} };
-    
+
     double evalCoeff[4];
     for(int i = 0; i < 4; i++) {
-        evalCoeff[i] = coeff[i][0] + log(z) * coeff[i][1] + 
+        evalCoeff[i] = coeff[i][0] + log(z) * coeff[i][1] +
             coeff[i][2]*pow(log(z),2.) + coeff[i][3]*pow(log(z),3.);
     }
-    
-    double logf = evalCoeff[0] + evalCoeff[1]*log(betaEp) + 
+
+    double logf = evalCoeff[0] + evalCoeff[1]*log(betaEp) +
         evalCoeff[2]*pow(log(betaEp),2.) + evalCoeff[3]*pow(log(betaEp),3.);
 
     return(pow(10,logf));
 }
 
 Variable BGTCalculator::CalcLevelEnergy(const Variable &en) {
-    double lvl = en.GetValue() + decay_.GetNeutronSepEnergy().GetValue() 
+    double lvl = en.GetValue() + decay_.GetNeutronSepEnergy().GetValue()
         + eG_.GetValue();
     return(Variable(lvl,0.0,"MeV"));
 }
 
-Variable BGTCalculator::CalcLogft(const Variable &en, const Variable &val, 
+Variable BGTCalculator::CalcLogft(const Variable &en, const Variable &val,
                                 const bool &isIndv) {
     Variable br;
     if(isIndv)
         br = CalcBranchingRatio(val);
     else
         br = val;
-    double logft = log10(CalcF(en)*(decay_.GetHalfLife().GetValue() 
+    double logft = log10(CalcF(en)*(decay_.GetHalfLife().GetValue()
                                     / br.GetValue()));
     return(Variable(logft, err.CalcLogftErr(br,decay_.GetHalfLife()), ""));
 }

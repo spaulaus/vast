@@ -12,11 +12,11 @@
 
 #include "Configuration.hpp"
 
-using namespace std; 
+using namespace std;
 
-Configuration::Configuration(const string &file) {
+Configuration::Configuration(const std::string &file) {
     pugi::xml_parse_result result = doc_.load_file(file.c_str());
-    
+
     if(result) {
         cout << "Fuck yeah, we opened that bitch" << endl;
         cfg_ = doc_.child("Configuration");
@@ -33,7 +33,7 @@ Experiment Configuration::ReadExperiment(void) {
     for(pugi::xml_node node : expInfo.children()) {
         string name = node.name();
         Variable temp = NodeToVar(node);
-        if(name == "betaEff") 
+        if(name == "betaEff")
             exp.SetBetaEff(temp);
         else if(name == "numBars")
             exp.SetNumBars(temp);
@@ -70,7 +70,7 @@ FitHandler Configuration::ReadFit(void) {
     for(pugi::xml_node pks : ft.child("peaks").child("g1").children())
         g1Peaks.push_back(pks.attribute("value").as_double());
     fit.SetGate1Peaks(g1Peaks);
-    
+
     for(pugi::xml_node pks : ft.child("peaks").child("g2").children())
         g2Peaks.push_back(pks.attribute("value").as_double());
     fit.SetGate2Peaks(g2Peaks);
@@ -79,9 +79,9 @@ FitHandler Configuration::ReadFit(void) {
     fit.SetPeakList(ft.child("pkList").attribute("value").as_string());
     fit.SetWiggle(ft.child("wiggle").attribute("value").as_double());
 
-    double low = 
+    double low =
         ft.child("range").child("low").attribute("value").as_double();
-    double high = 
+    double high =
         ft.child("range").child("high").attribute("value").as_double();
     fit.SetRange(make_pair(low,high));
     return(fit);
@@ -98,7 +98,7 @@ Decay Configuration::ReadDecay(void) {
     Decay decay;
     string nodeName = "Decay";
     pugi::xml_node dky = cfg_.child(nodeName.c_str());
-    
+
     for(pugi::xml_node node1 : dky.children()) {
         string name = node1.name();
         Variable temp = NodeToVar(node1);
@@ -125,7 +125,7 @@ Decay Configuration::ReadDecay(void) {
             SpitWarning(nodeName,name);
     }
     return(decay);
-} 
+}
 
 Variable Configuration::NodeToVar(const pugi::xml_node &node) {
     Variable var = Variable(node.attribute("value").as_double(),
@@ -134,11 +134,11 @@ Variable Configuration::NodeToVar(const pugi::xml_node &node) {
     return(var);
 }
 
-void Configuration::SpitWarning(const string &node, 
+void Configuration::SpitWarning(const string &node,
                                 const string &name) {
-    cerr << endl << "WARNING!!!!  " 
-         << "You put something in the " << node 
-         << " node that has confused the shit out of me." << endl 
-         << "If you need access to the information in " 
+    cerr << endl << "WARNING!!!!  "
+         << "You put something in the " << node
+         << " node that has confused the shit out of me." << endl
+         << "If you need access to the information in "
          << name << "; add it yourself." << endl << endl;
 }

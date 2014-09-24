@@ -17,42 +17,64 @@ public:
     /*! Default Destructor */
     ~FitHandler(){};
 
-    /*! Return the binning of the TOF histograms*/
+    /*! \return The binning of the ToF histograms */
     double GetBinning(void) const {return(bin_);};
-    /*! Return the amount that the neutron peaks are allowed to wiggle in the 
-      fit */
+    /*! \return The acceptable wiggle (in ns) of the neutron peaks */
     double GetWiggle(void) const {return(wiggle_);};
-    /*! Return the range of the fit */
+    /*! \return the range of the fit */
     std::pair<double,double> GetRange(void) const {return(rng_);};
-    /*! Return the list of peaks used in the fit */
+    /*! \return the list of peaks used in the fit */
     std::string GetPeakList(void) const {return(pkLst_);};
-    /*! Return the peaks used in the singles fit */
+    /*! \return the peaks used in the singles fit */
     std::vector<double> GetSnglPeaks(void) const {return(snglPeaks_);};
-    /*! Return the peaks used in the gamma gated spectrum */
+    /*! \return the peaks used in the gamma gated spectrum */
     std::vector<double> GetGate1Peaks(void) const {return(g1Peaks_);};
-    /*! Return the peaks used in the gamma gated spectrum */
+    /*! \return the peaks used in the gamma gated spectrum */
     std::vector<double> GetGate2Peaks(void)const {return(g2Peaks_);};
 
-    /*! Set the amount of binning on the TOF histograms */
+    /*! Set the amount of binning on the TOF histograms
+    *   \param[in] a The binning of the histograms
+    */
     void SetBinning(const double &a) {bin_ = a;};
-    /*! Set the peaks to be fit in the singles spectrum */
+    /*! Set the peaks to be fit in the singles spectrum
+    *   \param[in] a The peak list to use for the fits
+    */
     void SetPeakList(const std::string &a) {pkLst_ = a;};
-    /*! Set the fitting range */
+    /*! Set the fitting range
+    *   \param[in] a The range that the fit should be performed in
+    */
     void SetRange(const std::pair<double,double> &a) {rng_ = a;};
-    /*! Set the peaks used in the singles fits */
+    /*! Set the peaks used in the singles fits
+    *   \param[in] a The peaks that should be used to perform the singles fit
+    */
     void SetSnglPeaks(const std::vector<double> &a) {snglPeaks_ = a;};
-    /*! Set the peaks used in the gamma gated fit */
+    /*! Set the peaks used in the gamma gated fit
+    *   \param[in] a The peaks that should be used for the gated fit
+    */
     void SetGate1Peaks(const std::vector<double> &a) {g1Peaks_ = a;};
-    /*! Set the peaks used in the gamma gated fit */
+    /*! Set the peaks used in the gamma gated fit
+    *   \param[in] a The peaks to be used in the gated fit
+    */
     void SetGate2Peaks(const std::vector<double> &a) {g2Peaks_ = a;};
-    /*! Set the amount that the pekas are allowed to wiggle during the fit */
+    /*! Set the amount that the pekas are allowed to wiggle during the fit
+    *   \param[in] a The wiggle of the neutron peak
+    */
     void SetWiggle(const double &a) {wiggle_ = a;};
 
-    /*! Calculate the alpha parameter for a given TOF */
+    /*! Calculate the alpha parameter for a given TOF
+    *   \param[in] tof The ToF
+    *   \return The alpha parameter for the CB
+    */
     double CalcAlpha(const double &tof);
-    /*! Calculate the n parameter for a given TOF */
+    /*! Calculate the n parameter for a given TOF
+    *   \param[in] tof The ToF
+    *   \return The n parameter of the CB
+    */
     double CalcN(const double &tof);
-    /*! Calculate the sigma for a given TOF */
+    /*! Calculate the sigma for a given TOF
+    *   \param[in] tof The ToF
+    *   \return The sigma of the Gaussian from the CB
+    */
     double CalcSigma(const double &tof);
 private:
     std::pair<double,double> rng_;

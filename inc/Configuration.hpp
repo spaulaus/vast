@@ -1,4 +1,4 @@
-/** \file Configuration.hpp
+/*! \file Configuration.hpp
  * \brief A class to handle the configuration xml
  * \author S. V. Paulauskas
  * \date 30 November 2013
@@ -15,36 +15,48 @@
 
 #include <pugixml.hpp>
 
-/// A class that handles the parsing of the xml configuration file.
+//! A class that handles the parsing of the xml configuration file.
 class Configuration {
 public:
     /*! The default constructor */
     Configuration(void){};
-    /*! A constructor taking the configuration file as input */
+    /*! A constructor taking the configuration file as input
+    * \param[in] file The name of the configuration
+    */
     Configuration(const std::string &file);
     /*! The default destructor */
     ~Configuration(void){};
 
-    /*!A method that returns a pointer to the opened configuration document */
+    /*! \return A pointer to the opened configuration document */
     pugi::xml_document *GetDocument(void){return(&doc_);};
 
-    /*!A method that parses the decay information */
+    /*!A method that parses the decay information
+    * \return Decay information from config file
+    */
     Decay ReadDecay(void);
-    /*!A method that parses the experimental information */
+    /*!A method that parses the experimental information
+    * \return Experimental information from config file
+    */
     Experiment ReadExperiment(void);
-    /*!A method that parses the input and output files */
+    /*!A method that parses the input and output files
+    * \return File lists from the config file
+    */
     FileHandler ReadFiles(void);
-    /*!A method that parses the fitting information */
+    /*!A method that parses the fitting information
+    * \return information necessary for the fit from the config file
+    */
     FitHandler ReadFit(void);
-    /*!A method that parses the logic handling flags */
+    /*!A method that parses the logic handling flags
+    * \return Logic handling flags
+    */
     FlagHandler ReadFlags(void);
 private:
     pugi::xml_document doc_;
     pugi::xml_node cfg_;
-    std::string file_;    
+    std::string file_;
 
     Variable NodeToVar(const pugi::xml_node &node);
-    void SpitWarning(const std::string &node, 
+    void SpitWarning(const std::string &node,
                      const std::string &name);
 };
 #endif //__CONFIGURATION_HPP__

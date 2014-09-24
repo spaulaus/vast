@@ -12,14 +12,15 @@
 
 using namespace std;
 
-Integrator::Integrator(Neutron &neutron, const pair<double,double> &range) {
+Integrator::Integrator(Neutron &neutron,
+                       const std::pair<double,double> &range) {
     alpha_ = neutron.GetAlpha().GetValue();
     mu_    = neutron.GetMu().GetValue();
     n_     = neutron.GetN().GetValue();
     sigma_ = neutron.GetSigma().GetValue();
-    
+
     Variable yld = neutron.GetRawYield();
-    
+
     double fSimp = AdaptiveSimpsons(range.first, range.second, 1.e-20, 30);
     double uSimp = AdaptiveSimpsons(range.second, 1.e8, 1.e-20, 30);
     double intYld = (yld.GetValue()/fSimp)*uSimp + yld.GetValue();
@@ -29,7 +30,7 @@ Integrator::Integrator(Neutron &neutron, const pair<double,double> &range) {
     neutron.SetIntegratedYield(Variable(intYld, intYldErr, "counts"));
 }
 
-double Integrator::AdaptiveSimpsons(const double &a, const double &b, // interval 
+double Integrator::AdaptiveSimpsons(const double &a, const double &b, // interval
                                     const double &epsilon, // error tolerance
                                     const int &maxRecursionDepth){ // recursion cap
     double c = (a + b)/2, h = b - a;
@@ -38,10 +39,10 @@ double Integrator::AdaptiveSimpsons(const double &a, const double &b, // interva
     return AdaptiveSimpsonsAux(a, b, epsilon, S, fa, fb, fc, maxRecursionDepth);
 }
 
-double Integrator::AdaptiveSimpsonsAux(const double &a, 
-                                       const double &b, const double &epsilon, 
-                                       const double &S, const double &fa, 
-                                       const double &fb, const double &fc, 
+double Integrator::AdaptiveSimpsonsAux(const double &a,
+                                       const double &b, const double &epsilon,
+                                       const double &S, const double &fa,
+                                       const double &fb, const double &fc,
                                        const int &bottom) {
     double c = (a + b)/2, h = b - a;
     double d = (a + c)/2, e = (c + b)/2;
@@ -51,16 +52,16 @@ double Integrator::AdaptiveSimpsonsAux(const double &a,
     double S2 = Sleft + Sright;
     if (bottom <= 0 || fabs(S2 - S) <= 15*epsilon)
         return( S2 + (S2 - S)/15 );
-    return( AdaptiveSimpsonsAux(a, c, epsilon/2, Sleft,  fa, fc, fd, bottom-1) + 
+    return( AdaptiveSimpsonsAux(a, c, epsilon/2, Sleft,  fa, fc, fd, bottom-1) +
             AdaptiveSimpsonsAux(c, b, epsilon/2, Sright, fc, fb, fe, bottom-1) );
 }
 
 double Integrator::CrystalBall(const double &var){
     double t = (var-mu_)/sigma_;
-    
-    if (alpha_ < 0) 
+
+    if (alpha_ < 0)
         t = -t;
-    
+
     double absAlpha = fabs(alpha_);
 
     if (t >= -absAlpha) {
@@ -68,7 +69,7 @@ double Integrator::CrystalBall(const double &var){
     }
     else {
         double a = pow(n_/absAlpha,n_)*exp(-0.5*absAlpha*absAlpha);
-        double b = n_/absAlpha - absAlpha; 
+        double b = n_/absAlpha - absAlpha;
         return( a/pow(b - t, n_) );
     }
 }

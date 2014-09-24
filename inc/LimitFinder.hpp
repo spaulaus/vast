@@ -1,4 +1,4 @@
-/** \file LimitFinder.hpp
+/*! \file LimitFinder.hpp
  *  \brief A class to find the sensitivity limit of the analysis
  *  \author S. V. Paulauskas
  *  \date 12 November 2013
@@ -8,7 +8,7 @@
 
 #include "Neutron.hpp"
 
-///A class that calculates the sensitivity limit of the detectors 
+//!A class that calculates the sensitivity limit of the detectors
 class LimitFinder {
 public:
     /*! Default Constructor */
@@ -16,9 +16,10 @@ public:
     /*! Default Destructor */
     ~LimitFinder(){};
 
-    /*! Perform the fit used to calculate the sensitivity limit 
-      \param[in] edge  : The energy at which to perform the fit 
-      \param[in] yield : The the yield of the neutron peak
+    /*! Perform the fit used to calculate the sensitivity limit
+    *  \param[in] edge  : The energy at which to perform the fit
+    *  \param[in] yield : The the yield of the neutron peak
+    *   \return The neutron information from the fit
     */
     Neutron PerformFit(const double &edge, const double &yield);
 };

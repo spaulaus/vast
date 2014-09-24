@@ -1,3 +1,8 @@
+/*! \file FileChecker.hpp
+ *  \brief A class to check the existence of files and directories
+ *  \author S. V. Paulauskas
+ *  \date 04 September 2013
+ */
 #ifndef __FILECHECKER_HPP__
 #define __FILECHECKER_HPP__
 
@@ -8,7 +13,7 @@ class FileChecker {
 public:
     /*! Default constructor*/
     FileChecker(){};
-    /*! Constructor for checking directory or file 
+    /*! Constructor for checking directory or file
       \param[in] flag : tells us whether we're testing a "dir" or a "file"
       \param[in] name : the directory path or file that we're going to check
      */

@@ -1,4 +1,4 @@
- /***************************************************************************
+ /**************************************************************************
   *  Copyright S. V. Paulauskas 2012-2014                                  *
   *                                                                        *
   *  This program is free software: you can redistribute it and/or modify  *
@@ -12,8 +12,7 @@
   *                                                                        *
   *  You should have received a copy of the GNU General Public License     *
   *  along with this program.  If not, see <http://www.gnu.org/licenses/>. *
-  **************************************************************************
-*/
+  *************************************************************************/
 /** \file SimConvoluter.hpp
  * \brief Class to calculate the convoluted simulations from Sergey
  * \author S. V. Paulauskas
@@ -31,12 +30,14 @@
 
 #include "Configuration.hpp"
 
-///A class to perform the analysis and convolution of the simulated data. 
+///A class to perform the analysis and convolution of the simulated data.
 class SimConvoluter {
 public:
     /*! The default constructor */
     SimConvoluter(){};
-    /*! Constructor taking the configuration file as input */
+    /*! Constructor taking the configuration file as input
+    *   \param[in] cfg The name of the configuration file to use for the fitting
+    */
     SimConvoluter(const std::string &cfg);
     /*! Destructor for the class (does nothing) */
     ~SimConvoluter(){};
@@ -50,7 +51,7 @@ private:
     /*! Calculate the beta Resoultion as a function of the time of flight */
     double CalcBetaRes(const double &tof);
     /*! Calculate the Convoulted CB parameters */
-    void FitMc(const double &en, const double &mu, const double &sigma, 
+    void FitMc(const double &en, const double &mu, const double &sigma,
                const double &alpha, const double &n, std::ofstream &convOut);
     /*! Calculate the fit to the simulated data */
     void FitSim(void);

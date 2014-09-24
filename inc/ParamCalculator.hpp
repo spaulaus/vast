@@ -14,11 +14,20 @@ public:
     /*! Default destructor */
     ~ParamCalculator(){};
 
-    /*! Calculate the alpha parameter from the CB */
+    /*! Calculate the alpha parameter from the CB
+    *   \param[in] tof the time of flight
+    *   \return The break point for the Gaussian and Power parts of the CB
+    */
     double CalcAlpha(const double &tof);
-    /*! Calculate the n parameter for the CB */
+    /*! Calculate the n parameter for the CB
+    *   \param[in] tof the time of flight
+    *   \return The power parameter of the CB
+    */
     double CalcN(const double &tof);
-    /*! Calculate the sigma parameter for the CB */
+    /*! Calculate the sigma parameter for the CB
+    *   \param[in] tof the time of flight
+    *   \return The width of the Gaussian part of the CB
+    */
     double CalcSigma(const double &tof);
 private:
     double aI_, aH_, nJ_, nK_, nL_, sM_, sN_, sO;

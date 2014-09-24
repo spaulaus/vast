@@ -21,32 +21,43 @@ class BGTCalculator {
 public:
     /*! The default constructor */
     BGTCalculator(){};
-    /*! The constructor used for calculating the neutron densities */
+    /*! The constructor used for calculating the neutron densities
+    *   \param[in] density A map containing the neutron density
+    *   \param[in] decay An object of the Decay class
+    *   \param[in] exp An object of the Experiment class
+    *   \param[in] band The error band that we are calculating
+    *   \param[in] eg The energy of the gating gamma (if there is one)
+    */
     BGTCalculator(std::map<double,double> &density, const Decay &decay,
                   const Experiment &exp, const std::string &band = "",
                   const Variable &eg = Variable(0.0,1.0,""));
-    /*! The constructor used when calculating for a single neutron peak */
+    /*! The constructor used when calculating for a single neutron peak
+    *   \param[in] neutron An object of Neutron class
+    *   \param[in] decay An object of Decay class
+    *   \param[in] exp An object of Experiment Class
+    *   \param[in] eg The energy of the gating gamma (if there is one)
+    */
     BGTCalculator(Neutron &neutron, const Decay &decay,
                   const Experiment &exp,
                   const Variable &eg = Variable(0.0,0.0,""));
     /*! The default destructor */
     ~BGTCalculator(){};
 
-    /*! Return the map containing the B(GT) */
+    /*! \return the map containing the B(GT) */
     std::map<double,double>* GetBgtMap(void){return(&bgtMap_);};
-    /*! Return the map containing the Log(ft) */
+    /*! \return the map containing the Log(ft) */
     std::map<double,double>* GetLogftMap(void){return(&logftMap_);};
-    /*! Return the map containing the neutron density */
+    /*! \return the map containing the neutron density */
     std::map<double,double>* GetSDensity(void){return(&sDensity_);};
 private:
     Decay decay_;
-    Neutron neutron_; 
+    Neutron neutron_;
     ErrorCalculator err;
 
-    Variable betaEff_, geEff_, eG_, eN_, f_, omega_, yld_; 
+    Variable betaEff_, geEff_, eG_, eN_, f_, omega_, yld_;
     std::string band_;
     std::map<double,double> density_, bgtMap_, logftMap_, sDensity_;
-    
+
     Variable CalcBgt(const Variable &en, const Variable &val,
                    const bool &isIndv = true);
     Variable CalcBranchingRatio(const Variable &yld);
