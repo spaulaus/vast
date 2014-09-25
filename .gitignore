@@ -3,6 +3,7 @@ doc/html/
 doc/latex/
 *~
 pics
+*.layout
 *.save
 *.aux
 *.log

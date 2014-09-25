@@ -5,12 +5,22 @@
 		<Option title="vast" />
 		<Option platforms="Unix;" />
 		<Option makefile_is_custom="1" />
+		<Option execution_dir="/home/vincent/projects/c++/vast" />
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
+		<MakeCommands>
+			<Build command="$make" />
+			<CompileFile command="$make -f $makefile $file" />
+			<Clean command="$make clean" />
+			<DistClean command="$make -f $makefile distclean$target" />
+			<AskRebuildNeeded command="$make -q -f $makefile $target" />
+			<SilentBuild command="$make &gt; $(CMD_NULL)" />
+		</MakeCommands>
 		<Build>
 			<Target title="master">
 				<Option platforms="Unix;" />
 				<Option output="vast" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="./" />
 				<Option object_output="/home/vincent/sandbox/vast/.objs" />
 				<Option type="1" />
 				<Option compiler="gcc" />
@@ -35,7 +45,9 @@
 		<Unit filename="README" />
 		<Unit filename="TODO" />
 		<Unit filename="doc/Doxyfile" />
-		<Unit filename="inc/BGTCalculator.hpp" />
+		<Unit filename="inc/BGTCalculator.hpp">
+			<Option compile="1" />
+		</Unit>
 		<Unit filename="inc/Configuration.hpp" />
 		<Unit filename="inc/Decay.hpp" />
 		<Unit filename="inc/EffCalculator.hpp" />

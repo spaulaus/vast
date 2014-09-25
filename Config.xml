@@ -4,11 +4,11 @@
 <!-- This is an example configuration file based on a real experiment.
      Copy this file and modify its content to setup your experiment. -KM
 
-     I totally stole the tmplate of this from Krzysztof Miernik. 
+     I totally stole the tmplate of this from Krzysztof Miernik.
      Thanks,buddy! -SVP (see readme for more info)
 
-     NOTE: The program only recognizes the information that is currently 
-     listed in the nodes (Author, Experiment, Decay, etc.), except where 
+     NOTE: The program only recognizes the information that is currently
+     listed in the nodes (Author, Experiment, Decay, etc.), except where
      otherwise noted.
 -->
 <Configuration>
@@ -19,15 +19,15 @@
     <Date>November 2013</Date>
     <Updated>June 08 2014</Updated>
   </Author>
-  
+
   <!-- Short description of the experiment here. -->
   <Description>
-    LeRIBSS 2012 VANDLE experiment, 2 Clovers, 2 Beta scitilators, 
+    LeRIBSS 2012 VANDLE experiment, 2 Clovers, 2 Beta scitilators,
     MTC, 48 small VANDLE modules
 
     This is setup for the 77Cu analysis.
   </Description>
-  
+
   <!-- This has all the information about the decay of interest. -->
   <Decay>
     <!-- z of the parent -->
@@ -36,23 +36,23 @@
     <sn value='4.5575' error='0.00025' unit="MeV"/>
     <qbn value='5.720' error='0.015' unit="MeV"/>
     <t12 value='0.4679' error='0.00021' unit="s"/>
-    
+
     <gn> <!-- Information about the normalization gamma -->
       <area value="351222" error="14751" unit="counts"/>
       <!-- This will get changed to energy soon -->
       <eff value="0.0668422" error="0.003" unit="/100"/>
       <abr value="0.191" error="0.006" unit="/100"/>
     </gn>
-    
+
     <g1> <!-- Gating gamma number 1 (not implemented yet)-->
     </g1>
-    
+
     <g2> <!-- Gating gamma number 2 (not implemented yet)-->
     </g2>
   </Decay>
 
-  <!-- This is the place to put some of the general information 
-       about the experiment. 
+  <!-- This is the place to put some of the general information
+       about the experiment.
   -->
   <Experiment>
     <numBars value="9" error="0.0" unit=""/>
@@ -64,11 +64,11 @@
     <denRes value="0.500" error="0.0" unit="MeV"/>
     <flightPath value="50.5" error="0.0" unit="cm"/>
   </Experiment>
-  
+
   <!-- These are the input/output files. The program only
-       recognizes the Input/Output nodes for reading. However, 
+       recognizes the Input/Output nodes for reading. However,
        anything added under them will be read into the program.
-       
+
        NOTE: Blank spaces are hazardous to your health..err analysis.
   -->
   <Files>
@@ -79,7 +79,7 @@
       <g1Tof>data/tof/077cu-ban4-lower/077cu-ban4-lower02Plus.dat</g1Tof>
       <g2Tof>data/tof/077cu-ban4-lower/077cu-ban4-lower04Plus.dat</g2Tof>
     </Input>
-    
+
     <!-- The output file names (sometimes just the path) -->
     <Output>
       <!-- Files for the fitting -->
@@ -96,14 +96,14 @@
     </Output>
   </Files>
 
-  <!-- This is the section where we hold all of the information about 
-       the simulation. 
+  <!-- This is the section where we hold all of the information about
+       the simulation.
   -->
   <Simulation>
     <!-- These are the simulation data -->
     <inputBase>data/ilyushkin/8keVee-06-06-2014/</inputBase>
     <outputBase>results/sim/8keVee-06-06-2014/</outputBase>
-    <energies> 
+    <energies>
       <e0  file="0069keV.txt" energy="69"/>
       <e1  file="0113keV.txt" energy="113"/>
       <e2  file="0152keV.txt" energy="152"/>
@@ -121,7 +121,7 @@
     </energies>
     <output>
       <!-- These guys will store all the histograms of the fits -->
-      <sims>sims.root</sims> 
+      <sims>sims.root</sims>
       <conv>conv.root</conv>
       <!-- This one stores the results for the fits to the convolution -->
       <convData>convParms.dat</convData>
@@ -136,16 +136,16 @@
     </range>
   </Simulation>
 
-  <!-- Some flags to control program flow. The program will 
-       recgonize any flags that are added here. 
+  <!-- Some flags to control program flow. The program will
+       recgonize any flags that are added here.
   -->
   <Flags>
-    <doFit value="false"/>
+    <doFit value="true"/>
     <basic value="true"/>
     <theory value="false"/>
     <density value="true"/>
   </Flags>
-  
+
   <!-- How about some fitting information? -->
   <Fitting>
     <!-- the peaks to use in the fitting of the tof -->
@@ -185,11 +185,11 @@
       </g2>
     </peaks>
 
-    <!-- The Peak List to Use in the fit 
+    <!-- The Peak List to Use in the fit
          recognizes : sngl,g1,g2
     -->
     <pkList value="sngl"/>
-    
+
     <!-- The fitting range -->
     <range>
       <low value="0.0"/>
@@ -198,7 +198,7 @@
 
     <!-- The Binning for the picture -->
     <binning value="0.5" />
-    
+
     <!-- How much can the peaks move -->
     <wiggle value="200." />
 
