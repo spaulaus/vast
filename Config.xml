@@ -36,11 +36,14 @@
     <sn value='4.5575' error='0.00025' unit="MeV"/>
     <qbn value='5.720' error='0.015' unit="MeV"/>
     <t12 value='0.4679' error='0.00021' unit="s"/>
+  </Decay>
 
-    <gn> <!-- Information about the normalization gamma -->
+ <!-- Information about the gammas of interest for the experiment -->
+  <Gamma>
+    <!-- Information about the normalization gamma -->
+    <gn>
       <area value="351222" error="14751" unit="counts"/>
-      <!-- This will get changed to energy soon -->
-      <eff value="0.0668422" error="0.003" unit="/100"/>
+      <en value="" error="0.0" unit="MeV"/>
       <abr value="0.191" error="0.006" unit="/100"/>
     </gn>
 
@@ -49,7 +52,7 @@
 
     <g2> <!-- Gating gamma number 2 (not implemented yet)-->
     </g2>
-  </Decay>
+  </Gamma>
 
   <!-- This is the place to put some of the general information
        about the experiment.

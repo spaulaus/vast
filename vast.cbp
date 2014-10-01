@@ -5,7 +5,7 @@
 		<Option title="vast" />
 		<Option platforms="Unix;" />
 		<Option makefile_is_custom="1" />
-		<Option execution_dir="/home/vincent/projects/c++/vast" />
+		<Option execution_dir="./" />
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
 		<MakeCommands>
@@ -44,7 +44,7 @@
 		<Unit filename="Makefile" />
 		<Unit filename="README" />
 		<Unit filename="TODO" />
-		<Unit filename="doc/Doxyfile" />
+		<Unit filename="doc/doxyfile" />
 		<Unit filename="inc/BGTCalculator.hpp">
 			<Option compile="1" />
 		</Unit>
@@ -57,6 +57,7 @@
 		<Unit filename="inc/FileHandler.hpp" />
 		<Unit filename="inc/FitHandler.hpp" />
 		<Unit filename="inc/FlagHandler.hpp" />
+		<Unit filename="inc/Gamma.hpp" />
 		<Unit filename="inc/Integrator.hpp" />
 		<Unit filename="inc/LimitFinder.hpp" />
 		<Unit filename="inc/Neutron.hpp" />
@@ -66,6 +67,11 @@
 		<Unit filename="inc/SimConvoluter.hpp" />
 		<Unit filename="inc/TofFitter.hpp" />
 		<Unit filename="inc/mainPage.hpp" />
+		<Unit filename="scripts/compCgm.gp" />
+		<Unit filename="scripts/compFit.gp" />
+		<Unit filename="scripts/compPlot.gp" />
+		<Unit filename="scripts/convParam.gp" />
+		<Unit filename="scripts/densities.gp" />
 		<Unit filename="scripts/plot.C">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -77,6 +83,7 @@
 		<Unit filename="src/FileChecker.cpp" />
 		<Unit filename="src/FileHandler.cpp" />
 		<Unit filename="src/FitHandler.cpp" />
+		<Unit filename="src/Gamma.cpp" />
 		<Unit filename="src/Integrator.cpp" />
 		<Unit filename="src/LimitFinder.cpp" />
 		<Unit filename="src/Neutron.cpp" />
@@ -93,17 +100,22 @@
 		<Extensions>
 			<DoxyBlocks>
 				<comment_style block="3" line="1" />
-				<doxyfile_project output_directory="doc" />
+				<doxyfile_project output_directory="doc/temp" />
 				<doxyfile_build />
 				<doxyfile_warnings warn_if_undocumented="1" />
 				<doxyfile_output html_help="1" />
-				<doxyfile_dot />
+				<doxyfile_dot class_diagrams="1" />
 				<general />
 			</DoxyBlocks>
 			<code_completion />
 			<envvars />
 			<lib_finder disable_auto="1" />
 			<debugger />
+			<wxsmith version="1">
+				<resources>
+					<wxDialog wxs="wxsmith/NewDialog.wxs" src="NewDialog.cpp" hdr="NewDialog.hpp" fwddecl="0" i18n="1" name="NewDialog" language="CPP" />
+				</resources>
+			</wxsmith>
 		</Extensions>
 	</Project>
 </CodeBlocks_project_file>

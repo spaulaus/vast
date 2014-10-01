@@ -8,7 +8,7 @@ PROJECT_NAME           = "Vandle Analysis Software Toolkit (V.A.S.T.)"
 PROJECT_NUMBER         =
 PROJECT_BRIEF          = "Analysis tools for the analysis of VANDLE time-of-flight data"
 PROJECT_LOGO           =
-OUTPUT_DIRECTORY       = ""
+OUTPUT_DIRECTORY       = "doc/"
 CREATE_SUBDIRS         = YES
 ALLOW_UNICODE_NAMES    = NO
 OUTPUT_LANGUAGE        = English
@@ -98,11 +98,11 @@ WARN_LOGFILE           =
 #---------------------------------------------------------------------------
 # Configuration options related to the input files
 #---------------------------------------------------------------------------
-INPUT                  = inc src 
+INPUT                  = inc src
 INPUT_ENCODING         = UTF-8
 FILE_PATTERNS          = *.hpp *.cpp
 RECURSIVE              = YES
-EXCLUDE                = 
+EXCLUDE                =
 EXCLUDE_SYMLINKS       = YES
 EXCLUDE_PATTERNS       =
 EXCLUDE_SYMBOLS        =
