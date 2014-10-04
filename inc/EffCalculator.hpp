@@ -17,21 +17,12 @@ class EffCalculator{
 public:
     /*! Default constructor */
     EffCalculator(){};
-
-    /*! Constructor taking the type of efficiency to calculate
-     * \param[in] type : The type of detector for the efficiency calculation. It can
-     * either be "vandle" or "ge".
-     */
-    EffCalculator(const std::string &type){SetVariables(type);};
-
     /*!  Default destructor */
     ~EffCalculator(){};
 
-    /*!  Return the efficiency for the set detector type
-     * \param[in] energy : The energy in keV for the ge and MeV for vandle
-     * \return Return the efficiency of what was set
-     */
-    Variable GetEff(const Variable &energy);
+    enum class EffTypes {ge, svpBan4, mmfBan, vandle, rolling, beta};
+
+    Variable GetEff(const Variable &energy, const EffTypes &curve);
 
     /*! Return the efficiency that was simulated by Sergey following the rolling
      * threshold of the banana gate. We are currently assuming zero error on
@@ -39,7 +30,7 @@ public:
      * \param[in] energy : expects the energy in MeV
      * \return The efficiency based off of the banana curve
      */
-    Variable GetSimRollingEff(const Variable &energy);
+
 
     /*! Return the beta efficiency calculated from Q_eff. The parameter ex
      * should also include the gamma ray energy if the neutron state is in
@@ -49,13 +40,10 @@ public:
      * \return The efficiency of the beta
      */
     Variable GetBetaEff(const Variable &energy, const Decay &dky);
-
-    /*! A method to set the detector type for the efficiency calculation.
-     * \param[in] type : The detector type, either "ge" or "vandle".
-     */
-    void SetEfficiencyType(const std::string &type) {SetVariables(type);};
 private:
-    std::map<std::string, Variable> vals_;
-    void SetVariables(const std::string &type);
+    Variable CalcSimRollingEff(const Variable &energy);
+
+    Variable CalcEff(const Variable &energy,
+                     std::map<std::string, Variable> &coeffs);
 };
 #endif //__EFFCALCULATOR_HPP__

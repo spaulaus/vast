@@ -8,45 +8,42 @@
 #include <cmath>
 
 #include "BGTCalculator.hpp"
-#include "EffCalculator.hpp"
 
 using namespace std;
 
-//Constructor for using the Neutron Density
+//!Constructor for using the Neutron Density
 BGTCalculator::BGTCalculator(std::map<double, double> &density,
                              const Decay &decay, const Experiment &exp,
                              const std::string &band, const Variable &eg) {
     eG_ = eg;
     decay_ = decay;
     density_ = density;
-    betaEff_ = exp.GetBetaEff();
     omega_ = exp.GetOmegaPerBar()*exp.GetNumBars();
     band_ = band;
     HandleNeutronDensity(density);
 }
 
-//Constructor for using the Neutron Class
+//!Constructor for using the Neutron Class
 BGTCalculator::BGTCalculator(Neutron &neutron, const Decay &decay,
                              const Experiment &exp, const Variable &eg) {
     eG_ = eg;
     if(eg.GetValue() != 0.0) {
-        EffCalculator effGe("ge");
-        geEff_ = effGe.GetEff(eg); //needs gamma energy in keV
+        geEff_ = eff_.GetEff(eg, EffCalculator::EffTypes::ge);
     }else
         geEff_ = Variable(1.0,0.0,"");
 
     decay_ = decay;
-    betaEff_ = exp.GetBetaEff();
     omega_ = exp.GetOmegaPerBar()*exp.GetNumBars();
     HandleNeutronIndividual(neutron);
 }
 
 Variable BGTCalculator::CalcBgt(const Variable &en, const Variable &val,
                               const bool &isIndv) {
-    double coeff = 3812.413; //D/(ga/gv)**2 in units of s
+    //! D/(ga/gv)**2 in units of s
+    double coeff = 3812.413;
     Variable br, hl = decay_.GetHalfLife();
     if(isIndv)
-        br=CalcBranchingRatio(val);
+        br = CalcBranchingRatio(en, val);
     else
         br = val;
 
@@ -60,15 +57,17 @@ Variable BGTCalculator::CalcBgt(const Variable &en, const Variable &val,
     else
         halfLife = hl.GetValue();
 
-    double bgt = coeff/ CalcF(en) /(halfLife/br.GetValue());
-    return(Variable(bgt,err.CalcBgtErr(bgt,br,hl),""));
+    double bgt = coeff / CalcF(en) / (halfLife / br.GetValue());
+    return(Variable(bgt,err_.CalcBgtErr(bgt,br,hl),""));
 }
 
-Variable BGTCalculator::CalcBranchingRatio(const Variable &yld) {
+Variable BGTCalculator::CalcBranchingRatio(const Variable & en,
+                                           const Variable &yld) {
+    Variable betaEff = eff_.GetBetaEff(en, decay_);
     double br = yld.GetValue() / decay_.GetNumberDecays().GetValue() /
-        omega_.GetValue() / betaEff_.GetValue() / geEff_.GetValue();
-    return(Variable(br,err.CalcBrErr(br,yld,decay_.GetNumberDecays(),
-                                     geEff_,betaEff_), "/100"));
+        omega_.GetValue() / betaEff.GetValue() / geEff_.GetValue();
+    return(Variable(br,err_.CalcBrErr(br,yld,decay_.GetNumberDecays(),
+                                     geEff_,betaEff), "/100"));
 }
 
 double BGTCalculator::CalcF(const Variable &en) {
@@ -107,12 +106,13 @@ Variable BGTCalculator::CalcLogft(const Variable &en, const Variable &val,
                                 const bool &isIndv) {
     Variable br;
     if(isIndv)
-        br = CalcBranchingRatio(val);
+        br = CalcBranchingRatio(en, val);
     else
         br = val;
+
     double logft = log10(CalcF(en)*(decay_.GetHalfLife().GetValue()
                                     / br.GetValue()));
-    return(Variable(logft, err.CalcLogftErr(br,decay_.GetHalfLife()), ""));
+    return(Variable(logft, err_.CalcLogftErr(br,decay_.GetHalfLife()), ""));
 }
 
 void BGTCalculator::HandleNeutronDensity(const map<double,double> &density) {
@@ -134,7 +134,7 @@ void BGTCalculator::HandleNeutronIndividual(Neutron &neutron) {
     Variable en = neutron.GetEnergy();
     Variable yld = neutron.GetIntegratedYield();
     neutron.SetBgt(CalcBgt(en,yld));
-    neutron.SetBranchingRatio(CalcBranchingRatio(yld));
+    neutron.SetBranchingRatio(CalcBranchingRatio(en, yld));
     neutron.SetExcitationEnergy(CalcLevelEnergy(en));
     neutron.SetLogft(CalcLogft(en,yld));
 }

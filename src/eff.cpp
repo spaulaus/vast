@@ -16,48 +16,68 @@
 
 using namespace std;
 
-///The main function for the efficiency calculation
+void usage(void) {
+    cout << "You got it all wrong man. We need the following info:" << endl
+         << "./eff <flag> <energy in MeV> <err Energy> " << endl
+         << "Flags: " << endl
+         << "   -v = Basic Vandle Efficiency" << endl
+         << "   -g = Ge Efficiency" << endl
+         << "   -s = Vandle Efficiency using SVP Banana 4" << endl
+         << "   -m = Vandle Efficiency using MMF Banana 1" << endl
+         //<< "   -b = Beta Efficiency for the provided Qeff" << endl
+         << "Now let's try this again." << endl;
+    exit(2);
+}
+
+
+//!The main function for the efficiency calculation
 int main(int argc, char* argv[]) {
+    if(argc < 2 || argc > 4)
+        usage();
+
     int opt = -1;
-    double temp, temp1 = 0.;
-    string name;
-    while((opt = getopt (argc, argv, "e:g:v:")) != -1) {
+    Variable en;
+    EffCalculator::EffTypes curve;
+
+    while((opt = getopt (argc, argv, "b:g:m:s:v:")) != -1) {
         switch(opt) {
-        case 'e': {
-            temp1 = atof(optarg);
+        case 'b': {
+            curve = EffCalculator::EffTypes::beta;
+            en = Variable(atof(optarg), atof(argv[3]), "MeV");
             break;
         } case 'g': {
-            name = "ge";
-            temp = atof(optarg);
+            en = Variable(atof(optarg), atof(argv[3]), "MeV");
+            curve = EffCalculator::EffTypes::ge;
             break;
         } case 'v': {
-            name = "vandle";
-            temp = atof(optarg);
+            en = Variable(atof(optarg), atof(argv[3]), "MeV");
+            curve = EffCalculator::EffTypes::vandle;
+            break;
+        }  case 's': {
+            en = Variable(atof(optarg), atof(argv[3]), "MeV");
+            curve = EffCalculator::EffTypes::vandle;
+            break;
+        } case 'm': {
+            en = Variable(atof(optarg), atof(argv[3]), "MeV");
+            curve = EffCalculator::EffTypes::vandle;
             break;
         } case '?': {
-              return 1;
+            usage();
         } default: {
-            abort();
+            usage();
           }
         }
     }
 
-    Variable energy(temp, temp1, "keV");
-    EffCalculator eff(name);
-    Variable effRes;
-    if(name == "ge")
-        effRes = eff.GetEff(energy);
-    else if(name == "vandle")
-        effRes = eff.GetSimRollingEff(energy);
-    else
-        cout << "You didn't specify a known type" << endl;
+    EffCalculator eff;
+    Variable result = eff.GetEff(en, curve);
 
-    if(std::isnan(effRes.GetValue()))
-        cout << "The Efficiency calculation reported an efficiency of " 
+    if(std::isnan(result.GetValue()))
+        cout << "The Efficiency calculation reported an efficiency of "
              << "NaN. " << endl << "This is usually a problem with the "
-             << "energy." << endl << "Make sure you entered it in MeV !!" 
+             << "energy." << endl << "Make sure you entered it in MeV !!"
              << endl;
     else
-        cout << "Eff for " << name << " = " << effRes.GetValue() << " +- " 
-             << effRes.GetError() << endl;
+        cout << "The efficiency for " << en.Output() << " is "
+             << result.Output() << endl;
 }

@@ -13,7 +13,7 @@
 
 using namespace std;
 
-double ErrorCalculator::CalcBgtErr(const double &bgt, const Variable &br, 
+double ErrorCalculator::CalcBgtErr(const double &bgt, const Variable &br,
                                    const Variable &halfLife) {
     double brPart = br.GetError() / br.GetValue();
     double hlPart = halfLife.GetError() / halfLife.GetValue();
@@ -21,8 +21,9 @@ double ErrorCalculator::CalcBgtErr(const double &bgt, const Variable &br,
     return(bgt*sqrtPart);
 }
 
-double ErrorCalculator::CalcBrErr(const double &br, const Variable &yld, const Variable &ndky,
-                                  const Variable &gammaEff, const Variable &betaEff) {
+double ErrorCalculator::CalcBrErr(const double &br, const Variable &yld,
+                                  const Variable &ndky, const Variable &gammaEff,
+                                  const Variable &betaEff) {
     double yldPart = yld.GetError() / yld.GetValue();
     double dkyPart = ndky.GetError() / ndky.GetValue();
     double gammaPart = gammaEff.GetError() / gammaEff.GetValue();
@@ -32,23 +33,20 @@ double ErrorCalculator::CalcBrErr(const double &br, const Variable &yld, const V
     return(br*sqrtPart);
 }
 
-double ErrorCalculator::CalcEffErr(const map<string,Variable> &vars, 
+double ErrorCalculator::CalcEffErr(const map<string,Variable> &vars,
                                    const Variable &energy) {
     unsigned seed1 = chrono::system_clock::now().time_since_epoch().count();
-    
+
     mt19937_64 generator(seed1);
     map<string, normal_distribution<double> > randDists;
     vector<double> mcEffs;
 
-    for(map<string,Variable>::const_iterator it = vars.begin(); 
-        it != vars.end(); it++) {
-        if(it->second.GetError() == 0.0)
-            continue;
-        normal_distribution<double> dist(it->second.GetValue(),
-                                            it->second.GetError());
-        randDists.insert(make_pair(it->first, dist));
+    for(const auto &it : vars) {
+        normal_distribution<double> dist(it.second.GetValue(),
+                                         it.second.GetError());
+        randDists.insert(make_pair(it.first, dist));
     }
-    normal_distribution<double> eDist(energy.GetValue()*1000.,
+    normal_distribution<double> eDist(energy.GetValue(),
                                       energy.GetError());
 
     for(unsigned int i = 0; i < numSamples; i++) {
@@ -67,14 +65,14 @@ double ErrorCalculator::CalcEffErr(const map<string,Variable> &vars,
         double y = log(energy/e2);
 
         //--------- DEBUGGING -----------
-        // cout << a << " " << b << " " << c << " " << d << " " << d << " " 
-        //      << e << " " << f << " " << g << " " << e1 << " " << e2 << " " 
+        // cout << a << " " << b << " " << c << " " << d << " " << d << " "
+        //      << e << " " << f << " " << g << " " << e1 << " " << e2 << " "
         //      << energy << " " << x << " " << y << endl;
-        double eff = exp(pow(pow(a+b*x+c*x*x,-g) + 
+        double eff = exp(pow(pow(a+b*x+c*x*x,-g) +
                              pow(d+e*y+f*y*y,-g), -1/g))/100.;
         mcEffs.push_back(eff);
     }
-    
+
     auto mean = CalcMean(mcEffs);
     auto var  = CalcVariance(mcEffs, mean);
     return(sqrt(var));
@@ -91,22 +89,23 @@ double ErrorCalculator::CalcEnergyErr(const Variable &sig, const Variable &mu) {
     return(high-low);
 }
 
-double ErrorCalculator::CalcIntegratedYldErr(const double &fitYldErr, 
+double ErrorCalculator::CalcIntegratedYldErr(const double &fitYldErr,
                                              const double &fitSimp,
                                              const double &infSimp){
     double xErr = (fitYldErr/fitSimp) * infSimp;
     return(sqrt(xErr*xErr+fitYldErr*fitYldErr));
 }
 
-double ErrorCalculator::CalcLogftErr(const Variable &br, const Variable &halfLife) {
+double ErrorCalculator::CalcLogftErr(const Variable &br,
+                                     const Variable &halfLife) {
     double brPart = br.GetError() / br.GetValue() / log(10);
     double hlPart = halfLife.GetError() / halfLife.GetValue() / log(10);
     return(sqrt(pow(brPart,2)+pow(hlPart,2)));
 }
 
-double ErrorCalculator::CalcNumDkyErr(const double &numDky, 
-                                        const Variable &rawGammaCounts, 
-                                        const Variable &gammaEff, 
+double ErrorCalculator::CalcNumDkyErr(const double &numDky,
+                                        const Variable &rawGammaCounts,
+                                        const Variable &gammaEff,
                                         const Variable &gammaBr){
     double areaPart = rawGammaCounts.GetError()/ rawGammaCounts.GetValue();
     double effPart  = gammaEff.GetError() / gammaEff.GetValue();
@@ -114,27 +113,25 @@ double ErrorCalculator::CalcNumDkyErr(const double &numDky,
     return(numDky*sqrt(pow(areaPart,2)+pow(effPart,2)+pow(brPart,2)));
 }
 
-double ErrorCalculator::CalcPnErr(const double &pn, 
+double ErrorCalculator::CalcPnErr(const double &pn,
                                   vector<Neutron> &neutrons,
                                   const Decay &dky) {
     double yldPart;
     for(auto &i : neutrons)
-        yldPart += pow(i.GetIntegratedYield().GetError()/ 
+        yldPart += pow(i.GetIntegratedYield().GetError()/
                        i.GetIntegratedYield().GetValue(),2);
-    double ndkyPart = pow(dky.GetNumberDecays().GetError() / 
+    double ndkyPart = pow(dky.GetNumberDecays().GetError() /
                           dky.GetNumberDecays().GetValue(),2);
     return(pn*sqrt(yldPart+ndkyPart));
 }
-                          
-//---------- CalcMean
+
 double ErrorCalculator::CalcMean(const vector<double> &mcVals) {
     double sum = 0;
     for(const auto &i : mcVals)
         sum += i;
-    return(sum / mcVals.size());        
+    return(sum / mcVals.size());
 }
 
-//---------- CalcVariance
 double ErrorCalculator::CalcVariance(const vector<double> &mcVals,
                                      const double &mean) {
     double var = 0;

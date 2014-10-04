@@ -96,7 +96,8 @@ $(OBJDIR)/%.o: %.cpp
 .PHONY: clean eff sim sens doc
 clean:
 	@echo "Cleaning..."
-	@rm -f $(OBJDIR)/*.o $(PROGRAM) ./eff ./sim ./sens *~ src/*~ inc/*~
+	@rm -f $(OBJDIR)/*.o $(PROGRAM) ./eff ./sim ./sens *~ src/*~ inc/*~ \
+	src/*.save inc/*.save *.save
 eff: $(EFFOBJS_W_DIR)
 	$(CXX) $(CXXFLAGS) $(LDLIBS) $^ -o $@
 sim: $(SIMOBJS_W_DIR)

@@ -18,23 +18,23 @@ Neutron::Neutron(const double &mu, const double &yld) {
     mu_        = Variable(mu, 0.0, "ns");
     yld_       = Variable(yld,0.0,"counts");
     en_        = Variable(CalcEnergy(mu), 0.0, "MeV");
-    eff_       = eff.GetSimRollingEff(en_);
+    eff_       = eff.GetEff(en_, EffCalculator::EffTypes::mmfBan);
 }
 
-Neutron::Neutron(const double &mu, const double &muErr, 
+Neutron::Neutron(const double &mu, const double &muErr,
            const double &yld) {
     mu_        = Variable(mu, muErr, "ns");
     yld_       = Variable(yld,0.0,"counts");
     en_        = Variable(CalcEnergy(mu), 0.0, "MeV");
-    eff_       = eff.GetSimRollingEff(en_);
+    eff_       = eff.GetEff(en_, EffCalculator::EffTypes::mmfBan);
 }
 
-Neutron::Neutron(const double &mu, const double &muErr, 
+Neutron::Neutron(const double &mu, const double &muErr,
            const double &yld, const double &yldErr) {
     mu_        = Variable(mu, muErr, "ns");
     yld_       = Variable(yld,yldErr,"counts");
     en_        = Variable(CalcEnergy(mu), 0.0, "MeV");
-    eff_       = eff.GetSimRollingEff(en_);
+    eff_       = eff.GetEff(en_, EffCalculator::EffTypes::mmfBan);
 }
 
 double Neutron::CalcEnergy(const double &mu) {
@@ -45,8 +45,8 @@ double Neutron::CalcEnergy(const double &mu) {
 }
 
 void Neutron::CalcEnEff(void) {
-    en_        = Variable(CalcEnergy(mu_.GetValue()), 0.0, "MeV");
-    eff_       = eff.GetSimRollingEff(en_);
+    en_   = Variable(CalcEnergy(mu_.GetValue()), 0.0, "MeV");
+    eff_  = eff.GetEff(en_, EffCalculator::EffTypes::mmfBan);
 }
 
 void Neutron::CalcEnergyErr(void) {
@@ -55,7 +55,7 @@ void Neutron::CalcEnergyErr(void) {
 }
 
 Variable Neutron::AdjEff(const Variable &var) {
-    return(Variable(var.GetValue()/eff_.GetValue(), 
+    return(Variable(var.GetValue()/eff_.GetValue(),
                     var.GetError()/eff_.GetValue(),
                     var.GetUnits()));
 }

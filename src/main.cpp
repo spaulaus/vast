@@ -40,14 +40,16 @@ int main(int argc, char* argv[]) {
     FitHandler fit = cfg.ReadFit();
     if(flags.GetFlag("doFit"))
         TofFitter fitter(fit, fls);
-    
+
     //---------- READ IN THE DECAY INFORMATION HERE ----------
     Decay decay = cfg.ReadDecay();
 
     //---------- SET THE NEUTRON INFORMATION AND OUTPUT ----------
     vector<Neutron> singles;
     if(basic) {
+        cout << "We are now reading the fitted data." << endl;
         ReadData(singles, fls.GetOutputName("gsFit"));
+        cout << "Beginning to integrate peaks and calculate B(GT)s" << endl;
         for(vector<Neutron>::iterator it = singles.begin(); it!= singles.end();
             it++) {
             //---------- INTEGRATE THE NEUTRON PEAKS HERE ----------
@@ -60,12 +62,15 @@ int main(int argc, char* argv[]) {
         //---------- Output B(GT) for the simulations -------
         if(flags.GetFlag("theory"))
             output.OutputTheory(singles, fls.GetOutputName("cgm"));
-        
+
         //---------- Calculate the Neutron Density and B(GT) ---------
-        if(flags.GetFlag("density"))
-            output.OutputDensity(singles, decay, exp, fls.GetOutputName("density"));
-        
-    }//if(basic)
+        if(flags.GetFlag("density")) {
+            cout << "We are starting to calculate the neutron density + B(GT)"
+                 << endl;
+            output.OutputDensity(singles, decay, exp,
+                                 fls.GetOutputName("density"));
+        }
+    }
 }
 
 void ReadData(vector<Neutron> &nvec, const string &file) {
@@ -87,7 +92,7 @@ void ReadData(vector<Neutron> &nvec, const string &file) {
             }
         }
     } else{
-        cerr << "Oh, Jesus! We could no open the file: " 
+        cerr << "Oh, Jesus! We could no open the file: "
              << file << endl << "Please check the name and try again."
              << endl << endl;
         exit(1);

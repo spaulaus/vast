@@ -11,6 +11,7 @@
 #include <Variable.hpp>
 
 #include "Decay.hpp"
+#include "EffCalculator.hpp"
 #include "ErrorCalculator.hpp"
 #include "Neutron.hpp"
 #include "NeutronDensity.hpp"
@@ -52,15 +53,16 @@ public:
 private:
     Decay decay_;
     Neutron neutron_;
-    ErrorCalculator err;
+    ErrorCalculator err_;
+    EffCalculator eff_;
 
-    Variable betaEff_, geEff_, eG_, eN_, f_, omega_, yld_;
+    Variable geEff_, eG_, eN_, f_, omega_, yld_;
     std::string band_;
     std::map<double,double> density_, bgtMap_, logftMap_, sDensity_;
 
     Variable CalcBgt(const Variable &en, const Variable &val,
                    const bool &isIndv = true);
-    Variable CalcBranchingRatio(const Variable &yld);
+    Variable CalcBranchingRatio(const Variable &en, const Variable &yld);
     double CalcF(const Variable &en);
     Variable CalcLevelEnergy(const Variable &en);
     Variable CalcLogft(const Variable &en, const Variable &val,

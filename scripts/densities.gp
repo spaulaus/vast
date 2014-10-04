@@ -5,8 +5,8 @@ unset key
 set xlabel "E_x (MeV)"
 set terminal postscript eps enhanced color solid "NimbusSanL-Regu,18"
 
-sn=4.558
-qbeta=10.490
+sn=5.243
+qbeta=13.690
 res=0.5
 
 set xrange[4:11]
