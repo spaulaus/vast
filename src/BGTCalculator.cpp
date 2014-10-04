@@ -30,7 +30,7 @@ BGTCalculator::BGTCalculator(Neutron &neutron, const Decay &decay,
     if(eg.GetValue() != 0.0) {
         geEff_ = eff_.GetEff(eg, EffCalculator::EffTypes::ge);
     }else
-        geEff_ = Variable(1.0,0.0,"");
+        geEff_ = Variable(1.0,0.0,"/100");
 
     decay_ = decay;
     omega_ = exp.GetOmegaPerBar()*exp.GetNumBars();
@@ -66,8 +66,11 @@ Variable BGTCalculator::CalcBranchingRatio(const Variable & en,
     Variable betaEff = eff_.GetBetaEff(en, decay_);
     double br = yld.GetValue() / decay_.GetNumberDecays().GetValue() /
         omega_.GetValue() / betaEff.GetValue() / geEff_.GetValue();
+    cout << yld.GetValue() << " " << decay_.GetNumberDecays().GetValue()
+         << " " << omega_.GetValue() << " " << betaEff.GetValue()
+         << " " << geEff_.GetValue() << endl;
     return(Variable(br,err_.CalcBrErr(br,yld,decay_.GetNumberDecays(),
-                                     geEff_,betaEff), "/100"));
+                                      geEff_,betaEff), "/100"));
 }
 
 double BGTCalculator::CalcF(const Variable &en) {

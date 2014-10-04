@@ -53,12 +53,12 @@ public:
      * These are measured quantities for the experiment and will vary from
      * dataset to dataset
      *
-     * \param[in] rawG : The raw gamma energy in keV
-     * \param[in] gEff : The efficiency for the gamma used to normalize
-     * \param[in] br   : The absolute branching ratio for the normalization gamma
+     * \param[in] energy: The raw gamma energy in MeV
+     * \param[in] yield : Energy of the normalization line
+     * \param[in] br : The absolute branching ratio for the normalization gamma
      */
-    void SetNormInfo(const Variable &rawG, const Variable &gEff,
-                      const Variable &br);
+    void SetNumDecay(const Variable &energy, const Variable &yield,
+                     const Variable &br);
     /*!  Set the half-life of the parent nucleus
     * \param[in] a The half-life of the nucleus
     */
@@ -84,10 +84,9 @@ public:
     */
     void SetQBetaN(const Variable &a){qbn_ = a;};
 private:
-    Variable gBr_, dauZ_, numDecay_, parZ_, pn_,
-        q_, qbn_, sn_, t_, rawG_, gEff_;
+    Variable dauZ_, numDecay_, parZ_, pn_,
+        q_, qbn_, sn_, t_;
 
-    void CalcNumberDecays(void);
     void SetDaughterZ(void) {dauZ_ = Variable(parZ_.GetValue()+1,0.0,"");};
 };
 #endif //__DECAY_HPP__

@@ -64,10 +64,6 @@ double ErrorCalculator::CalcEffErr(const map<string,Variable> &vars,
         double x = log(energy/e1);
         double y = log(energy/e2);
 
-        //--------- DEBUGGING -----------
-        // cout << a << " " << b << " " << c << " " << d << " " << d << " "
-        //      << e << " " << f << " " << g << " " << e1 << " " << e2 << " "
-        //      << energy << " " << x << " " << y << endl;
         double eff = exp(pow(pow(a+b*x+c*x*x,-g) +
                              pow(d+e*y+f*y*y,-g), -1/g))/100.;
         mcEffs.push_back(eff);

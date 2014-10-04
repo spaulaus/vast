@@ -114,9 +114,9 @@ Decay Configuration::ReadDecay(void) {
             decay.SetHalfLife(temp);
         else if (name == "gn") {
             Variable area = NodeToVar(node1.child("area"));
-            Variable eff = NodeToVar(node1.child("eff"));
+            Variable en = NodeToVar(node1.child("en"));
             Variable abr = NodeToVar(node1.child("abr"));
-            decay.SetNormInfo(area,eff,abr);
+            decay.SetNumDecay(en,area,abr);
         } else if (name == "g1") {
             //unused for now
         } else if (name == "g2") {

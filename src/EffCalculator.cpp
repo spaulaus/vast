@@ -33,10 +33,10 @@ Variable EffCalculator::CalcEff(const Variable &energy,
 
 Variable EffCalculator::CalcSimRollingEff(const Variable &en) {
     //From Sergey's eff_var_thresh; we currently assume 0 error.
-    Variable a = Variable(29508.583014511, 0.0, "");
-    Variable b = Variable(-360.519617657447, 0.0, "");
-    Variable c = Variable(-0.0020863546616623, 0.0, "");
-    Variable d = Variable(19.665798880457, 0.0, "");
+    Variable a = Variable(29508.583014511, 2323, "");
+    Variable b = Variable(-360.519617657447, 24.19, "");
+    Variable c = Variable(-0.0020863546616623, 0.000257, "");
+    Variable d = Variable(19.665798880457, 1.703, "");
     Variable eff = (a/(en-b))+c*en+d;
 
     if(eff.GetValue() > 100.)
@@ -78,7 +78,7 @@ Variable EffCalculator::GetEff(const Variable &energy, const EffTypes &curve) {
             coeffs.insert(make_pair("g",  Variable(7., 0.0, "")));
             coeffs.insert(make_pair("e1", Variable(50., 0.0, "keV")));
             coeffs.insert(make_pair("e2", Variable(1000., 0.0, "keV")));
-            en = en / Variable(1000, 0.0, "");
+            en = en * Variable(1000, 0.0, "");
             break;
         case(EffTypes::svpBan4) :
             //This new parameterization is from the data provided to Sergey for

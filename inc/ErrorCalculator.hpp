@@ -94,7 +94,7 @@ public:
     double CalcPnErr(const double &pn, std::vector<Neutron> &neutrons,
                      const Decay &dky);
 private:
-    static const int numSamples=1e5;  // number of experiments
+    static const int numSamples=1e5;  //!< The number of MC tries for Eff calc
 
     double CalcMean(const std::vector<double> &mcVals);
     double CalcVariance(const std::vector<double> &mcVals,

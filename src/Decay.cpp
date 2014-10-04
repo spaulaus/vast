@@ -3,28 +3,23 @@
  *  \author S. V. Paulauskas
  *  \date 04 September 2013
  */
+#include <iostream>
 
 #include "Decay.hpp"
 #include "ErrorCalculator.hpp"
 
-Decay::Decay(const Variable &z, const Variable&q, const Variable &sn, 
-             const Variable &qbn, const Variable &t) : 
+Decay::Decay(const Variable &z, const Variable&q, const Variable &sn,
+             const Variable &qbn, const Variable &t) :
     parZ_(z), q_(q), qbn_(qbn), sn_(sn), t_(t) {
 }
 
-void Decay::SetNormInfo(const Variable &rawG, const Variable &gEff,
-                         const Variable &br) {
-    rawG_=rawG; 
-    gEff_=gEff; 
-    gBr_=br;
-    CalcNumberDecays();
-}
+void Decay::SetNumDecay(const Variable &energy, const Variable &yield,
+                        const Variable &br) {
+    EffCalculator eff;
+    numDecay_ = energy / eff.GetEff(energy, EffCalculator::EffTypes::ge)
+        / br;
 
-void Decay::CalcNumberDecays(void){
-    double numDky = rawG_.GetValue() / gEff_.GetValue() / gBr_.GetValue();
-         
-    ErrorCalculator err;
-    double numDkyErr = err.CalcNumDkyErr(numDky, rawG_, gEff_, gBr_);
-
-    numDecay_ = Variable(numDky, numDkyErr, "");
+    std::cout << energy.Output() << std::endl
+        << eff.GetEff(energy, EffCalculator::EffTypes::ge).Output() << std::endl
+        << br.Output() << std::endl;
 }

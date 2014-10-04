@@ -36,11 +36,16 @@
     <sn value='5.243' error='0.004' unit="MeV"/>
     <qbn value='8.600' error='0.006' unit="MeV"/>
     <t12 value='0.085' error='0.010' unit="s"/>
+    <gn>
+      <area value="7208" error="0.0" unit="counts"/>
+      <en value="0.2473" error="0.0005" unit="MeV"/>
+      <abr value="0.086" error="0.008" unit="/100"/>
+    </gn>
   </Decay>
 
  <!-- Information about the gammas of interest for the experiment -->
   <Gamma>
-    <!-- Information about the normalization gamma -->
+    <!-- Information about the normalization gamma NOT IMPLEMENTED YET -->
     <gn>
       <area value="7208" error="0.0" unit="counts"/>
       <en value="0.2473" error="0.0005" unit="MeV"/>
@@ -145,7 +150,7 @@
     <doFit value="false"/>
     <basic value="true"/>
     <theory value="false"/>
-    <density value="true"/>
+    <density value="false"/>
   </Flags>
 
   <!-- How about some fitting information? -->
