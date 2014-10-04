@@ -39,9 +39,9 @@ Neutron::Neutron(const double &mu, const double &muErr,
 
 double Neutron::CalcEnergy(const double &mu) {
     PhysConstants consts;
-    double c  = consts.GetConstant("c").GetValue()*(100/1e9); // cm / ns
-    double mn = consts.GetConstant("neutronMass").GetValue()/c/c; // MeV
-    return(0.5*mn*pow(50.5/mu,2.)); // MeV
+    double c  = consts.GetConstant("c").GetValue()*(100/1e9);
+    double mn = consts.GetConstant("neutronMass").GetValue()/c/c;
+    return(0.5*mn*pow(50.5/mu,2.));
 }
 
 void Neutron::CalcEnEff(void) {
@@ -55,8 +55,6 @@ void Neutron::CalcEnergyErr(void) {
 }
 
 Variable Neutron::AdjEff(const Variable &var) {
-    return(Variable(var.GetValue()/eff_.GetValue(),
-                    var.GetError()/eff_.GetValue(),
-                    var.GetUnits()));
+    return(var/eff_);
 }
 

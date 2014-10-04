@@ -18,3 +18,39 @@ in there.
 After revamping the EffCalculator, the B(GT) calculation has broken like a 
 champ. Looks like I broke the Ge efficiency calculation. There was a unit error. 
 I was trying to go from MeV to keV by dividing by 1000, this is dumb.
+
+\subsection{P$_n$ for \iso{Ga}{84}}
+I have got all the major errors that I can find fixed. This leaves us with the 
+more complicated stuff. The P$_n$ for the \iso{Ga}{84} is being reported as 
+40\%. This is significantly smaller than what Miguel reports, and what I have
+gotten in the past. 
+
+\textbf{The setup for this number is } with the ToF data taken using Miguel's 
+banana, and the efficiency curve from Sergey using Miguel's banana. I have 
+listed the current values for things in Table \ref{tbl:ga84-mmf-wrong}.
+
+\begin{table}[htbp]
+  \caption{The table containing the obviously, wrong results from my code 
+    for the \iso{Ga}{84} data. The data use ToFs from Miguel's banana and 
+    Sergey's efficiency from that banana.}
+  \label{tbl:ga84-mmf-wrong}
+  \begin{center}
+    \begin{tabular}{|c|c|c|}
+      \hline
+      Paramter & Value & Error\\\hline
+      Integrated Yield & 2.662e5 & --\\\hline
+      Number of Decays & 6.7503e5 & --\\\hline
+      Pn & 0.39435 & 0.95527\\\hline
+      Raw Number of Neutrons & 1011 & --\\\hline
+      Raw Integrated Number of Neutrons & 1199.2 & --\\\hline
+    \end{tabular}
+  \end{center}
+\end{table}
+
+I am double checking that I haven't screwed anything obvious up in my 
+calculations. I need to really make sure that things are clean and easy to 
+follow in terms of what they are doing. 
+
+\textbf{UPDATE: } I have just gotten an email from Miguel saying that this number
+that I am getting is consistent with what he is getting! This is good news. I 
+am going to call that a win for now, and will talk with him more tomorrow.

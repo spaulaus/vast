@@ -16,10 +16,6 @@ Decay::Decay(const Variable &z, const Variable&q, const Variable &sn,
 void Decay::SetNumDecay(const Variable &energy, const Variable &yield,
                         const Variable &br) {
     EffCalculator eff;
-    numDecay_ = energy / eff.GetEff(energy, EffCalculator::EffTypes::ge)
+    numDecay_ = yield / eff.GetEff(energy, EffCalculator::EffTypes::ge)
         / br;
-
-    std::cout << energy.Output() << std::endl
-        << eff.GetEff(energy, EffCalculator::EffTypes::ge).Output() << std::endl
-        << br.Output() << std::endl;
 }

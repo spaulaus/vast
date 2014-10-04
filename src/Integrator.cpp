@@ -30,9 +30,9 @@ Integrator::Integrator(Neutron &neutron,
     neutron.SetIntegratedYield(Variable(intYld, intYldErr, "counts"));
 }
 
-double Integrator::AdaptiveSimpsons(const double &a, const double &b, // interval
-                                    const double &epsilon, // error tolerance
-                                    const int &maxRecursionDepth){ // recursion cap
+double Integrator::AdaptiveSimpsons(const double &a, const double &b,
+                                    const double &epsilon,
+                                    const int &maxRecursionDepth){
     double c = (a + b)/2, h = b - a;
     double fa = CrystalBall(a), fb = CrystalBall(b), fc = CrystalBall(c);
     double S = (h/6)*(fa + 4*fc + fb);

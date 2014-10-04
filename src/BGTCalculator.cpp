@@ -66,9 +66,6 @@ Variable BGTCalculator::CalcBranchingRatio(const Variable & en,
     Variable betaEff = eff_.GetBetaEff(en, decay_);
     double br = yld.GetValue() / decay_.GetNumberDecays().GetValue() /
         omega_.GetValue() / betaEff.GetValue() / geEff_.GetValue();
-    cout << yld.GetValue() << " " << decay_.GetNumberDecays().GetValue()
-         << " " << omega_.GetValue() << " " << betaEff.GetValue()
-         << " " << geEff_.GetValue() << endl;
     return(Variable(br,err_.CalcBrErr(br,yld,decay_.GetNumberDecays(),
                                       geEff_,betaEff), "/100"));
 }

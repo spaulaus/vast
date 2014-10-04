@@ -99,7 +99,7 @@ Decay Configuration::ReadDecay(void) {
     string nodeName = "Decay";
     pugi::xml_node dky = cfg_.child(nodeName.c_str());
 
-    for(pugi::xml_node node1 : dky.children()) {
+    for(auto node1 : dky.children()) {
         string name = node1.name();
         Variable temp = NodeToVar(node1);
         if(name == "z")
