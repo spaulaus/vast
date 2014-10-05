@@ -58,15 +58,15 @@ Variable EffCalculator::GetEff(const Variable &energy, const EffTypes &curve) {
     Variable en = energy;
     switch(curve) {
         case(EffTypes::vandle) :
-            coeffs.insert(make_pair("a",  Variable(4.14143,0.0,"")));
-            coeffs.insert(make_pair("b",  Variable(0.423852, 0.0,"")));
+            coeffs.insert(make_pair("a",  Variable(3.16156, 0.6946, "")));
+            coeffs.insert(make_pair("b",  Variable(0.547724, 0.3057, "")));
             coeffs.insert(make_pair("c",  Variable(0.0, 0.0, "")));
-            coeffs.insert(make_pair("d",  Variable(3.73002, 0.0, "")));
-            coeffs.insert(make_pair("e",  Variable(-0.32406, 0.0, "")));
-            coeffs.insert(make_pair("f",  Variable(0.0562497, 0.0, "")));
-            coeffs.insert(make_pair("g",  Variable(23.8918, 0.0, "")));
-            coeffs.insert(make_pair("e1", Variable(0.05, 0.0, "MeV")));
-            coeffs.insert(make_pair("e2", Variable(1., 0.0, "MeV")));
+            coeffs.insert(make_pair("d",  Variable(3.44128, 0.01617, "")));
+            coeffs.insert(make_pair("e",  Variable(-0.206794, 0.03284, "")));
+            coeffs.insert(make_pair("f",  Variable(0.0520048, 0.01448, "")));
+            coeffs.insert(make_pair("g",  Variable(27.0, 0.0, "")));
+            coeffs.insert(make_pair("e1", Variable(0.01, 0.0, "MeV")));
+            coeffs.insert(make_pair("e2", Variable(3.0, 0.0, "MeV")));
             break;
         case(EffTypes::ge) :
             coeffs.insert(make_pair("a",  Variable(2.84408,0.02047,"")));
@@ -81,8 +81,6 @@ Variable EffCalculator::GetEff(const Variable &energy, const EffTypes &curve) {
             en = en * Variable(1000, 0.0, "");
             break;
         case(EffTypes::svpBan4) :
-            //This new parameterization is from the data provided to Sergey for
-            //my 077cu.ban banana 4, he provided these to me on 09-10-2014
             coeffs.insert(make_pair("a",  Variable(-2.55462, 0.1936,"")));
             coeffs.insert(make_pair("b",  Variable(0.556012, 0.09609,"")));
             coeffs.insert(make_pair("c",  Variable(0.0, 0.0, "")));
@@ -94,8 +92,6 @@ Variable EffCalculator::GetEff(const Variable &energy, const EffTypes &curve) {
             coeffs.insert(make_pair("e2", Variable(0.1, 0.0, "MeV")));
             break;
         case(EffTypes::mmfBan) :
-            //The parameterization of the simulation results from Miguel's
-            //values sent to Sergey on 03-12-2014
             coeffs.insert(make_pair("a",  Variable(4.78289, 0.09881, "")));
             coeffs.insert(make_pair("b",  Variable(-0.868005, 0.05189, "")));
             coeffs.insert(make_pair("c",  Variable(0.0, 0.0, "")));

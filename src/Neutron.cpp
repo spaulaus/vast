@@ -18,7 +18,7 @@ Neutron::Neutron(const double &mu, const double &yld) {
     mu_        = Variable(mu, 0.0, "ns");
     yld_       = Variable(yld,0.0,"counts");
     en_        = Variable(CalcEnergy(mu), 0.0, "MeV");
-    eff_       = eff.GetEff(en_, EffCalculator::EffTypes::mmfBan);
+    eff_       = eff.GetEff(en_, EffCalculator::EffTypes::svpBan4);
 }
 
 Neutron::Neutron(const double &mu, const double &muErr,
@@ -26,7 +26,7 @@ Neutron::Neutron(const double &mu, const double &muErr,
     mu_        = Variable(mu, muErr, "ns");
     yld_       = Variable(yld,0.0,"counts");
     en_        = Variable(CalcEnergy(mu), 0.0, "MeV");
-    eff_       = eff.GetEff(en_, EffCalculator::EffTypes::mmfBan);
+    eff_       = eff.GetEff(en_, EffCalculator::EffTypes::svpBan4);
 }
 
 Neutron::Neutron(const double &mu, const double &muErr,
@@ -34,7 +34,7 @@ Neutron::Neutron(const double &mu, const double &muErr,
     mu_        = Variable(mu, muErr, "ns");
     yld_       = Variable(yld,yldErr,"counts");
     en_        = Variable(CalcEnergy(mu), 0.0, "MeV");
-    eff_       = eff.GetEff(en_, EffCalculator::EffTypes::mmfBan);
+    eff_       = eff.GetEff(en_, EffCalculator::EffTypes::svpBan4);
 }
 
 double Neutron::CalcEnergy(const double &mu) {
@@ -46,7 +46,7 @@ double Neutron::CalcEnergy(const double &mu) {
 
 void Neutron::CalcEnEff(void) {
     en_   = Variable(CalcEnergy(mu_.GetValue()), 0.0, "MeV");
-    eff_  = eff.GetEff(en_, EffCalculator::EffTypes::mmfBan);
+    eff_  = eff.GetEff(en_, EffCalculator::EffTypes::svpBan4);
 }
 
 void Neutron::CalcEnergyErr(void) {

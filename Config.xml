@@ -82,7 +82,7 @@
     <!-- These are the input files -->
     <Input>
       <!-- These are the experimental Data -->
-      <gsTof>data/084ga/tof/084ga-mmfBan/084ga-mmfBan.dat</gsTof>
+      <gsTof>data/084ga/tof/084ga-ban4-lower/084ga-ban4-lower.dat</gsTof>
       <g1Tof>data/084ga/tof/084ga-mmfBan/084ga-mmfBan-247keV.dat</g1Tof>
       <g2Tof></g2Tof>
     </Input>
@@ -147,7 +147,7 @@
        recgonize any flags that are added here.
   -->
   <Flags>
-    <doFit value="false"/>
+    <doFit value="true"/>
     <basic value="true"/>
     <theory value="false"/>
     <density value="false"/>

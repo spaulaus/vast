@@ -1,4 +1,4 @@
-/** \file eff.cpp
+/*! \file eff.cpp
  *  \brief A simple file to output the efficiency for a given energy
  *  \author S. V. Paulauskas
  *  \date 05 September 2013
@@ -16,6 +16,7 @@
 
 using namespace std;
 
+//! A function used to output the usage of the program in the event of an error.
 void usage(void) {
     cout << "You got it all wrong man. We need the following info:" << endl
          << "./eff <flag> <energy in MeV> <err Energy> " << endl

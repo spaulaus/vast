@@ -19,7 +19,7 @@ After revamping the EffCalculator, the B(GT) calculation has broken like a
 champ. Looks like I broke the Ge efficiency calculation. There was a unit error. 
 I was trying to go from MeV to keV by dividing by 1000, this is dumb.
 
-\subsection{P$_n$ for \iso{Ga}{84}}
+\subsection{P$_n$ for \iso{Ga}{84} - MMF}
 I have got all the major errors that I can find fixed. This leaves us with the 
 more complicated stuff. The P$_n$ for the \iso{Ga}{84} is being reported as 
 40\%. This is significantly smaller than what Miguel reports, and what I have
@@ -27,13 +27,13 @@ gotten in the past.
 
 \textbf{The setup for this number is } with the ToF data taken using Miguel's 
 banana, and the efficiency curve from Sergey using Miguel's banana. I have 
-listed the current values for things in Table \ref{tbl:ga84-mmf-wrong}.
+listed the current values for things in Table \ref{tbl:ga84-mmf-vast}.
 
 \begin{table}[htbp]
-  \caption{The table containing the obviously, wrong results from my code 
+  \caption{The table containing the potentially correct results from my code 
     for the \iso{Ga}{84} data. The data use ToFs from Miguel's banana and 
     Sergey's efficiency from that banana.}
-  \label{tbl:ga84-mmf-wrong}
+  \label{tbl:ga84-mmf-vast}
   \begin{center}
     \begin{tabular}{|c|c|c|}
       \hline
@@ -54,3 +54,60 @@ follow in terms of what they are doing.
 \textbf{UPDATE: } I have just gotten an email from Miguel saying that this number
 that I am getting is consistent with what he is getting! This is good news. I 
 am going to call that a win for now, and will talk with him more tomorrow.
+
+\subsection{P$_n$ for \iso{Ga}{84} - SVP}
+I have done the same calculations as above using my own banana, and have come up
+with a number that's about 10\% lower than the numbers using information that 
+is all taken from Miguel's banana/eff. The results are summarized in Table 
+\ref{tbl:ga84-svp-vast-wrong}
+\begin{table}[htbp]
+  \caption{The table containing the incorrect results from my code 
+    for the \iso{Ga}{84} data. The data use ToFs from my banana and 
+    Sergey's efficiency from that banana.}
+  \label{tbl:ga84-svp-vast-wrong}
+  \begin{center}
+    \begin{tabular}{|c|c|c|}
+      \hline
+      Paramter & Value & Error\\\hline
+      Integrated Yield & 2.0414e5 & --\\\hline
+      Number of Decays & 6.7503e5 & --\\\hline
+      Pn & 0.30241 & 0.4472\\\hline
+      Raw Number of Neutrons & 721.97 & --\\\hline
+      Raw Integrated Number of Neutrons & 856.34 & --\\\hline
+    \end{tabular}
+  \end{center}
+\end{table}
+
+This result seems to support the idea that there is something iffy with the 
+efficiencies from my data. It's also possible that my banana may not be 
+working the greatest? 
+
+From the results between the two different versions I see that the peaks 
+are not quite in the same spots. This could be throwing things a little 
+off, but I do not expect it to be by 10\%. I am rerunning the data with 
+the efficiency curve taken from mmfBan instead of svpBan4. I would like to 
+see if the results change significantly or not. 
+
+The results do change a little bit. The P$_n$ is now 0.28411 coming back down 
+from the 30\% that I had previously. This supports the idea that the efficiency
+is indeed recovering for the cuts my banana is making, but it doesn't seem to 
+be quite enough. We will go through the various different efficiency curves to 
+see what is going on here. The ``rolling'' efficiency curve gets me back up to 
+approximately 34\%. It seems that none of the efficiency curves really 
+compensate properly for the cuts that my banana gives. I should double check 
+that values that I am providing to Sergey are indeed the proper ones. 
+
+\subsection{Documentation}
+I need to clean up some of the documentation for the program. Most importantly 
+how to make sure that some of the relevant information gets into the Doxygen 
+generated stuff. 
+
+\workday{10-05-2014}
+\subsection{Error Calculations}
+Some of the error calculations are fubar. We will need to delve into those as 
+soon as the efficiency issue is resolved. 
+
+\subsection{Continuing to check efficiencies}
+I am looking at the different efficiencies that we have available, and none of 
+them seem to do very well with my banana. The VANDLE efficiency curve is the 
+last and only cluprit here. 
