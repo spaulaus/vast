@@ -36,67 +36,192 @@
 					<SilentBuild command="$make &gt; $(CMD_NULL)" />
 				</MakeCommands>
 			</Target>
+			<Target title="eff">
+				<Option platforms="Unix;" />
+				<Option output="eff" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="./" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Option parameters="-g 1.0 0.001" />
+			</Target>
+			<Target title="sim">
+				<Option output="sim" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="./" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+			</Target>
+			<Target title="sens">
+				<Option output="sens" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="./" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Option use_console_runner="0" />
+			</Target>
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
-		<Unit filename="Config.xml" />
-		<Unit filename="Makefile" />
-		<Unit filename="README" />
-		<Unit filename="TODO" />
-		<Unit filename="doc/doxyfile" />
+		<Unit filename="Config.xml">
+			<Option target="master" />
+		</Unit>
+		<Unit filename="Makefile">
+			<Option target="master" />
+		</Unit>
+		<Unit filename="README">
+			<Option target="master" />
+		</Unit>
+		<Unit filename="TODO">
+			<Option target="master" />
+		</Unit>
+		<Unit filename="doc/doxyfile">
+			<Option target="master" />
+		</Unit>
 		<Unit filename="inc/BGTCalculator.hpp">
 			<Option compile="1" />
+			<Option target="master" />
 		</Unit>
-		<Unit filename="inc/Configuration.hpp" />
-		<Unit filename="inc/Decay.hpp" />
-		<Unit filename="inc/EffCalculator.hpp" />
-		<Unit filename="inc/ErrorCalculator.hpp" />
-		<Unit filename="inc/Experiment.hpp" />
-		<Unit filename="inc/FileChecker.hpp" />
-		<Unit filename="inc/FileHandler.hpp" />
-		<Unit filename="inc/FitHandler.hpp" />
-		<Unit filename="inc/FlagHandler.hpp" />
-		<Unit filename="inc/Gamma.hpp" />
-		<Unit filename="inc/Integrator.hpp" />
-		<Unit filename="inc/LimitFinder.hpp" />
-		<Unit filename="inc/Neutron.hpp" />
-		<Unit filename="inc/NeutronDensity.hpp" />
-		<Unit filename="inc/OutputHandler.hpp" />
-		<Unit filename="inc/ParamCalculator.hpp" />
-		<Unit filename="inc/SimConvoluter.hpp" />
-		<Unit filename="inc/TofFitter.hpp" />
-		<Unit filename="inc/mainPage.hpp" />
-		<Unit filename="scripts/compCgm.gp" />
-		<Unit filename="scripts/compFit.gp" />
-		<Unit filename="scripts/compPlot.gp" />
-		<Unit filename="scripts/convParam.gp" />
-		<Unit filename="scripts/densities.gp" />
+		<Unit filename="inc/Configuration.hpp">
+			<Option target="master" />
+		</Unit>
+		<Unit filename="inc/Decay.hpp">
+			<Option target="master" />
+		</Unit>
+		<Unit filename="inc/EffCalculator.hpp">
+			<Option target="master" />
+		</Unit>
+		<Unit filename="inc/ErrorCalculator.hpp">
+			<Option target="master" />
+		</Unit>
+		<Unit filename="inc/Experiment.hpp">
+			<Option target="master" />
+		</Unit>
+		<Unit filename="inc/FileChecker.hpp">
+			<Option target="master" />
+		</Unit>
+		<Unit filename="inc/FileHandler.hpp">
+			<Option target="master" />
+		</Unit>
+		<Unit filename="inc/FitHandler.hpp">
+			<Option target="master" />
+		</Unit>
+		<Unit filename="inc/FlagHandler.hpp">
+			<Option target="master" />
+		</Unit>
+		<Unit filename="inc/Gamma.hpp">
+			<Option target="master" />
+		</Unit>
+		<Unit filename="inc/Integrator.hpp">
+			<Option target="master" />
+		</Unit>
+		<Unit filename="inc/LimitFinder.hpp">
+			<Option target="master" />
+		</Unit>
+		<Unit filename="inc/Neutron.hpp">
+			<Option target="master" />
+		</Unit>
+		<Unit filename="inc/NeutronDensity.hpp">
+			<Option target="master" />
+		</Unit>
+		<Unit filename="inc/OutputHandler.hpp">
+			<Option target="master" />
+		</Unit>
+		<Unit filename="inc/ParamCalculator.hpp">
+			<Option target="master" />
+		</Unit>
+		<Unit filename="inc/SimConvoluter.hpp">
+			<Option target="master" />
+		</Unit>
+		<Unit filename="inc/TofFitter.hpp">
+			<Option target="master" />
+		</Unit>
+		<Unit filename="inc/mainPage.hpp">
+			<Option target="master" />
+		</Unit>
+		<Unit filename="scripts/compCgm.gp">
+			<Option target="master" />
+		</Unit>
+		<Unit filename="scripts/compFit.gp">
+			<Option target="master" />
+		</Unit>
+		<Unit filename="scripts/compPlot.gp">
+			<Option target="master" />
+		</Unit>
+		<Unit filename="scripts/convParam.gp">
+			<Option target="master" />
+		</Unit>
+		<Unit filename="scripts/densities.gp">
+			<Option target="master" />
+		</Unit>
 		<Unit filename="scripts/plot.C">
 			<Option compilerVar="CC" />
+			<Option target="master" />
 		</Unit>
-		<Unit filename="src/BGTCalculator.cpp" />
-		<Unit filename="src/Configuration.cpp" />
-		<Unit filename="src/Decay.cpp" />
-		<Unit filename="src/EffCalculator.cpp" />
-		<Unit filename="src/ErrorCalculator.cpp" />
-		<Unit filename="src/FileChecker.cpp" />
-		<Unit filename="src/FileHandler.cpp" />
-		<Unit filename="src/FitHandler.cpp" />
-		<Unit filename="src/Gamma.cpp" />
-		<Unit filename="src/Integrator.cpp" />
-		<Unit filename="src/LimitFinder.cpp" />
-		<Unit filename="src/Neutron.cpp" />
-		<Unit filename="src/NeutronDensity.cpp" />
-		<Unit filename="src/OutputHandler.cpp" />
-		<Unit filename="src/ParamCalculator.cpp" />
-		<Unit filename="src/SimConvoluter.cpp" />
-		<Unit filename="src/TofFitter.cpp" />
-		<Unit filename="src/cfgtst.cpp" />
-		<Unit filename="src/eff.cpp" />
-		<Unit filename="src/main.cpp" />
-		<Unit filename="src/sensitivity.cpp" />
-		<Unit filename="src/simtest.cpp" />
+		<Unit filename="src/BGTCalculator.cpp">
+			<Option target="master" />
+		</Unit>
+		<Unit filename="src/Configuration.cpp">
+			<Option target="master" />
+		</Unit>
+		<Unit filename="src/Decay.cpp">
+			<Option target="master" />
+		</Unit>
+		<Unit filename="src/EffCalculator.cpp">
+			<Option target="master" />
+		</Unit>
+		<Unit filename="src/ErrorCalculator.cpp">
+			<Option target="master" />
+		</Unit>
+		<Unit filename="src/FileChecker.cpp">
+			<Option target="master" />
+		</Unit>
+		<Unit filename="src/FileHandler.cpp">
+			<Option target="master" />
+		</Unit>
+		<Unit filename="src/FitHandler.cpp">
+			<Option target="master" />
+		</Unit>
+		<Unit filename="src/Gamma.cpp">
+			<Option target="master" />
+		</Unit>
+		<Unit filename="src/Integrator.cpp">
+			<Option target="master" />
+		</Unit>
+		<Unit filename="src/LimitFinder.cpp">
+			<Option target="master" />
+		</Unit>
+		<Unit filename="src/Neutron.cpp">
+			<Option target="master" />
+		</Unit>
+		<Unit filename="src/NeutronDensity.cpp">
+			<Option target="master" />
+		</Unit>
+		<Unit filename="src/OutputHandler.cpp">
+			<Option target="master" />
+		</Unit>
+		<Unit filename="src/ParamCalculator.cpp">
+			<Option target="master" />
+		</Unit>
+		<Unit filename="src/SimConvoluter.cpp">
+			<Option target="master" />
+		</Unit>
+		<Unit filename="src/TofFitter.cpp">
+			<Option target="master" />
+		</Unit>
+		<Unit filename="src/cfgtst.cpp">
+			<Option target="master" />
+		</Unit>
+		<Unit filename="src/eff.cpp">
+			<Option target="master" />
+		</Unit>
+		<Unit filename="src/main.cpp">
+			<Option target="master" />
+		</Unit>
+		<Unit filename="src/sensitivity.cpp">
+			<Option target="master" />
+		</Unit>
+		<Unit filename="src/simtest.cpp">
+			<Option target="master" />
+		</Unit>
 		<Extensions>
 			<DoxyBlocks>
 				<comment_style block="3" line="1" />
