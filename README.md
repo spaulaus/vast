@@ -1,7 +1,8 @@
 Vandle Analysis Software Toolkit (VAST)
----------------------------------------------
+=======================================
 
 Some prerequisites:
+-------------------
 pugixml >= 1.2
 ROOT >= 5.99/03
 RooFit >= 3.55
