@@ -48,8 +48,9 @@
   they use this program. Here is a list of them and where they can be downloaded.
 
   - ROOT: A Data Analysis Framework
-  - Variable
-  - Constants :
+  - Variable  : A C++ class to create physics style variables
+  - Constants : A C++ class that provides useful physics constants
+  - GCC v4.8.1 or greater : Allows for use of C++ Standard 11 features
 */
 
 /*! \page getStart Getting Started

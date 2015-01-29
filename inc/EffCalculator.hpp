@@ -22,17 +22,23 @@ public:
 
     /*! An enum that contains all of the various efficiencies that we are
      *  currently investigating in the code. \n
+     *  + beta    : The beta efficiency from Miguel's Calculations, currently
+     *                  UNUSED due to the requirement for Q effective for the
+     *                  calculation.
      *  + ge      : The Ge efficiency for gamma rays.
-     *  + svpBan4 : The new parameterization is from the data provided
-     *    to Sergey for my 077cu.ban banana 4, he provided these to me on
-     *    09-10-2014, it was updated on 09-17-2014.
+     *  + mmf     : The parameterization taken from Miguel's code that adjusts
+     *                  the efficiency based off of his banana gate.
      *  + mmfBan  : The parameterization of the simulation results from
-     *    Miguel's values sent to Sergey on 03-12-2014
-     *  + vandle  : The efficiency taken from the LG Cf data (~ 6 keVee)
+     *                  Miguel's values sent to Sergey on 03-12-2014
      *  + rolling : The original efficiency from Sergey - BAD, kept for legacy
-     *  + beta    : The beta efficiency from Miguel's Calculations - UNUSED
+     *  + svpBan4 : The new parameterization is from the data provided to Sergey
+     *                  for my 077cu.ban banana 4, he provided these to me on
+     *                  09-10-2014, it was updated on 09-17-2014.
+     *  + svpTestBan1 : Banana that is a little wider than the previous one.
+     *  + vandle  : The efficiency taken from the LG Cf data (~ 6 keVee)
      */
-    enum class EffTypes {ge, svpBan4, mmfBan, vandle, rolling, beta};
+    enum class EffTypes {beta, ge, , mmf, mmfBan, rolling, svpBan4, svpTestBan1,
+                            vandle};
 
     /*! Return the efficiency for the requested efficiency curve. The options
      *  for the different curves are documented in the enum, EffTypes.

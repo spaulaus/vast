@@ -36,31 +36,26 @@ int main(int argc, char* argv[]) {
     if(argc < 2 || argc > 4)
         usage();
 
+    EffCalculator eff;
     int opt = -1;
-    Variable en;
     EffCalculator::EffTypes curve;
 
-    while((opt = getopt (argc, argv, "b:g:m:s:v:")) != -1) {
+    while((opt = getopt (argc, argv, "bgmsv")) != -1) {
         switch(opt) {
         case 'b': {
             curve = EffCalculator::EffTypes::beta;
-            en = Variable(atof(optarg), atof(argv[3]), "MeV");
             break;
         } case 'g': {
-            en = Variable(atof(optarg), atof(argv[3]), "MeV");
             curve = EffCalculator::EffTypes::ge;
             break;
         } case 'v': {
-            en = Variable(atof(optarg), atof(argv[3]), "MeV");
             curve = EffCalculator::EffTypes::vandle;
             break;
         }  case 's': {
-            en = Variable(atof(optarg), atof(argv[3]), "MeV");
-            curve = EffCalculator::EffTypes::vandle;
+            curve = EffCalculator::EffTypes::svpBan4;
             break;
         } case 'm': {
-            en = Variable(atof(optarg), atof(argv[3]), "MeV");
-            curve = EffCalculator::EffTypes::vandle;
+            curve = EffCalculator::EffTypes::mmfBan;
             break;
         } case '?': {
             usage();
@@ -70,7 +65,7 @@ int main(int argc, char* argv[]) {
         }
     }
 
-    EffCalculator eff;
+    Variable en(atof(argv[2]), atof(argv[3]), "MeV");
     Variable result = eff.GetEff(en, curve);
 
     if(std::isnan(result.GetValue()))

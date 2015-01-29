@@ -28,7 +28,14 @@ void ReadData(vector<Neutron> &nvec, const string &file);
 
 ///The main program function
 int main(int argc, char* argv[]) {
-    Configuration cfg("Config.xml");
+    if(argc < 2) {
+        cerr << "You must provide me the name of the configuration file!!"
+             << endl;
+        cerr << "Usage: ./vast /path/to/configuration/file" << endl;
+        exit(0);
+    }
+
+    Configuration cfg(argv[1]);
     FileHandler fls = cfg.ReadFiles();
     Experiment exp = cfg.ReadExperiment();
     OutputHandler output;
@@ -36,35 +43,35 @@ int main(int argc, char* argv[]) {
     FlagHandler flags = cfg.ReadFlags();
     bool basic = flags.GetFlag("basic");
 
-    //---------- SET FIT INFORMATION AND PERFORM FIT HERE ----------
+    cout << "Performing the Fit and reading the Fit configuration" << endl;
     FitHandler fit = cfg.ReadFit();
     if(flags.GetFlag("doFit"))
         TofFitter fitter(fit, fls);
 
-    //---------- READ IN THE DECAY INFORMATION HERE ----------
+    cout << "Reading the Decay information" << endl;
     Decay decay = cfg.ReadDecay();
 
-    //---------- SET THE NEUTRON INFORMATION AND OUTPUT ----------
     vector<Neutron> singles;
     if(basic) {
         cout << "We are now reading the fitted data." << endl;
         ReadData(singles, fls.GetOutputName("gsFit"));
-        cout << "Beginning to integrate peaks and calculate B(GT)s" << endl;
         for(vector<Neutron>::iterator it = singles.begin(); it!= singles.end();
             it++) {
-            //---------- INTEGRATE THE NEUTRON PEAKS HERE ----------
+            cout << "Integrating the neutron peak" << endl;
             Integrator integrator(*it, fit.GetRange());
-            //---------- Calculate the B(GT) for the Line ---------
+            cout << "Calculating the B(GT)" << endl;
             BGTCalculator bgt(*it, decay, exp);
         }
         output.OutputBasics(singles, decay, exp, fls.GetOutputName("neutrons"));
 
-        //---------- Output B(GT) for the simulations -------
-        if(flags.GetFlag("theory"))
+        if(flags.GetFlag("theory")) {
+            cout << "Outputting the information for the CGM calculations"
+                 << endl;
             output.OutputTheory(singles, fls.GetOutputName("cgm"));
+        }
 
-        //---------- Calculate the Neutron Density and B(GT) ---------
         if(flags.GetFlag("density")) {
+            cout << "Calculate the neutron density " << endl;
             cout << "We are starting to calculate the neutron density + B(GT)"
                  << endl;
             output.OutputDensity(singles, decay, exp,

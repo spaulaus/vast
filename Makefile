@@ -74,9 +74,9 @@ SENSOBJS_W_DIR = $(addprefix $(OBJDIR)/,$(SENSOBJS))
 
 #Add the ROOT config stuff to the compilation
 ROOTCONFIG   := root-config
-CXXFLAGS     += $(shell $(ROOTCONFIG) --cflags)
-LDFLAGS      += $(shell $(ROOTCONFIG) --ldflags)
-LDLIBS       += $(shell $(ROOTCONFIG) --libs) -lRooFit -lRooFitCore
+ROOTCXXFLAGS    += $(shell $(ROOTCONFIG) --cflags)
+ROOTLDFLAGS      += $(shell $(ROOTCONFIG) --ldflags)
+ROOTLDLIBS       += $(shell $(ROOTCONFIG) --libs) -lRooFit -lRooFitCore
 
 .SUFFIXES: .$(c++SrcSuf)
 
@@ -88,10 +88,10 @@ $(OBJDIR):
 	mkdir $(OBJDIR)
 
 $(PROGRAM): $(OBJS_W_DIR)
-	$(CXX) $(CXXFLAGS) $(LDLIBS) $^ -o $@
+	$(CXX) $(CXXFLAGS) $(ROOTCXXFLAGS) $(LDLIBS) $(ROOTLDLIBS) $^ -o $@
 
 $(OBJDIR)/%.o: %.cpp
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+	$(CXX) $(CXXFLAGS) $(ROOTCXXFLAGS) -c $< -o $@
 
 .PHONY: clean eff sim sens doc
 clean:
@@ -101,8 +101,8 @@ clean:
 eff: $(EFFOBJS_W_DIR)
 	$(CXX) $(CXXFLAGS) $(LDLIBS) $^ -o $@
 sim: $(SIMOBJS_W_DIR)
-	$(CXX) $(CXXFLAGS) $(LDLIBS) $^ -o $@
+	$(CXX) $(CXXFLAGS) $(ROOTCXXFLAGS) $(LDLIBS) $(ROOTLDLIBS) $^ -o $@
 sens: $(SENSOBJS_W_DIR)
-	$(CXX) $(CXXFLAGS) $(LDLIBS) $^ -o $@
+	$(CXX) $(CXXFLAGS) $(ROOTCXXFLAGS) $(LDLIBS) $(ROOTLDLIBS) $^ -o $@
 doc: doc/doxyfile
 	@doxygen $^

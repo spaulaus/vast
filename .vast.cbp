@@ -24,6 +24,7 @@
 				<Option object_output="/home/vincent/sandbox/vast/.objs" />
 				<Option type="1" />
 				<Option compiler="gcc" />
+				<Option parameters="configs/Config.xml.077cu" />
 				<Compiler>
 					<Add option="-g" />
 				</Compiler>
@@ -61,18 +62,15 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
-		<Unit filename="Config.xml">
-			<Option target="master" />
-		</Unit>
 		<Unit filename="Makefile">
 			<Option target="master" />
 		</Unit>
-		<Unit filename="README">
-			<Option target="master" />
-		</Unit>
+		<Unit filename="README.md" />
 		<Unit filename="TODO">
 			<Option target="master" />
 		</Unit>
+		<Unit filename="configs/Config.xml.077cu" />
+		<Unit filename="configs/Config.xml.084ga" />
 		<Unit filename="doc/doxyfile">
 			<Option target="master" />
 		</Unit>
