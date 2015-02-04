@@ -7,14 +7,16 @@
 
 #include <cmath>
 
+#include <PhysConstants.hpp>
+
 #include "Decay.hpp"
 #include "EffCalculator.hpp"
 #include "ErrorCalculator.hpp"
 
 using namespace std;
 
-Variable EffCalculator::CalcEff(const Variable &energy,
-                                std::map<std::string, Variable> &coeffs) {
+Variable EffCalculator::CalcEff(const Variable &energy, std::map<std::string,
+                                Variable> &coeffs) {
     double en = energy.GetValue();
     double x = log(en/coeffs["e1"].GetValue());
     double y = log(en/coeffs["e2"].GetValue());
@@ -43,6 +45,49 @@ Variable EffCalculator::CalcSimRollingEff(const Variable &en) {
         return(Variable(1.0, 0.0, " / 100"));
 
     return(Variable(eff.GetValue()/100., 0.0, " / 100"));
+}
+
+double EffCalculator::CalcTof(const double &en) {
+    PhysConstants consts;
+    double c  = consts.GetConstant("c").GetValue()*(100/1e9);
+    double mn = consts.GetConstant("neutronMass").GetValue()/c/c;
+    return(distance_ * sqrt(mn/2/en));
+}
+
+Variable EffCalculator::CalcMmfAdjusted(const Variable &en) {
+    double eff = 0.0;
+    double tof = CalcTof(en.GetValue());
+    if (tof < 26.25) {
+        eff = pow(10,-0.56779 - 0.30214*log10(en.GetValue())
+                    + 0.06163*pow(log10(en.GetValue()),2)
+                    + 8.6109*pow(log10(en.GetValue()),3)
+                    - 26.803*pow(log10(en.GetValue()),4)
+                    + 5.6116*pow(log10(en.GetValue()),5)
+                    + 53.225*pow(log10(en.GetValue()),6)
+                    - 48.326*pow(log10(en.GetValue()),7));
+        eff = eff * (tof*0.04847845-0.2069092); //banana correction
+    }else if (tof >= 26.25 && tof <= 30.0) {
+        eff = pow(10, -0.4887-0.50485*log10(en.GetValue())
+                    +0.31886*pow(log10(en.GetValue()),2)
+                    +4.7401*pow(log10(en.GetValue()),3)
+                    -4.1318*pow(log10(en.GetValue()),4)
+                    -19.607*pow(log10(en.GetValue()),5)
+                    +4.0407*pow(log10(en.GetValue()),6)
+                    +28.821*pow(log10(en.GetValue()),7));
+        eff = eff * (tof*0.030117+0.109063); //banana correction
+    }else if (tof > 30.9) {
+        eff= pow(10, -0.38866-0.31627*log10(en.GetValue())
+                    +0.322206*pow(log10(en.GetValue()),2)
+                    +0.04875*pow(log10(en.GetValue()),3)
+                    -0.41693*pow(log10(en.GetValue()),4)
+                    -0.13806*pow(log10(en.GetValue()),5));
+        if (tof <= 34)
+            eff = eff * (tof*0.122664 - 3.2250166667); //ban correction
+        else if (tof > 34 && tof <= 55)
+            eff = eff * (tof*0.0033386667 + 0.8055463333); //ban correction
+    }else
+        eff = 0.0;
+    return(Variable(eff, 0.0, " / 100"));
 }
 
 Variable EffCalculator::GetBetaEff(const Variable &energy, const Decay &dky) {
@@ -101,7 +146,7 @@ Variable EffCalculator::GetEff(const Variable &energy, const EffTypes &curve) {
             coeffs.insert(make_pair("g",  Variable(50., 0.0, "")));
             coeffs.insert(make_pair("e1", Variable(2.0, 0.0, "MeV")));
             coeffs.insert(make_pair("e2", Variable(0.3, 0.0, "MeV")));
-        case(EffTypes::mmfBan) :
+        case(EffTypes::mmfTheory) :
             coeffs.insert(make_pair("a",  Variable(4.78289, 0.09881, "")));
             coeffs.insert(make_pair("b",  Variable(-0.868005, 0.05189, "")));
             coeffs.insert(make_pair("c",  Variable(0.0, 0.0, "")));
@@ -112,6 +157,8 @@ Variable EffCalculator::GetEff(const Variable &energy, const EffTypes &curve) {
             coeffs.insert(make_pair("e1", Variable(0.3, 0.0, "MeV")));
             coeffs.insert(make_pair("e2", Variable(4.0, 0.0, "MeV")));
             break;
+        case(EffTypes::mmfCalc) :
+            return(CalcMmfAdjusted(energy));
         case(EffTypes::rolling) :
             return(CalcSimRollingEff(energy));
         default :
@@ -120,4 +167,3 @@ Variable EffCalculator::GetEff(const Variable &energy, const EffTypes &curve) {
     }
     return(CalcEff(en, coeffs));
 }
-

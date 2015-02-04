@@ -19,31 +19,39 @@ using namespace std;
 //! A function used to output the usage of the program in the event of an error.
 void usage(void) {
     cout << "You got it all wrong man. We need the following info:" << endl
-         << "./eff <flag> <energy in MeV> <err Energy> " << endl
+         << "./eff <flag>" << endl
          << "Flags: " << endl
-         << "   -v = Basic Vandle Efficiency" << endl
+         << "   -e <val> = (required) Energy of the neutron" << endl
+         << "   -s <val> = (optional) Uncertainty in the energy of the neutron" << endl
+         << "   -b = Beta Efficiency for the provided energy" << endl
          << "   -g = Ge Efficiency" << endl
-         << "   -s = Vandle Efficiency using SVP Banana 4" << endl
          << "   -m = Vandle Efficiency using MMF Banana 1" << endl
-         //<< "   -b = Beta Efficiency for the provided Qeff" << endl
+         << "   -c = Vandle Efficiency using SVP Banana 4"
+         << "   -v = Basic Vandle Efficiency" << endl
+         << "   -t = VANDLE Efficiency using Sergey's Simulation for MMF Banana 1" << endl
+         << "   -d <val> = The distance to be used for ToF Calculation. " <<
+            "Used in conjunction with the -m flag" << endl
          << "Now let's try this again." << endl;
     exit(2);
 }
 
-
 //!The main function for the efficiency calculation
 int main(int argc, char* argv[]) {
-    if(argc < 2 || argc > 4)
-        usage();
-
     EffCalculator eff;
     int opt = -1;
     EffCalculator::EffTypes curve;
+    double distance = 0.0, energy = 0.0, sigma = 0.0;
 
-    while((opt = getopt (argc, argv, "bgmsv")) != -1) {
+    while((opt = getopt (argc, argv, "e:s:bgmcvtd:")) != -1) {
         switch(opt) {
         case 'b': {
             curve = EffCalculator::EffTypes::beta;
+            break;
+        } case 'e': {
+            energy = atof(optarg);
+            break;
+        } case 's': {
+            sigma = atof(optarg);
             break;
         } case 'g': {
             curve = EffCalculator::EffTypes::ge;
@@ -51,11 +59,17 @@ int main(int argc, char* argv[]) {
         } case 'v': {
             curve = EffCalculator::EffTypes::vandle;
             break;
-        }  case 's': {
+        }  case 'c': {
             curve = EffCalculator::EffTypes::svpBan4;
             break;
         } case 'm': {
-            curve = EffCalculator::EffTypes::mmfBan;
+            curve = EffCalculator::EffTypes::mmfCalc;
+            break;
+        } case 't' : {
+            curve = EffCalculator::EffTypes::mmfTheory;
+            break;
+        } case 'd' : {
+            distance = atof(optarg);
             break;
         } case '?': {
             usage();
@@ -65,7 +79,9 @@ int main(int argc, char* argv[]) {
         }
     }
 
-    Variable en(atof(argv[2]), atof(argv[3]), "MeV");
+    if(distance != 0)
+        eff.SetDistance(distance);
+    Variable en(energy, sigma, "MeV");
     Variable result = eff.GetEff(en, curve);
 
     if(std::isnan(result.GetValue()))
