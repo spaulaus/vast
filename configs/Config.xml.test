@@ -84,8 +84,7 @@
 
     <gn> <!-- Information about the normalization gamma -->
       <area value="351222" error="14751" unit="counts"/>
-      <!-- This will get changed to energy soon -->
-      <eff value="0.0668422" error="0.003" unit="/100"/>
+      <en value="0.50521" error="0.00001" unit="MeV"/>
       <abr value="0.191" error="0.006" unit="/100"/>
     </gn>
 
@@ -100,7 +99,7 @@
        recognize any flags that are added here.
   -->
   <Flags>
-    <doFit value="true"/>
+    <doFit value="false"/>
     <basic value="true"/>
     <theory value="false"/>
     <density value="false"/>

@@ -11,7 +11,6 @@
 
 using namespace std;
 
-//!Constructor for using the Neutron Density
 BGTCalculator::BGTCalculator(std::map<double, double> &density,
                              const Decay &decay, const Experiment &exp,
                              const std::string &band, const Variable &eg) {
@@ -23,7 +22,6 @@ BGTCalculator::BGTCalculator(std::map<double, double> &density,
     HandleNeutronDensity(density);
 }
 
-//!Constructor for using the Neutron Class
 BGTCalculator::BGTCalculator(Neutron &neutron, const Decay &decay,
                              const Experiment &exp, const Variable &eg) {
     eG_ = eg;
@@ -56,7 +54,6 @@ Variable BGTCalculator::CalcBgt(const Variable &en, const Variable &val,
         halfLife = hl.GetValue()+hl.GetError();
     else
         halfLife = hl.GetValue();
-
     double bgt = coeff / CalcF(en) / (halfLife / br.GetValue());
     return(Variable(bgt,err_.CalcBgtErr(bgt,br,hl),""));
 }

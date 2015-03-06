@@ -68,44 +68,34 @@ public:
     Variable GetEfficiency(void){return(eff_);};
 
     /*! Set the mean of the CB for the peak
-    *   \param[in] a The mean of the neutron peak
-    */
+    *   \param[in] a The mean of the neutron peak */
     void SetMu(const Variable &a) {mu_ = a; CalcEnEff();};
     /*! Set the yield of the CB
-    *   \param[in] a The yield as calculated from the fit
-    */
+    *   \param[in] a The yield as calculated from the fit */
     void SetYld(const Variable &a) {yld_ = a;};
     /*! Set the alpha parameter of the CB
-    *   \param[in] a The alpha of the CB
-    */
+    *   \param[in] a The alpha of the CB */
     void SetAlpha(const Variable &a){alph_ = a;};
     /*! Set the n parameter for the CB
-    *   \param[in] a The n of the CB
-    */
+    *   \param[in] a The n of the CB */
     void SetN(const Variable &a){n_ = a;};
     /*! Set the sigma for the CB
-    *   \param[in] a The sigma of the Gaussian of the CB
-    */
+    *   \param[in] a The sigma of the Gaussian of the CB */
     void SetSigma(const Variable &a){sig_ = a; CalcEnergyErr();};
     /*! Set the integrated yield
-    *   \param[in] a The integrated yield of the CB
-    */
+    *   \param[in] a The integrated yield of the CB */
     void SetIntegratedYield(const Variable &a){intYld_ = a;};
     /*! Set the B(GT)
-    *   \param[in] a The Delta Function B(GT) of the neutron
-    */
+    *   \param[in] a The Delta Function B(GT) of the neutron */
     void SetBgt(const Variable &a){bgt_ = a;};
     /*! Set the branching ratio
-    *   \param[in] a The Delta Function Branching Ratio of the neutron
-    */
+    *   \param[in] a The Delta Function Branching Ratio of the neutron */
     void SetBranchingRatio(const Variable &a){br_ = a;};
     /*! Set the Excitation energy
-    *   \param[in] a The excitation energy of the state (S_n + E_n)
-    */
+    *   \param[in] a The excitation energy of the state (S_n + E_n) */
     void SetExcitationEnergy(const Variable &a){ex_ = a;};
     /*! Set the log(ft)
-    *   \param[in] a The log(ft) of the neutron
-    */
+    *   \param[in] a The log(ft) of the neutron */
     void SetLogft(const Variable &a){logft_ = a;};
 private:
     //!Instance of the efficiency and error calculators
@@ -125,14 +115,11 @@ private:
 
     /*! Calculate the energy of the neutron from the ToF
     *   \param[in] mu The ToF of the neutron
-    *   \return The energy of the neturon
-    */
+    *   \return The energy of the neturon */
     double CalcEnergy(const double &mu);
-
     /*! Adjust the input variable for the intrinsic neutron efficiency
     *   \param[in] var The variable to adjust for the intrinsic efficiency
-    *   \return The intrinsic efficiency adjusted variable
-    */
+    *   \return The intrinsic efficiency adjusted variable */
     Variable AdjEff(const Variable &var);
     /*! Calculate the efficiency of the neutron */
     void CalcEnEff(void);

@@ -21,30 +21,35 @@ SENS="'../results/vast/working/working.sens' u 1:($4*res):($5*res) w yerrorbars 
 #---------- PLOT THE NEUTRON INDIVIDUAL STUFF --------
 file0='../results/vast/working/working.dat'
 set ylabel offset 1,0 "I_n (/100 decays)"
-set arrow 1 from sn,0.0002 to sn,0.002 @ARSTY
-set arrow 2 from qbeta,0.0002 to qbeta,0.002 @ARSTY1
-set output '../pics/vast/working/working-br.eps'
+set arrow 1 from sn,0.002 to sn,0.014 @ARSTY
+set arrow 2 from qbeta,0.002 to qbeta,0.014 @ARSTY1
+set terminal wxt 0
+#set output '../pics/vast/working/working-br.eps'
 plot file0 u ($3+sn):7 w impulses lw 5 lc rgb prim3
 
 set ylabel offset 1,0 "B(GT)"
 set arrow 1 from sn,0 to sn,0.06 @ARSTY
 set arrow 2 from qbeta,0 to qbeta,0.06 @ARSTY1
-set output '../pics/vast/working/working-bgt.eps'
+set terminal wxt 1
+#set output '../pics/vast/working/working-bgt.eps'
 plot [][0:0.06] file0 u ($3+sn):8 w impulses lw 5 lc rgb prim3, @SENS
 
-
 #---------- PLOT THE NEUTRON DENSITY STUFF --------
-file1='../results/vast/working/working.bgt'
-set ylabel offset 1,0 "I_n / (0.001 MeV)"
-set arrow 1 from sn,0 to sn,0.0004 @ARSTY
-set arrow 2 from qbeta,0 to qbeta,0.0004 @ARSTY1
-set output '../pics/vast/working/working-nden.eps'
-plot [][0:0.0004]file1 u 1:3:4 w filledcurve lc rgb comp5, '' u 1:2 w steps lc rgb prim3 lw 3
-
-set terminal wxt
 highRange=0.07
-set ylabel offset 1,0 "B(GT) / (0.001 MeV)"
+
+file1='../results/vast/working/working.bgt'
+set ylabel offset 1,0 "I_n / (0.5 MeV)"
+set arrow 1 from sn,0 to sn,highRange @ARSTY
+set arrow 2 from qbeta,0 to qbeta,highRange @ARSTY1
+#set output '../pics/vast/working/working-nden.eps'
+set terminal wxt 2
+plot [4:11][0:highRange]file1 u ($1+res*0.5):2:3:4 w yerrorbars ls 2 ps 0,\
+     '' u 1:2 w steps ls 1
+
+set ylabel offset 1,0 "B(GT) / (0.5 MeV)"
 set arrow 1 from sn,0 to sn,highRange @ARSTY
 set arrow 2 from qbeta,0 to qbeta,highRange @ARSTY1
 #set output '../pics/vast/working/working-nden-bgt.eps'
-plot [4:11][0:highRange] file1 u ($1+res*0.5):5:6:7 w yerrorbars lc rgb comp5 ps 0.0 lw 3, '' u 1:5 w steps lc rgb prim3 lw 3, @SENS
+set terminal wxt 3
+plot [4:11][0:highRange] file1 u ($1+res*0.5):5:6:7 w yerrorbars ls 2 ps 0,\
+     '' u 1:5 w steps ls 1, @SENS
