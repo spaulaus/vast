@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Configuration>
+    <!-- your name, email and date -->
+    <Author>
+        <Name>S. V. Paulauskas</Name>
+        <Email>stanpaulauskas@gmail.com</Email>
+        <Date>February 28, 2015</Date>
+    </Author>
+
+    <!-- Short description of the experiment here. -->
+    <Description>
+        Configuration file for doing the analysis of the detector response
+        simulations performed by Sergey.
+    </Description>
+
+    <Simulation>
+        <!-- These are the simulation data -->
+        <inputBase>data/ilyushkin/vandle/response/8keVee-06-06-2014/</inputBase>
+        <outputBase>results/sim/working/</outputBase>
+
+        <flightPath value="50.5" error="0.0" unit="cm"/>
+
+        <energies>
+            <e0  file="0069keV.txt" energy="69"/>
+            <e1  file="0113keV.txt" energy="113"/>
+            <e2  file="0152keV.txt" energy="152"/>
+            <e3  file="0300keV.txt" energy="300"/>
+            <e4  file="0400keV.txt" energy="400"/>
+            <e5  file="0600keV.txt" energy="600"/>
+            <e6  file="0800keV.txt" energy="800"/>
+            <e7  file="1000keV.txt" energy="1000"/>
+            <e8  file="1200keV.txt" energy="1200"/>
+            <e9  file="1800keV.txt" energy="1800"/>
+            <e10 file="2000keV.txt" energy="2000"/>
+            <e11 file="3000keV.txt" energy="3000"/>
+            <e12 file="4000keV.txt" energy="4000"/>
+            <e13 file="5000keV.txt" energy="5000"/>
+        </energies>
+        <output>
+            <!-- These guys will store all the histograms of the fits -->
+            <sims>sims.root</sims>
+            <!-- This one stores the results for the fits to the convolution -->
+            <convData>convParms.dat</convData>
+            <!-- This one stores the results from the un-convoluted fits -->
+            <fitData>fitParms.dat</fitData>
+        </output>
+
+        <!-- The fitting range as measured from the peak position-->
+        <range>
+            <low value="20"/>
+            <high value="1480.0"/>
+        </range>
+    </Simulation>
+</Configuration>

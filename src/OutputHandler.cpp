@@ -31,7 +31,6 @@ void OutputHandler::OutputBasics(vector<Neutron> &nvec, Decay &dky,
     EffCalculator eff;
     for(auto it = nvec.begin();
         it != nvec.end(); it++) {
-        //---------- CALCULATE THE TOTAL NUMBER OF NEUTRONS --------
         intN += it->GetRawIntegratedYield().GetValue();
         totN += it->GetIntegratedYield().GetValue() /
             eff.GetBetaEff(it->GetEnergy(), dky).GetValue() /

@@ -29,7 +29,7 @@ void ReadData(vector<Neutron> &nvec, const string &file);
 ///The main program function
 int main(int argc, char* argv[]) {
     if(argc < 2) {
-        cerr << "You must provide me the name of the configuration file!!"
+        cerr << "You must provide the name of the configuration file!!"
              << endl;
         cerr << "Usage: ./vast /path/to/configuration/file" << endl;
         exit(0);
@@ -43,10 +43,11 @@ int main(int argc, char* argv[]) {
     FlagHandler flags = cfg.ReadFlags();
     bool basic = flags.GetFlag("basic");
 
-    cout << "Performing the Fit and reading the Fit configuration" << endl;
     FitHandler fit = cfg.ReadFit();
-    if(flags.GetFlag("doFit"))
+    if(flags.GetFlag("doFit")) {
+        cout << "Performing the Fit and reading the Fit configuration" << endl;
         TofFitter fitter(fit, fls);
+    }
 
     cout << "Reading the Decay information" << endl;
     Decay decay = cfg.ReadDecay();

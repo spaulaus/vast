@@ -6,11 +6,12 @@ vpath %.cpp src/
 vpath %.hpp inc/
 vpath %.o obj/
 
+CINCLUDEDIRS = -Iinc -I/home/vincent/programs/inc
+
 #Set some of the compile options
 CXX = g++
 CXXFLAGS = -fPIC -g -std=c++11 -Wall $(CINCLUDEDIRS)
 LDLIBS = -ldl -lpthread -lPhysConstants -lSignalGenerator -lpugixml
-CINCLUDEDIRS = -Iinc
 c++SrcSuf = cpp
 
 #Set the name of the program to be compiled

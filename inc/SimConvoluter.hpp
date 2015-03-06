@@ -44,7 +44,7 @@ public:
 private:
     std::map<double, std::string> energies_;
     std::pair<double,double> rng_, convRng_;
-    std::string inputDir_, outputDir_, convHists_, simHists_, fitFile_, convFile_;
+    std::string inputDir_, outputDir_, simHists_, fitFile_, convFile_;
     double flightPath_;
     std::string header_ = "#Energy(keV) ToF(ns) sigma sigmaErr alpha alphaErr n nErr";
 

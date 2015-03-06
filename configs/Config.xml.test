@@ -25,7 +25,8 @@
     LeRIBSS 2012 VANDLE experiment, 2 Clovers, 2 Beta scintillators,
     MTC, 48 small VANDLE modules
 
-    This is setup for the 77Cu analysis.
+    This is a testing configuration for the program. I will probably stick
+    to analyzing the 77Cu data with this guy.
   </Description>
 
   <!-- This is the place to put some of the general information
@@ -72,44 +73,6 @@
     </Output>
   </Files>
 
-  <Simulation>
-    <!-- These are the simulation data -->
-    <inputBase>data/ilyushkin/8keVee-06-06-2014/</inputBase>
-    <outputBase>results/sim/8keVee-06-06-2014/</outputBase>
-    <energies>
-      <e0  file="0069keV.txt" energy="69"/>
-      <e1  file="0113keV.txt" energy="113"/>
-      <e2  file="0152keV.txt" energy="152"/>
-      <e3  file="0300keV.txt" energy="300"/>
-      <e4  file="0400keV.txt" energy="400"/>
-      <e5  file="0600keV.txt" energy="600"/>
-      <e6  file="0800keV.txt" energy="800"/>
-      <e7  file="1000keV.txt" energy="1000"/>
-      <e8  file="1200keV.txt" energy="1200"/>
-      <e9  file="1800keV.txt" energy="1800"/>
-      <e10 file="2000keV.txt" energy="2000"/>
-      <e11 file="3000keV.txt" energy="3000"/>
-      <e12 file="4000keV.txt" energy="4000"/>
-      <e13 file="5000keV.txt" energy="5000"/>
-    </energies>
-    <output>
-      <!-- These guys will store all the histograms of the fits -->
-      <sims>sims.root</sims>
-      <conv>conv.root</conv>
-      <!-- This one stores the results for the fits to the convolution -->
-      <convData>convParms.dat</convData>
-      <!-- This one stores the results from the un-convoluted fits -->
-      <fitData>fitParms.dat</fitData>
-    </output>
-
-    <!-- The fitting range as measured from the peak position-->
-    <range>
-      <low value="20"/>
-      <high value="1480.0"/>
-    </range>
-  </Simulation>
-
-
   <!-- This has all the information about the decay of interest. -->
   <Decay>
     <!-- z of the parent -->
@@ -150,7 +113,9 @@
       <!-- peaks for the singles fitting -->
       <sngl>
         <pk0  value="24.0"/>
+        <pk1  value="36.0"/>
         <pk1  value="30.0"/>
+        <pk1  value="35.0"/>
         <pk2  value="38.128"/>
         <pk3  value="40.0"/>
         <pk4  value="44.917"/>
@@ -186,20 +151,18 @@
          recognizes : sngl,g1,g2
     -->
     <pkList value="sngl"/>
-
     <!-- The fitting range -->
     <range>
       <low value="0.0"/>
       <high value="200.0"/>
     </range>
-
     <!-- The Binning for the picture -->
     <binning value="0.5" />
-
     <!-- How much can the peaks move -->
     <wiggle value="200." />
-
-    <!-- Parameterization for the fitted parameters (not quite implemented)-->
+    </Fitting>
+    <CbParameterization>
+        <!-- Parameterization for the CB parameters -->
     <alpha>
       <aI value="0.0130289072593045"/>
       <aH value="-0.641803483244778"/>
@@ -216,5 +179,5 @@
       <nK value="0.00189178692442985"/>
       <nL value="1.33190840921066"/>
     </n>
-  </Fitting>
+    </CbParameterization>
 </Configuration>

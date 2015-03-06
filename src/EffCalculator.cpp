@@ -137,15 +137,15 @@ Variable EffCalculator::GetEff(const Variable &energy, const EffTypes &curve) {
             coeffs.insert(make_pair("e2", Variable(0.1, 0.0, "MeV")));
             break;
         case(EffTypes::svpTestBan1) :
-            coeffs.insert(make_pair("a",  Variable(-1.45548, 0.2412,"")));
-            coeffs.insert(make_pair("b",  Variable(1.69698, 0.3494,"")));
+            coeffs.insert(make_pair("a",  Variable(4.4967, 0.3058,"")));
+            coeffs.insert(make_pair("b",  Variable(-0.658414, 0.0657,"")));
             coeffs.insert(make_pair("c",  Variable(0.0, 0.0, "")));
-            coeffs.insert(make_pair("d",  Variable(2.28361, 0.09504, "")));
-            coeffs.insert(make_pair("e",  Variable(0.197731, 0.07555, "")));
-            coeffs.insert(make_pair("f",  Variable(0.341611, 0.1275, "")));
-            coeffs.insert(make_pair("g",  Variable(50., 0.0, "")));
-            coeffs.insert(make_pair("e1", Variable(2.0, 0.0, "MeV")));
-            coeffs.insert(make_pair("e2", Variable(0.3, 0.0, "MeV")));
+            coeffs.insert(make_pair("d",  Variable(6.21952, 0.5401, "")));
+            coeffs.insert(make_pair("e",  Variable(4.89239, 0.3106, "")));
+            coeffs.insert(make_pair("f",  Variable(-1.49588, 0.08555, "")));
+            coeffs.insert(make_pair("g",  Variable(1.43805, 0.2167, "")));
+            coeffs.insert(make_pair("e1", Variable(1.0, 0.0, "MeV")));
+            coeffs.insert(make_pair("e2", Variable(0.1, 0.0, "MeV")));
         case(EffTypes::mmfTheory) :
             coeffs.insert(make_pair("a",  Variable(4.78289, 0.09881, "")));
             coeffs.insert(make_pair("b",  Variable(-0.868005, 0.05189, "")));

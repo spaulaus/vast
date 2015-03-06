@@ -37,38 +37,25 @@ SimConvoluter::SimConvoluter(const std::string &cfg) {
              << "fill up all of my naughty bits." << endl << endl;
         pugi::xml_node base = doc.child("Configuration").child("Simulation");
 
-        flightPath_ = 
-            doc.child("Configuration").child("Experiment").child("flightPath").
-            attribute("value").as_double();
+        flightPath_ = base.child("flightPath").attribute("value").as_double();
 
-        //Here are the base directories that things will be saved to
         inputDir_ = base.child("inputBase").child_value();
         outputDir_ = base.child("outputBase").child_value();
-        
-        //check that the output directory exists
+
         FileChecker result ("dir",outputDir_);
 
-        //Here are all our output filenames
-        convHists_ = base.child("output").child("conv").child_value();
         simHists_ = base.child("output").child("sims").child_value();
         convFile_ = base.child("output").child("convData").child_value();
         fitFile_ = base.child("output").child("fitData").child_value();
-        
-        //Read in the range for the fitting
+
         rng_ = make_pair(base.child("range").
                          child("low").attribute("value").as_double(),
                          base.child("range").
                          child("high").attribute("value").as_double());
 
-        //Read in all the energies for fitting and their associated filenames
         for(auto en : base.child("energies").children())
             energies_.insert(make_pair(en.attribute("energy").as_double(),
                                        en.attribute("file").value()));
-        
-        // //Open up the ROOT file to store the histograms
-        // f_.Open((outputDir_+histogramFile_).c_str(),"RECREATE");
-        
-        //Finally begin to do the fits to the simulation data
         FitSim();
     } else {
         cerr << "We had errors with the config file. " << endl
@@ -79,159 +66,125 @@ SimConvoluter::SimConvoluter(const std::string &cfg) {
 }
 
 double SimConvoluter::CalcBetaRes(const double &tof) {
-    //These parameters are from Miguel's spreadsheet
-    //We need to convert from FWHM to sigma!!
     if(tof <= 42.5)
         return((0.071824559*tof+1.5544112228)/(2*sqrt(2*log(2))));
     else
         return((0.0168145157*tof+3.7803929763)/(2*sqrt(2*log(2))));
 }
 
-void SimConvoluter::FitMc(const double &en, const double &mu, 
-                          const double &sigma, const double &alpha, 
+void SimConvoluter::FitMc(const double &en, const double &mu,
+                          const double &sigma, const double &alpha,
                           const double &n, ofstream &convOut) {
-    convOut << header_ << endl;
-
-    //---------- DO THE CONVOLUTION AND RECALCULATE THE PARAMETERS -------
     double simLow  = mu - rng_.first;
     double simHigh = mu + rng_.second;
-    RooRealVar simTof("simTof", "tof for the simulation", 0.0, 4000., "ns");
-    simTof.setBins(1e5,"cache");
-    
-    //Set the information for the resolution model
-    double detRes = CalcBetaRes(mu);
-    RooRealVar res("res", "res for gauss model", detRes / (2*sqrt(2*log(2))));
+    RooRealVar tof("tof", "tof for the simulation", 0.0, 4000., "ns");
+    tof.setBins(1e5,"cache");
+
+    RooRealVar res("res", "res for gauss model", CalcBetaRes(mu));
     RooRealVar x("x", "mean for gauss model", 0.0);
-    
+
     RooRealVar simMu("simMu","", mu);
     RooRealVar simSigma("simSigma", "", sigma);
     RooRealVar simAlpha("simAlpha", "", alpha);
     RooRealVar simN("simN", "", n);
-    RooCBShape simCb("simCb", "", simTof, simMu, simSigma, simAlpha, simN);
-    
-    RooGaussModel gauss("gauss", "", simTof, x, res);
-    RooFFTConvPdf pk("pk","",simTof,simCb,gauss);
-    RooDataSet* mcData = pk.generate(simTof,1.e6);
-    
+    RooCBShape simCb("simCb", "", tof, simMu, simSigma, simAlpha, simN);
+
+    RooGaussModel gauss("gauss", "", tof, x, res);
+    RooFFTConvPdf pk("pk","",tof,simCb,gauss);
+    RooDataSet* mcData = pk.generate(tof,1.e6);
+
     RooRealVar zYield("zYield", "", 1.e6, 0., 1.e8);
     RooRealVar zMu("zMu","", mu);
     RooRealVar zSigma("zSigma", "", 2., 0., 100.);
     RooRealVar zAlpha("zAlpha", "", -1.0, -100., 0.);
-    RooRealVar zN("zN", "", 1., 0., 50.);
-    RooCBShape zCb("zCb", "", simTof, zMu, zSigma, zAlpha, zN);
-    
+    RooRealVar zN("zN", "", 1., 0., 500.);
+    RooCBShape zCb("zCb", "", tof, zMu, zSigma, zAlpha, zN);
+
     RooAddPdf model1("model1", "", RooArgList(zCb),RooArgList(zYield));
-    
-    RooFitResult *mcFit = model1.fitTo(*mcData, NumCPU(3), Save(), 
+
+    RooFitResult *mcFit = model1.fitTo(*mcData, NumCPU(3), Save(),
                                        Range(simLow, simHigh));
     if(mcFit->statusCodeHistory(0) == 0) {
-        //Do the plots
-        RooPlot* frame1 = simTof.frame();
-        frame1 = simTof.frame(rng_.second);
-        frame1->SetTitle("");
-        frame1->SetXTitle("Time-of-Flight (ns)");
-        frame1->SetYTitle("Events/ns");
-        frame1->GetYaxis()->SetTitleOffset(1.2);
-        frame1->SetAxisRange(simLow,simHigh,"X");        
-        
-        mcData->plotOn(frame1, Name("mcData"));
-        model1.plotOn(frame1,Name("model1"));
-        
-        stringstream canvName;
-        canvName << "conv" << en;
-        TCanvas* canv = new TCanvas(canvName.str().c_str(),"",0,0,700,500);
-        canv->cd();
-        frame1->Draw();
-        canv->Write(canvName.str().c_str());
-        delete canv;
-        
-        convOut << setprecision(6) 
-                << en << " " << zMu.getValV() << " " 
+        stringstream dataName, modelName;
+        dataName << "mc-data-" << en;
+        mcData->Write(dataName.str().c_str());
+        modelName << "conv-" << en;
+        model1.Write(modelName.str().c_str());
+
+        convOut << setprecision(6)
+                << en << " " << zMu.getValV() << " "
                 << zSigma.getValV() << " " << zSigma.getError() << " "
-                << zAlpha.getValV() << " " << zAlpha.getError() << " " 
+                << zAlpha.getValV() << " " << zAlpha.getError() << " "
                 << zN.getValV() << " " << zN.getError() << " " << endl;
-        cout << endl << endl << "The fit to the convoluted spectrum converged " 
-             << " successfully." << endl;
     }else {
-        cout << endl << endl << "Oh, Jesus, the fit did not converge for the " 
+        cout << endl << endl << "Oh man! The fit did not converge for the "
              << "simulation to the " << en << " keV" << " case." << endl;
         exit(1);
     }
 }
 
 void SimConvoluter::FitSim(void) {
-    //Prepare the datastreams
+    PhysConstants consts;
+    double c = consts.GetConstant("c").GetValue()*(100/1e9); //cm/ns
+    double mass = consts.GetConstant("neutronMass").GetValue()/c/c; //MeV
+
     ofstream simOut((outputDir_+fitFile_).c_str());
     simOut << header_ << endl;
     ofstream convOut((outputDir_+convFile_).c_str());
-
+    convOut << header_ << endl;
     TFile f((outputDir_+simHists_).c_str(), "RECREATE");
 
     RooRealVar tof("tof","tof", 0., 4000.);
     RooPlot* frame = tof.frame();
     frame = tof.frame(2000);
+    frame->SetName("frame");
     frame->SetTitle("");
     frame->SetXTitle("Time-of-Flight (ns)");
     frame->SetYTitle("Events / 2 ns");
     frame->GetYaxis()->SetTitleOffset(1.2);
+    tof.Write();
+    frame->Write();
 
     for(const auto it : energies_) {
         string inputName = inputDir_ + it.second;
         FileChecker dataChk("file", inputName);
-        
-        //Set the information for the peaks
-        PhysConstants consts;
-        double mass = consts.GetConstant("neutronMass").GetValue(); //MeV/c^2
-        double c = consts.GetConstant("c").GetValue()*(100/1e9); //cm/ns
-        double peak = (flightPath_/c)*sqrt(mass/(2*it.first/1000.));
-        
-        //Read in the data and set the variable to fit.
+
+        double peak = (flightPath_)*sqrt(mass/(2*it.first/1000.));
+
         double low = peak-rng_.first;
         double high = peak+rng_.second;
-        RooDataSet *data = RooDataSet::read(inputName.c_str(), 
+        RooDataSet *data = RooDataSet::read(inputName.c_str(),
                                             RooArgList(tof));
 
-        //Setup the CB to fit
-        RooRealVar yield("yield", "", 1.e4, 0., 1.e7);
-        RooRealVar mu("mu","", peak, peak-300., peak+300.);
-        RooRealVar sigma("sigma", "", 2., 0, 20.);
+        RooRealVar yield("yield", "", 1.e4, 0., 1.e8);
+        RooRealVar mu("mu","", peak, peak-30., peak+30.);
+        RooRealVar sigma("sigma", "", 2., 0, 200.);
         RooRealVar alpha("alpha", "", -1., -10., 0.);
-        RooRealVar n("n", "", 2., 0., 20.);
+        RooRealVar n("n", "", 2., 0., 200.);
         RooCBShape cb("cb", "", tof, mu, sigma, alpha, n);
-        
-        //marry the CB with the yield
+
         RooAddPdf model("model", it.second.c_str(), RooArgList(cb), RooArgList(yield));
-        
-        //Perform the fit and store the results in the "fitResult" variable
-        RooFitResult* fitResult = model.fitTo(*data, NumCPU(3), Save(), 
+        RooFitResult* fitResult = model.fitTo(*data, NumCPU(3), Save(),
                                               Range(low, high));
 
         if(fitResult->statusCodeHistory(0) == 0) {
-            data->plotOn(frame,Name("data"));
-            model.plotOn(frame,Name("model"));
-            
-            stringstream canvName;
-            canvName << "sim" << it.first;
-            TCanvas* canv = new TCanvas(canvName.str().c_str(),"",0,0,700,500);
-            canv->cd();
-            frame->Draw();
-            canv->Write(canvName.str().c_str());
-            delete canv;
-            frame->remove("data");
-            frame->remove("model");
-            
-            cout << endl << endl << "The Fit to the simulated data" << it.second 
-                 << "  keV.dat converged successufully, proceeding with fit "
-                 << "to convoluted function." << endl << endl;
-            simOut << setprecision(6) 
-                   << it.first << " " << mu.getValV() << " " 
+            stringstream dataName, modelName;
+
+            dataName << "sim-data-" << it.first;
+            data->Write(dataName.str().c_str());
+
+            modelName << "sim-model-" << it.first;
+            model.Write(modelName.str().c_str());
+
+            simOut << setprecision(6)
+                   << it.first << " " << mu.getValV() << " "
                    << sigma.getValV() << " " << sigma.getError() << " "
-                   << alpha.getValV() << " " << alpha.getError() << " " 
+                   << alpha.getValV() << " " << alpha.getError() << " "
                    << n.getValV() << " " << n.getError() << " " << endl;
-            FitMc(it.first, mu.getValV(), sigma.getValV(), alpha.getValV(), n.getValV(), 
-                  convOut);
+            FitMc(it.first, mu.getValV(), sigma.getValV(), alpha.getValV(),
+                  n.getValV(), convOut);
         } else {
-            cerr << endl << endl << "Oh, Jesus, the fit to the simulated data for " 
+            cerr << endl << endl << "Oh, man! The fit to the simulated data for "
                  << it.second << "keV.dat did not converge!!" << endl;
             simOut.close();
             f.Close();

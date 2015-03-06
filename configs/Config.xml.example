@@ -25,7 +25,8 @@
     LeRIBSS 2012 VANDLE experiment, 2 Clovers, 2 Beta scintillators,
     MTC, 48 small VANDLE modules
 
-    This is setup for the 77Cu analysis.
+    This is a testing configuration for the program. I will probably stick
+    to analyzing the 77Cu data with this guy.
   </Description>
 
   <!-- This is the place to put some of the general information
