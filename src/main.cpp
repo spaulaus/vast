@@ -12,6 +12,7 @@
 #include <utility>
 
 #include <Variable.hpp>
+#include <ezETAProgressBar.hpp>
 
 #include "BGTCalculator.hpp"
 #include "Configuration.hpp"
@@ -35,6 +36,8 @@ int main(int argc, char* argv[]) {
         exit(0);
     }
 
+
+
     Configuration cfg(argv[1]);
     FileHandler fls = cfg.ReadFiles();
     Experiment exp = cfg.ReadExperiment();
@@ -53,31 +56,33 @@ int main(int argc, char* argv[]) {
     Decay decay = cfg.ReadDecay();
 
     vector<Neutron> singles;
+    cout << "We are now reading the fitted data." << endl;
+    ReadData(singles, fls.GetOutputName("gsFit"));
+
+    cout << "Integrating neutron peaks and calculating B(GT)" << endl;
+    ez::ezETAProgressBar eta(singles.size());
+    eta.start();
+    for(vector<Neutron>::iterator it = singles.begin(); it!= singles.end();
+        it++, ++eta) {
+        Integrator integrator(*it, fit.GetRange());
+        BGTCalculator bgt(*it, decay, exp);
+    }
+
     if(basic) {
-        cout << "We are now reading the fitted data." << endl;
-        ReadData(singles, fls.GetOutputName("gsFit"));
-        for(vector<Neutron>::iterator it = singles.begin(); it!= singles.end();
-            it++) {
-            cout << "Integrating the neutron peak" << endl;
-            Integrator integrator(*it, fit.GetRange());
-            cout << "Calculating the B(GT)" << endl;
-            BGTCalculator bgt(*it, decay, exp);
-        }
+        cout << "Outputting the basic neutron information" << endl;
         output.OutputBasics(singles, decay, exp, fls.GetOutputName("neutrons"));
+    }
 
-        if(flags.GetFlag("theory")) {
-            cout << "Outputting the information for the CGM calculations"
-                 << endl;
-            output.OutputTheory(singles, fls.GetOutputName("cgm"));
-        }
+    if(flags.GetFlag("theory")) {
+        cout << "Outputting the information for the CGM calculations"
+             << endl;
+        output.OutputTheory(singles, fls.GetOutputName("cgm"));
+    }
 
-        if(flags.GetFlag("density")) {
-            cout << "Calculate the neutron density " << endl;
-            cout << "We are starting to calculate the neutron density + B(GT)"
-                 << endl;
-            output.OutputDensity(singles, decay, exp,
-                                 fls.GetOutputName("density"));
-        }
+    if(flags.GetFlag("density")) {
+        cout << "Calculating the neutron density " << endl;
+        NeutronDensity nden(singles, decay.GetQBetaN().GetValue());
+        output.OutputDensity(nden, decay, exp, fls.GetOutputName("density"));
     }
 }
 

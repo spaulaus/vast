@@ -29,9 +29,9 @@ public:
     *   \param[in] band The error band that we are calculating
     *   \param[in] eg The energy of the gating gamma (if there is one)
     */
-    BGTCalculator(std::map<double,double> &density, const Decay &decay,
+    BGTCalculator(const std::map<double,double> &density, const Decay &decay,
                   const Experiment &exp, const std::string &band = "",
-                  const Variable &eg = Variable(0.0,1.0,""));
+                  const Variable &eg = Variable(0.0,1.0,"MeV"));
     /*! The constructor used when calculating for a single neutron peak
     *   \param[in] neutron An object of Neutron class
     *   \param[in] decay An object of Decay class
@@ -56,6 +56,9 @@ private:
     ErrorCalculator err_;
     EffCalculator eff_;
 
+    static constexpr double bgtCoeff_ = 3812.413; //!< D/(ga/gv)**2 in units of s
+    Variable currentEx_; //!< The excitation energy for the current calculation.
+
     Variable geEff_, eG_, eN_, f_, omega_, yld_;
     std::string band_;
     std::map<double,double> density_, bgtMap_, logftMap_, sDensity_;
@@ -68,7 +71,7 @@ private:
     Variable CalcLogft(const Variable &en, const Variable &val,
                      const bool &isIndv = true);
 
-    void HandleNeutronDensity(const std::map<double,double> &density);
+    void HandleNeutronDensity(void);
     void HandleNeutronIndividual(Neutron &neutron);
 };
 #endif //__BGTCALCULATOR_HPP__

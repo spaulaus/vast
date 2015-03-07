@@ -37,7 +37,6 @@ TofFitter::TofFitter(const FitHandler &fit, const FileHandler &fls) {
     binning_ = fit.GetBinning();
     peaks_ = fit.GetSnglPeaks();
     rng_ = fit.GetRange();
-    wiggle_ = fit.GetWiggle();
 
     dataFile_ = fls.GetInputName("gsTof");
     eps_ = fls.GetOutputName("picGs");
@@ -87,10 +86,10 @@ void TofFitter::GenerateNames(void) {
 }
 
 void TofFitter::PerformFit(void) {
-    ParamCalculator params;
     RooRealVar tof("tof","tof", 0.0, rng_.first, rng_.second);
     RooArgList cbs, ylds;
 
+    ParamCalculator params;
     RooConstVar e("e","",params.GetE().GetValue());
     RooConstVar d("d","",params.GetD().GetValue());
     RooConstVar c("c","",params.GetC().GetValue());
@@ -107,9 +106,9 @@ void TofFitter::PerformFit(void) {
    for(unsigned int i = 0; i < yields_.size(); i++) {
         stringstream fSig, fAlph, fN;
         RooRealVar *yield = new RooRealVar(yields_[i].c_str(), "", yStart_,
-                                     yLow_, yHigh_);
-        RooRealVar *mu = new RooRealVar(mus_[i].c_str(),"",peaks_[i],
-                      peaks_[i]-wiggle_, peaks_[i]+wiggle_);
+                                           yLow_, yHigh_);
+        RooRealVar *mu = new RooRealVar(mus_[i].c_str(), "", peaks_[i],
+                                        rng_.first, 150.);
 
         fSig << "e*pow(" << mus_[i] << ",4)+ d*pow(" << mus_[i] <<",3) + "
              << "c*pow(" << mus_[i] << ",2) + b*" << mus_[i] << "+a";
@@ -137,6 +136,9 @@ void TofFitter::PerformFit(void) {
     RooAddPdf model("model", "", cbs, ylds);
     RooDataSet *data = RooDataSet::read(dataFile_.c_str(), RooArgList(tof));
     RooFitResult* fitResult = model.fitTo(*data, NumCPU(3), Save(),
+                                          Offset(kTRUE),
+                                          PrintLevel(fit_.GetPrintLevel()),
+                                          Minimizer("Minuit2"),
                                           Range(rng_.first, rng_.second));
 
     hasConvergence_ = fitResult->statusCodeHistory(0) == 0;
@@ -176,26 +178,22 @@ void TofFitter::PerformFit(void) {
         exit(1);
     }
 
-    RooPlot* frame = tof.frame();
-    frame = tof.frame((rng_.second-rng_.first)*binning_);
-    frame->SetTitle("");
-    frame->SetAxisRange(rng_.first,rng_.second,"X");
-    frame->SetXTitle("Time-of-Flight (ns)");
-    frame->SetYTitle("Events / 2 ns");
-    frame->GetYaxis()->SetTitleOffset(1.2);
+    RooPlot frame("frame", "", tof, rng_.first, rng_.second,
+                  (rng_.second-rng_.first)*binning_);
+    frame.SetTitle("");
+    frame.SetAxisRange(rng_.first,rng_.second,"X");
+    frame.SetXTitle("Time-of-Flight (ns)");
+    stringstream ylabel;
+    ylabel << "Events / " << (int)(1./binning_) << "ns" << endl;
+    frame.SetYTitle(ylabel.str().c_str());
+    frame.GetYaxis()->SetTitleOffset(1.2);
 
-    data->plotOn(frame,Name("data"));
-    model.plotOn(frame,Name("model"));
-
-    int lineColor = 36;
-    for(unsigned int i = 0; i < components_.size(); i++, lineColor++) {
-        model.plotOn(frame,Components(components_.at(i).c_str()),
-                     LineColor(lineColor), LineStyle(2));
-    }
+    data->plotOn(&frame,Name("data"));
+    model.plotOn(&frame,Name("model"));
 
     TCanvas* canvas = new TCanvas("canvas","",0,0,700,500);
     canvas->cd();
-    frame->Draw();
+    frame.Draw();
     canvas->SaveAs(eps_.c_str());
     delete(canvas);
 }

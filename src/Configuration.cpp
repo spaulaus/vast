@@ -75,9 +75,9 @@ FitHandler Configuration::ReadFit(void) {
         g2Peaks.push_back(pks.attribute("value").as_double());
     fit.SetGate2Peaks(g2Peaks);
 
-    fit.SetBinning(ft.child("binning").attribute("value").as_double());
+    fit.SetBinning(ft.child("binning").attribute("value").as_double(0.5));
     fit.SetPeakList(ft.child("pkList").attribute("value").as_string());
-    fit.SetWiggle(ft.child("wiggle").attribute("value").as_double());
+    fit.SetPrintLevel(ft.child("PrintLevel").attribute("value").as_int(1));
 
     double low =
         ft.child("range").child("low").attribute("value").as_double();

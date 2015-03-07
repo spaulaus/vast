@@ -66,6 +66,10 @@ double ErrorCalculator::CalcEffErr(const map<string,Variable> &vars,
 
         double eff = exp(pow(pow(a+b*x+c*x*x,-g) +
                              pow(d+e*y+f*y*y,-g), -1/g))/100.;
+        if(std::isnan(eff)) {
+            i--;
+            continue;
+        }
         mcEffs.push_back(eff);
     }
 
@@ -89,7 +93,8 @@ double ErrorCalculator::CalcIntegratedYldErr(const double &fitYldErr,
                                              const double &fitSimp,
                                              const double &infSimp){
     double xErr = (fitYldErr/fitSimp) * infSimp;
-    return(sqrt(xErr*xErr+fitYldErr*fitYldErr));
+    double err = sqrt(xErr*xErr+fitYldErr*fitYldErr);
+    return(err);
 }
 
 double ErrorCalculator::CalcLogftErr(const Variable &br,

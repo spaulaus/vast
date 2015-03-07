@@ -46,6 +46,10 @@ set terminal wxt enhanced noraise 2
 plot file u 2:7:8 w yerrorbars pt 7 ps 3 lc rgb prim3,\
      h(x) lw 3 lt 1 lc rgb comp3
 
+set print
+print f(15.)
+
+
 set print '../results/sim/8keVee-06-06-2014/convParam.fit'
 print "alpha(tof)=i*x**3+h*x**2+g*x+f"
 print "f_ = Variable(",f,", ",f_err,", \"\");"

@@ -7,17 +7,14 @@
 
 #include <cmath>
 
-#include <SignalGenerator.hpp>
-
 #include "EffCalculator.hpp"
 #include "NeutronDensity.hpp"
 
 using namespace std;
 
-NeutronDensity::NeutronDensity(std::vector<Neutron> &neutrons, const double &len,
-                               const double &res, const Variable &ge) {
-    len_     = len;
-    res_     = res;
+NeutronDensity::NeutronDensity(std::vector<Neutron> &neutrons,
+                               const double &qbetan, const Variable &ge) {
+    qbetan_  = qbetan;
     neutrons_ = neutrons;
 
     if(ge.GetValue() == 0)
@@ -29,22 +26,17 @@ NeutronDensity::NeutronDensity(std::vector<Neutron> &neutrons, const double &len
 }
 
 void NeutronDensity::CalcDensity(const Variable &ge, const Variable &geEff) {
-    SignalGenerator sig, sigLow, sigHigh;
-    sig.SetSignalType("gaussian");
-    sigLow.SetSignalType("gaussian");
-    sigHigh.SetSignalType("gaussian");
-
     for(vector<Neutron>::iterator it = neutrons_.begin();
         it != neutrons_.end(); it++) {
         double br = it->GetBranchingRatio().GetValue();
         double brErr = it->GetBranchingRatio().GetError();
-
-        sig.SetDelay(it->GetEnergy().GetValue()+ge.GetValue());
-        sig.SetSigma(it->GetEnergy().GetError());
-
         vector<double> brList = {br-brErr,br,br+brErr};
+
+        mu_ = it->GetEnergy().GetValue()+ge.GetValue();
+        sigma_ = it->GetEnergy().GetError();
+
         for(auto const &i : brList) {
-            sig.SetAmplitude(i*res_);
+            amplitude_ = i*stepSize_;
 
             map<double,double> *tempMap;
             if(i == br-brErr)
@@ -54,9 +46,9 @@ void NeutronDensity::CalcDensity(const Variable &ge, const Variable &geEff) {
             else if (i == br+brErr)
                 tempMap = &denHigh_;
 
-            for(double j = 0; j < len_; j+=res_) {
-                double val = sig.GetSignalValue(j) / geEff.GetValue();
+            for(double j = 0.0; j <= qbetan_; j+=stepSize_) {
                 auto temp = tempMap->find(j);
+                double val = Gaussian(j) / geEff.GetValue();
                 if(temp != tempMap->end())
                     temp->second += val;
                 else
@@ -64,4 +56,10 @@ void NeutronDensity::CalcDensity(const Variable &ge, const Variable &geEff) {
             }
         }
     }
+}
+
+double NeutronDensity::Gaussian(const double &x) {
+    double coeff = amplitude_/(sigma_*sqrt(2*M_PI));
+    double exponent = -pow((x-mu_)/sigma_,2)*0.5;
+    return( coeff * exp(exponent) );
 }

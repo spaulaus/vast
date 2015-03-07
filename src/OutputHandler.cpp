@@ -7,12 +7,25 @@
 #include <iomanip>
 #include <iostream>
 
+#include <TFile.h>
+#include <TGraphAsymmErrors.h>
+
 #include "BGTCalculator.hpp"
 #include "ErrorCalculator.hpp"
 #include "NeutronDensity.hpp"
 #include "OutputHandler.hpp"
 
 using namespace std;
+
+bool OutputHandler::NotInfOrNan(const double &val) {
+    return(!std::isnan(val) && !std::isinf(val));
+}
+
+void OutputHandler::FillHistogram(TH1D &hist,
+                                  const std::map<double,double> & data) {
+    for(const auto &it : data)
+        hist.Fill(it.first, it.second);
+}
 
 void OutputHandler::OutputBasics(vector<Neutron> &nvec, Decay &dky,
                   Experiment &exp, const string &file) {
@@ -54,46 +67,54 @@ void OutputHandler::OutputBasics(vector<Neutron> &nvec, Decay &dky,
     out.close();
 }
 
-void OutputHandler::OutputDensity(vector<Neutron> &nvec, Decay &dky,
-                                  Experiment &exp, const string &file) {
-    NeutronDensity nden(nvec, dky.GetQBetaN().GetValue(),
-                        exp.GetDensityRes().GetValue());
-    auto ndenRes = *nden.GetDensity();
-    auto ndenLow = *nden.GetDensityLow();
-    auto ndenHigh = *nden.GetDensityHigh();
+void OutputHandler::OutputDensity(const NeutronDensity &nden, const Decay &dky,
+                                  const Experiment &exp, const string &file) {
+    BGTCalculator ndenBgt(*nden.GetDensity(), dky, exp);
+    BGTCalculator ndenBgtLow(*nden.GetDensityLow(), dky, exp, "low");
+    BGTCalculator ndenBgtHigh(*nden.GetDensityHigh(), dky, exp, "high");
 
-    BGTCalculator ndenBgt(ndenRes, dky, exp);
-    BGTCalculator ndenBgtLow(ndenLow, dky, exp, "low");
-    BGTCalculator ndenBgtHigh(ndenHigh, dky, exp, "high");
+    resolution_ = exp.GetDensityRes().GetValue();
+    int nbins = maxEnergy_/ resolution_;
 
-    auto bgtMap = *ndenBgt.GetBgtMap();
-    auto bgtSden = *ndenBgt.GetSDensity();
+    TFile f(file.c_str(), "RECREATE");
 
-    auto bgtMapLow = *ndenBgtLow.GetBgtMap();
-    auto bgtMapLowSden = *ndenBgtLow.GetSDensity();
+    TH1D density("density", "", nbins, minEnergy_, maxEnergy_);
+    SetHistOptions(density,"den");
+    FillHistogram(density, *ndenBgt.GetSDensity());
 
-    auto bgtMapHigh = *ndenBgtHigh.GetBgtMap();
-    auto bgtMapHighSden = *ndenBgtHigh.GetSDensity();
+    TH1D densityErrLow("densityLow", "", nbins, minEnergy_,maxEnergy_);
+    SetHistOptions(densityErrLow, "den");
+    FillHistogram(densityErrLow, *ndenBgtLow.GetSDensity());
 
-    ofstream outNDenBgt(file.c_str());
-    outNDenBgt << "#Ex(MeV) BR BR(LOW) BR(HIGH) B(GT) B(GT)(LOW)"
-               << " B(GT)(HIGH)" << endl;
-    for(auto it = bgtMap.begin(); it != bgtMap.end(); it++) {
-        auto itS = bgtSden.find(it->first);
+    TH1D densityErrHigh("densityHigh", "", nbins, minEnergy_, maxEnergy_);
+    SetHistOptions(densityErrHigh, "den");
+    FillHistogram(densityErrHigh, *ndenBgtHigh.GetSDensity());
 
-        auto itLow = bgtMapLow.find(it->first);
-        auto itLowS = bgtMapLowSden.find(it->first);
+    TH1D bgt("bgt", "", nbins, minEnergy_, maxEnergy_);
+    SetHistOptions(bgt, "bgt");
+    FillHistogram(bgt,*ndenBgt.GetBgtMap());
 
-        auto itHigh = bgtMapHigh.find(it->first);
-        auto itHighS = bgtMapHighSden.find(it->first);
+    TH1D bgtErrLow("bgtLow", "", nbins, minEnergy_,maxEnergy_);
+    SetHistOptions(bgtErrLow, "bgt");
+    FillHistogram(bgtErrLow, *ndenBgtLow.GetBgtMap());
 
-        outNDenBgt.setf(ios::fixed);
-        outNDenBgt << setprecision (8) << setw (10) << it->first << " "
-                   << itS->second << " " <<  itLowS->second << " "
-                   << itHighS->second << " " << it->second << " "
-                   << itLow->second << " " << itHigh->second << endl;
+    TH1D bgtErrHigh("bgtHigh", "", nbins, minEnergy_, maxEnergy_);
+    SetHistOptions(bgtErrHigh, "bgt");
+    FillHistogram(bgtErrHigh, *ndenBgtHigh.GetBgtMap());
+
+    auto temp = *ndenBgt.GetBgtMap();
+    auto tempH = *ndenBgtHigh.GetBgtMap();
+    auto tempL = *ndenBgtLow.GetBgtMap();
+    TGraphAsymmErrors graph(temp.size());
+    int j= 0;
+    for(auto i = temp.begin(); i != temp.end(); i++,j++) {
+        graph.SetPoint(j, i->first, i->second);
+        graph.SetPointError(j,0.,0.,tempL.find(i->first)->second,
+                            tempH.find(i->first)->second);
     }
-    outNDenBgt.close();
+    graph.Write();
+    f.Write();
+    f.Close();
 }
 
 void OutputHandler::OutputTheory(vector<Neutron> &nvec, const string &file) {
@@ -108,4 +129,19 @@ void OutputHandler::OutputTheory(vector<Neutron> &nvec, const string &file) {
             outTheory << endl;
     }
     outTheory.close();
+}
+
+void OutputHandler::SetHistOptions(TH1D &hist, const std::string &type) {
+    stringstream label;
+    if(type == "bgt")
+        label << "B(GT) / ";
+    if(type == "den")
+        label << "Intensity / ";
+    label << "(" << resolution_ << " MeV)";
+
+    hist.SetYTitle(label.str().c_str());
+    hist.SetTitleOffset(1.5, "Y");
+    hist.SetXTitle("Excitation Energy (MeV)");
+    hist.SetLineColor(2002);
+    hist.SetOption("HIST");
 }
