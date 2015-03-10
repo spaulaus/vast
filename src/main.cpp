@@ -36,8 +36,6 @@ int main(int argc, char* argv[]) {
         exit(0);
     }
 
-
-
     Configuration cfg(argv[1]);
     FileHandler fls = cfg.ReadFiles();
     Experiment exp = cfg.ReadExperiment();

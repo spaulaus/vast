@@ -147,6 +147,9 @@
 		<Unit filename="inc/mainPage.hpp">
 			<Option target="master" />
 		</Unit>
+		<Unit filename="scripts/bgt.C">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="scripts/compCgm.gp">
 			<Option target="master" />
 		</Unit>

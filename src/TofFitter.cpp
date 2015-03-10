@@ -108,7 +108,7 @@ void TofFitter::PerformFit(void) {
         RooRealVar *yield = new RooRealVar(yields_[i].c_str(), "", yStart_,
                                            yLow_, yHigh_);
         RooRealVar *mu = new RooRealVar(mus_[i].c_str(), "", peaks_[i],
-                                        rng_.first, 150.);
+                                        rng_.first, rng_.second);
 
         fSig << "e*pow(" << mus_[i] << ",4)+ d*pow(" << mus_[i] <<",3) + "
              << "c*pow(" << mus_[i] << ",2) + b*" << mus_[i] << "+a";

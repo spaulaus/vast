@@ -21,16 +21,14 @@ public:
     /*! Default constructor */
     TofFitter(){};
     /*! Perform the fit to the TOF spectrum
-      \param[in] fit : The parameters for the fitting
-      \param[in] fls : the files that will be used for the fitting
-    */
+     * \param [in] fit : The parameters for the fitting
+     * \param [in] fls : the files that will be used for the fitting */
     TofFitter(const FitHandler &fit, const FileHandler &fls);
     /*! Default destructor */
     ~TofFitter(){};
 
     /*! Get the vector of fitted neutrons
-    *   \return Vector of neutron peaks
-    */
+    *   \return Vector of neutron peaks */
     std::vector<Neutron> GetFitResults(void){return(neutrons_);};
 private:
     ParamCalculator par_;

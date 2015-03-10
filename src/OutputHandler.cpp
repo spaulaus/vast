@@ -102,17 +102,6 @@ void OutputHandler::OutputDensity(const NeutronDensity &nden, const Decay &dky,
     SetHistOptions(bgtErrHigh, "bgt");
     FillHistogram(bgtErrHigh, *ndenBgtHigh.GetBgtMap());
 
-    auto temp = *ndenBgt.GetBgtMap();
-    auto tempH = *ndenBgtHigh.GetBgtMap();
-    auto tempL = *ndenBgtLow.GetBgtMap();
-    TGraphAsymmErrors graph(temp.size());
-    int j= 0;
-    for(auto i = temp.begin(); i != temp.end(); i++,j++) {
-        graph.SetPoint(j, i->first, i->second);
-        graph.SetPointError(j,0.,0.,tempL.find(i->first)->second,
-                            tempH.find(i->first)->second);
-    }
-    graph.Write();
     f.Write();
     f.Close();
 }

@@ -18,7 +18,7 @@
     <Experiment>
         <numBars value="9" error="0.0" unit=""/>
         <omegaPerBar value="0.0061" error="0.0" unit=""/>
-        <denRes value="0.5" error="0.0" unit="MeV"/>
+        <denRes value="0.001" error="0.0" unit="MeV"/>
         <flightPath value="50.5" error="0.0" unit="cm"/>
         <EffCurve>svpBan4</EffCurve>
     </Experiment>
@@ -59,10 +59,10 @@
     </Decay>
 
     <Flags>
-        <doFit value="true"/>
-        <basic value="false"/>
+        <doFit value="false"/>
+        <basic value="true"/>
         <theory value="false"/>
-        <density value="false"/>
+        <density value="true"/>
     </Flags>
 
     <Fitting>
