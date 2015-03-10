@@ -25,9 +25,6 @@
 
 using namespace std;
 
-///A function to read the data from an input file
-void ReadData(vector<Neutron> &nvec, const string &file);
-
 ///The main program function
 int main(int argc, char* argv[]) {
     if(argc < 2) {
