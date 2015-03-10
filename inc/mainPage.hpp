@@ -6,7 +6,7 @@
 /** \mainpage V.A.S.T.
 
   \author S. V. Paulauskas
-  \version code : v0.6.0 \n
+  \version code : v0.8.0 \n
   manual : beta v1
 
   \par Contact

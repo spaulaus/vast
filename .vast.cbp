@@ -86,6 +86,7 @@
 		<Unit filename="doc/doxyfile">
 			<Option target="master" />
 		</Unit>
+		<Unit filename="doc/temp/doxyfile" />
 		<Unit filename="inc/BGTCalculator.hpp">
 			<Option compile="1" />
 			<Option target="master" />
@@ -120,6 +121,7 @@
 		<Unit filename="inc/Gamma.hpp">
 			<Option target="master" />
 		</Unit>
+		<Unit filename="inc/InputHandler.hpp" />
 		<Unit filename="inc/Integrator.hpp">
 			<Option target="master" />
 		</Unit>
@@ -189,12 +191,10 @@
 		<Unit filename="src/FileHandler.cpp">
 			<Option target="master" />
 		</Unit>
-		<Unit filename="src/FitHandler.cpp">
-			<Option target="master" />
-		</Unit>
 		<Unit filename="src/Gamma.cpp">
 			<Option target="master" />
 		</Unit>
+		<Unit filename="src/InputHandler.cpp" />
 		<Unit filename="src/Integrator.cpp">
 			<Option target="master" />
 		</Unit>
