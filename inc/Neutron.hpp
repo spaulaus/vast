@@ -40,6 +40,8 @@ public:
 
     /*! \return The CB parameter alpha */
     Variable GetAlpha(void) {return{alph_};};
+    /*! \return The beta resolution for the given neutron peak */
+    Variable GetBetaResolution(void) {return(betaRes_);};
     /*! \return the CB parameter n */
     Variable GetN(void) {return(n_);};
     /*! \return the CB parameter sigma */
@@ -81,7 +83,7 @@ public:
     void SetN(const Variable &a){n_ = a;};
     /*! Set the sigma for the CB
     *   \param[in] a The sigma of the Gaussian of the CB */
-    void SetSigma(const Variable &a){sig_ = a; CalcEnergyErr();};
+    void SetSigma(const Variable &a){sig_ = a;};
     /*! Set the integrated yield
     *   \param[in] a The integrated yield of the CB */
     void SetIntegratedYield(const Variable &a){intYld_ = a;};
@@ -101,6 +103,7 @@ private:
     //!Instance of the efficiency and error calculators
     EffCalculator eff;
 
+    Variable betaRes_;
     //!Variables related to the CB
     Variable alph_, n_, sig_;
     //!Variables related to the integration
@@ -112,18 +115,17 @@ private:
     //!Miscellaneous Information
     Variable eff_, gammaE_;
 
-
     /*! Calculate the energy of the neutron from the ToF
     *   \param[in] mu The ToF of the neutron
     *   \return The energy of the neturon */
-    double CalcEnergy(const double &mu);
+    void CalcEnergy(void);
     /*! Adjust the input variable for the intrinsic neutron efficiency
     *   \param[in] var The variable to adjust for the intrinsic efficiency
     *   \return The intrinsic efficiency adjusted variable */
     Variable AdjEff(const Variable &var);
     /*! Calculate the efficiency of the neutron */
     void CalcEnEff(void);
-    /*! Calculate the error on the energy */
-    void CalcEnergyErr(void);
+    /*! Calculate the beta resolution for the neutron peak */
+    void CalcBetaResolution(void);
 };
 #endif //__NEUTRON_HPP__

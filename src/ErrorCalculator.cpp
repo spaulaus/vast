@@ -78,15 +78,13 @@ double ErrorCalculator::CalcEffErr(const map<string,Variable> &vars,
     return(sqrt(var));
 }
 
-double ErrorCalculator::CalcEnergyErr(const Variable &sig, const Variable &mu) {
-    PhysConstants consts;
-    double c  = consts.GetConstant("c").GetValue()*(100/1e9); // cm / ns
-    double mn = consts.GetConstant("neutronMass").GetValue()/c/c; // MeV
-
-    double frac = 0.25;
-    double high = 0.5*mn*pow(50.5/(mu.GetValue()-sig.GetValue()*frac),2.);
-    double low  = 0.5*mn*pow(50.5/(mu.GetValue()+sig.GetValue()*frac),2.);
-    return(high-low);
+double ErrorCalculator::CalcEnergyErr(Neutron &neutron) {
+    double tofPart = pow(2 * neutron.GetBetaResolution().GetValue() /
+                        neutron.GetMu().GetValue(), 2);
+    double physicalPart = pow(2 * 3 / 50.5, 2);
+    double sqrtPart = sqrt(tofPart + physicalPart);
+    double err = sqrtPart * neutron.GetEnergy().GetValue();
+    return(err);
 }
 
 double ErrorCalculator::CalcIntegratedYldErr(const double &fitYldErr,
