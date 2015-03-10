@@ -17,6 +17,7 @@
 #include "BGTCalculator.hpp"
 #include "Configuration.hpp"
 #include "Decay.hpp"
+#include "InputHandler.hpp"
 #include "Integrator.hpp"
 #include "Neutron.hpp"
 #include "OutputHandler.hpp"
@@ -36,6 +37,7 @@ int main(int argc, char* argv[]) {
         exit(0);
     }
 
+    InputHandler input;
     Configuration cfg(argv[1]);
     FileHandler fls = cfg.ReadFiles();
     Experiment exp = cfg.ReadExperiment();
@@ -55,7 +57,8 @@ int main(int argc, char* argv[]) {
 
     vector<Neutron> singles;
     cout << "We are now reading the fitted data." << endl;
-    ReadData(singles, fls.GetOutputName("gsFit"));
+
+    input.ReadFitOutput(singles, fls.GetOutputName("gsFit"));
 
     cout << "Integrating neutron peaks and calculating B(GT)" << endl;
     ez::ezETAProgressBar eta(singles.size());
@@ -82,31 +85,4 @@ int main(int argc, char* argv[]) {
         NeutronDensity nden(singles, decay.GetQBetaN().GetValue());
         output.OutputDensity(nden, decay, exp, fls.GetOutputName("density"));
     }
-}
-
-void ReadData(vector<Neutron> &nvec, const string &file) {
-    ifstream data(file.c_str());
-    if(data.is_open()) {
-        while(data.good()) {
-            if(isdigit(data.peek())) {
-                double junk, temp0, temp1, temp2, temp3, a, s, n;
-                data >> junk >> temp0 >> temp1 >> temp2 >> temp3 >> s
-                     >> a >> n;
-                nvec.push_back(Neutron(temp0,temp1,temp2,temp3));
-
-                //Set the information for the CB from the fit
-                nvec.back().SetSigma(Variable(s,0.0,"ns"));
-                nvec.back().SetAlpha(Variable(a,0.0,""));
-                nvec.back().SetN(Variable(n,0.0,""));
-            }else {
-                data.ignore(1000,'\n');
-            }
-        }
-    } else{
-        cerr << "Oh, Jesus! We could no open the file: "
-             << file << endl << "Please check the name and try again."
-             << endl << endl;
-        exit(1);
-    }
-    data.close();
 }
