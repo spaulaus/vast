@@ -14,6 +14,7 @@
     TH1D *bgtHigh = (TH1D*)f.Get("bgtHigh");
     bgtHigh->SetFillColor(2022);
     bgtHigh->SetLineColor(2022);
+    bgtHigh->SetAxisRange(4,11,"X");
     bgtHigh->Draw("HIST");
 
     TH1D *bgt = (TH1D*)f.Get("bgt");

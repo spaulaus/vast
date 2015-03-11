@@ -8,6 +8,7 @@
 #include <string>
 
 #include "Decay.hpp"
+#include "EffCalculator.hpp"
 #include "Experiment.hpp"
 #include "FileHandler.hpp"
 #include "FlagHandler.hpp"
@@ -21,8 +22,7 @@ public:
     /*! The default constructor */
     Configuration(void){};
     /*! A constructor taking the configuration file as input
-    * \param[in] file The name of the configuration
-    */
+    * \param [in] file The name of the configuration */
     Configuration(const std::string &file);
     /*! The default destructor */
     ~Configuration(void){};
@@ -31,30 +31,26 @@ public:
     pugi::xml_document *GetDocument(void){return(&doc_);};
 
     /*!A method that parses the decay information
-    * \return Decay information from config file
-    */
+    * \return Decay information from config file */
     Decay ReadDecay(void);
     /*!A method that parses the experimental information
-    * \return Experimental information from config file
-    */
+    * \return Experimental information from config file */
     Experiment ReadExperiment(void);
     /*!A method that parses the input and output files
-    * \return File lists from the config file
-    */
+    * \return File lists from the config file */
     FileHandler ReadFiles(void);
     /*!A method that parses the fitting information
-    * \return information necessary for the fit from the config file
-    */
+    * \return information necessary for the fit from the config file */
     FitHandler ReadFit(void);
     /*!A method that parses the logic handling flags
-    * \return Logic handling flags
-    */
+    * \return Logic handling flags */
     FlagHandler ReadFlags(void);
 private:
     pugi::xml_document doc_;
     pugi::xml_node cfg_;
     std::string file_;
 
+    EffCalculator::EffTypes StringToEffType(const std::string &a);
     Variable NodeToVar(const pugi::xml_node &node);
     void SpitWarning(const std::string &node,
                      const std::string &name);

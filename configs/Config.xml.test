@@ -16,11 +16,11 @@
     </Description>
 
     <Experiment>
-        <numBars value="9" error="0.0" unit=""/>
-        <omegaPerBar value="0.0061" error="0.0" unit=""/>
-        <denRes value="0.001" error="0.0" unit="MeV"/>
-        <flightPath value="50.5" error="0.0" unit="cm"/>
-        <EffCurve>svpBan4</EffCurve>
+        <NumberOfBars value="9" error="0.0" unit=""/>
+        <OmegaPerBar value="0.0061" error="0.0" unit=""/>
+        <DensityResolution value="0.001" error="0.0" unit="MeV"/>
+        <FlightPath value="50.5" error="0.0" unit="cm"/>
+        <EfficiencyCurve>svpBan4</EfficiencyCurve>
     </Experiment>
 
     <Files>

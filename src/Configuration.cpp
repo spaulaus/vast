@@ -7,9 +7,6 @@
 #include <map>
 #include <vector>
 
-#include <pugixml.hpp>
-#include <Variable.hpp>
-
 #include "Configuration.hpp"
 
 using namespace std;
@@ -18,7 +15,7 @@ Configuration::Configuration(const std::string &file) {
     pugi::xml_parse_result result = doc_.load_file(file.c_str());
 
     if(result) {
-        cout << "Fuck yeah, we opened that bitch" << endl;
+        cout << "We opened up the configuration file : " << file << endl;
         cfg_ = doc_.child("Configuration");
     } else {
         cout << "We had errors with the config file. " << endl
@@ -33,14 +30,16 @@ Experiment Configuration::ReadExperiment(void) {
     for(pugi::xml_node node : expInfo.children()) {
         string name = node.name();
         Variable temp = NodeToVar(node);
-        if(name == "betaEff")
-            exp.SetBetaEff(temp);
-        else if(name == "numBars")
+        if(name == "NumberOfBars")
             exp.SetNumBars(temp);
-        else if(name == "omegaPerBar")
+        else if(name == "OmegaPerBar")
             exp.SetOmegaPerBar(temp);
-        else if(name =="denRes")
+        else if(name =="DensityResolution")
             exp.SetDensityRes(temp);
+        else if(name == "FlightPath")
+            exp.SetFlightPath(temp);
+        else if(name == "EfficiencyCurve")
+            exp.SetEfficiencyCurveName(StringToEffType(node.child_value()));
         else
             SpitWarning("Experiment", name);
     }
@@ -125,6 +124,22 @@ Decay Configuration::ReadDecay(void) {
             SpitWarning(nodeName,name);
     }
     return(decay);
+}
+
+EffCalculator::EffTypes Configuration::StringToEffType(const std::string &a) {
+    if(a == "mmfCalc")
+        return(EffCalculator::EffTypes::mmfCalc);
+    if(a == "mmfTheory")
+        return(EffCalculator::EffTypes::mmfTheory);
+    if(a == "rolling")
+        return(EffCalculator::EffTypes::rolling);
+    if(a == "svpBan4")
+        return(EffCalculator::EffTypes::svpBan4);
+    if(a == "svpTestBan1")
+        return(EffCalculator::EffTypes::svpTestBan1);
+    if(a == "vandle")
+        return(EffCalculator::EffTypes::vandle);
+    return(EffCalculator::EffTypes::svpBan4);
 }
 
 Variable Configuration::NodeToVar(const pugi::xml_node &node) {
