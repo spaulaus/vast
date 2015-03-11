@@ -95,7 +95,8 @@ Variable EffCalculator::GetBetaEff(const Variable &energy, const Decay &dky) {
     qeff = Variable(qeff.GetValue()*1000., qeff.GetError()*1000., "keV");
     double a = 0.0000237963;
     double b = 0.1767496566;
-    return(Variable(a*qeff.GetValue()+b, a*qeff.GetError()+b, "/100"));
+    Variable beff = Variable(a*qeff.GetValue()+b, a*qeff.GetError(), "/100");
+    return(beff);
 }
 
 Variable EffCalculator::GetEff(const Variable &energy, const EffTypes &curve) {
