@@ -14,11 +14,14 @@ d=1.
 e=1.
 f(x)=e*x**4+d*x**3+c*x**2+b*x+a
 fit f(x) file u 2:3:4 via a,b,c,d,e
+test(x)=1.89-19./x
+#fit f(x) file u 2:3:4 via a,b
+
 #set output '../../pics/roofit/convSigmaVsTof.eps'
 set terminal wxt enhanced noraise 0
 set ylabel offset 1.25,0 "{/StandardSymL s}\' (ns)"
 plot file u 2:3:4 w yerrorbars pt 7 ps 3 lc rgb prim3,\
-    f(x) lw 3 lc rgb comp3 lt 3
+    f(x) lw 3 lc rgb comp3 lt 3#, test(x)
 
 f=1.
 g=-0.5
