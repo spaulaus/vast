@@ -38,15 +38,15 @@ void bgt(void){
     bgt->SetLineColor(2002);
     bgt->DrawCopy("HIST same");
 
-    ofstream bgtout("077cu-bgt.dat");
-    if(bgtout.is_open()) {
-        Int_t n = bgt->GetNbinsX();
-        for (Int_t i = 1; i <= n; i++) {
-            bgtout << bgt->GetBinLowEdge(i)+bgt->GetBinWidth(i)/2 << " " 
-                   << bgt->GetBinContent(i) << endl;
-        }
-    }
-    bgtout.close();
+    // ofstream bgtout("077cu-bgt.dat");
+    // if(bgtout.is_open()) {
+    //     Int_t n = bgt->GetNbinsX();
+    //     for (Int_t i = 1; i <= n; i++) {
+    //         bgtout << bgt->GetBinLowEdge(i)+bgt->GetBinWidth(i)/2 << " " 
+    //                << bgt->GetBinContent(i) << endl;
+    //     }
+    // }
+    // bgtout.close();
 
     TH1D *bgtLow = (TH1D*)f.Get("bgtLow");
     bgtLow->SetFillColor(10);
@@ -62,7 +62,7 @@ void bgt(void){
 
     gPad->RedrawAxis();
 
-    c1->SaveAs("077cu-bgt.eps");
+    //c1->SaveAs("077cu-bgt.eps");
 
 #ifndef __CLING__
     app.Run(kTRUE);

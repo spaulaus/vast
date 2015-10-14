@@ -12,7 +12,6 @@
      otherwise noted.
 -->
 <Configuration>
-  <!-- your name, email and date -->
   <Author>
     <Name>S. V. Paulauskas</Name>
     <Email>stanpaulauskas@gmail.com</Email>
@@ -20,7 +19,6 @@
     <Updated>June 08 2014</Updated>
   </Author>
 
-  <!-- Short description of the experiment here. -->
   <Description>
     LeRIBSS 2012 VANDLE experiment, 2 Clovers, 2 Beta scintillators,
     MTC, 48 small VANDLE modules
@@ -28,9 +26,6 @@
     This is setup for the 77Cu analysis.
   </Description>
 
-  <!-- This is the place to put some of the general information
-       about the experiment.
-  -->
   <Experiment>
     <numBars value="9" error="0.0" unit=""/>
     <!-- This one is from Sergey's simulation -->
@@ -112,8 +107,7 @@
 
   <!-- This has all the information about the decay of interest. -->
   <Decay>
-    <!-- z of the parent -->
-    <z value='29' error='0.0' unit=""/>
+    <z value='29' error='0.0' unit=""/>     <!-- z of the parent -->
     <q value='10.490' error='0.5' unit="MeV"/>
     <sn value='4.5575' error='0.00025' unit="MeV"/>
     <qbn value='5.720' error='0.015' unit="MeV"/>
@@ -124,29 +118,17 @@
         <en value="0.50521" error="0.00001" unit="MeV"/>
         <abr value="0.191" error="0.006" unit="/100"/>
     </gn>
-
-    <g1> <!-- Gating gamma number 1 (not implemented yet)-->
-    </g1>
-
-    <g2> <!-- Gating gamma number 2 (not implemented yet)-->
-    </g2>
   </Decay>
 
-  <!-- Some flags to control program flow. The program will
-       recognize any flags that are added here.
-  -->
   <Flags>
     <doFit value="true"/>
     <basic value="true"/>
     <theory value="false"/>
-    <density value="false"/>
+    <density value="true"/>
   </Flags>
 
-  <!-- How about some fitting information? -->
   <Fitting>
-    <!-- the peaks to use in the fitting of the tof -->
     <peaks>
-      <!-- peaks for the singles fitting -->
       <sngl>
         <pk0  value="24.0"/>
         <pk1  value="30.0"/>
@@ -186,16 +168,12 @@
     -->
     <pkList value="sngl"/>
 
-    <!-- The fitting range -->
     <range>
       <low value="0.0"/>
       <high value="200.0"/>
     </range>
 
-    <!-- The Binning for the picture -->
     <binning value="0.5" />
-
-    <!-- How much can the peaks move -->
     <wiggle value="200." />
 
     <!-- Parameterization for the fitted parameters (not quite implemented)-->

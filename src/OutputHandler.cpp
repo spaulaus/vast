@@ -74,7 +74,7 @@ void OutputHandler::OutputDensity(const NeutronDensity &nden, const Decay &dky,
     BGTCalculator ndenBgtHigh(*nden.GetDensityHigh(), dky, exp, "high");
 
     resolution_ = exp.GetDensityRes().GetValue();
-    int nbins = maxEnergy_/ resolution_;
+    int nbins = maxEnergy_ / resolution_;
 
     TFile f(file.c_str(), "RECREATE");
 

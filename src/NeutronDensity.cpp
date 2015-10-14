@@ -60,7 +60,6 @@ void NeutronDensity::CalcDensity(const Variable &ge, const Variable &geEff) {
 
 double NeutronDensity::Gaussian(const double &x) {
     double coeff = amplitude_/(sigma_*sqrt(2*M_PI));
-    //double coeff = amplitude_;
     double exponent = -pow((x-mu_)/sigma_,2)*0.5;
     return( coeff * exp(exponent) );
 }
