@@ -39,7 +39,7 @@ public:
     ~Neutron(){};
 
     /*! \return The CB parameter alpha */
-    Variable GetAlpha(void) {return{alph_};};
+    Variable GetAlpha(void) {return(alph_);};
     /*! \return The beta resolution for the given neutron peak */
     Variable GetBetaResolution(void) {return(betaRes_);};
     /*! \return the CB parameter n */

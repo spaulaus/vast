@@ -10,7 +10,7 @@ CINCLUDEDIRS = -Iinc -I/home/vincent/programs/inc
 
 #Set some of the compile options
 CXX = g++
-CXXFLAGS = -fPIC -g -std=c++11 -Wall $(CINCLUDEDIRS)
+CXXFLAGS = -fPIC -g -Wall $(CINCLUDEDIRS)
 LDLIBS = -ldl -lpthread -lPhysConstants -lSignalGenerator -lpugixml
 c++SrcSuf = cpp
 

@@ -56,7 +56,6 @@ private:
     ErrorCalculator err_;
     EffCalculator eff_;
 
-    static constexpr double bgtCoeff_ = 3812.413; //!< D/(ga/gv)**2 in units of s
     Variable currentEx_; //!< The excitation energy for the current calculation.
 
     Variable geEff_, eG_, eN_, f_, omega_, yld_;

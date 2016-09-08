@@ -10,14 +10,14 @@
 using namespace std;
 
 string FileHandler::GetInputName(const string &name) const {
-    auto it = input_.find(name);
+    const map<string,string>::const_iterator it = input_.find(name);
     if(it == input_.end())
         EndError(name);
     return(it->second);
 }
 
 string FileHandler::GetOutputName(const string &name) const {
-    auto it = output_.find(name);
+    const map<string,string>::const_iterator it = output_.find(name);
     if(it == output_.end())
         EndError(name);
     return(it->second);

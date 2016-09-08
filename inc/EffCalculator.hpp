@@ -40,7 +40,7 @@ public:
      *                  09-10-2014, it was updated on 09-17-2014.
      *  + svpTestBan1 : Banana that is a little wider than the previous one.
      *  + vandle  : The efficiency taken from the LG Cf data (~ 6 keVee) */
-    enum class EffTypes {beta, ge, mmfCalc, mmfTheory, rolling, svpBan4,
+    enum EffTypes {beta, ge, mmfCalc, mmfTheory, rolling, svpBan4,
                             svpTestBan1, vandle};
 
     /*! Return the efficiency for the requested efficiency curve. The options
