@@ -12,6 +12,8 @@
 
 using namespace std;
 
+static const double stepSize_ = 0.001; //! The step size for sampling the Gaussian
+
 NeutronDensity::NeutronDensity(std::vector<Neutron> &neutrons,
                                const double &qbetan, const Variable &ge) {
     qbetan_  = qbetan;

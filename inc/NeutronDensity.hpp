@@ -39,7 +39,6 @@ private:
     double amplitude_;//!< the amplitude of the Gaussian Function
     double mu_;//!< The mean of the Gaussian Function
     double sigma_;//! The Sigma of the Gaussian Function
-    static constexpr double stepSize_ = 0.001; //! The step size for sampling the Gaussian
     std::map<double,double> denMean_, denLow_, denHigh_;
     std::vector<Neutron> neutrons_;
 

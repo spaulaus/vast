@@ -11,6 +11,8 @@
 
 using namespace std;
 
+static const double bgtCoeff_ = 3812.413; //!< D/(ga/gv)**2 in units of s
+
 BGTCalculator::BGTCalculator(const std::map<double, double> &density,
                              const Decay &decay, const Experiment &exp,
                              const std::string &band, const Variable &eg) {
@@ -26,7 +28,7 @@ BGTCalculator::BGTCalculator(Neutron &neutron, const Decay &decay,
                              const Experiment &exp, const Variable &eg) {
     eG_ = eg;
     if(eg.GetValue() != 0.0) {
-        geEff_ = eff_.GetEff(eg, EffCalculator::EffTypes::ge);
+        geEff_ = eff_.GetEff(eg, EffCalculator::ge);
     }else
         geEff_ = Variable(1.0,0.0,"/100");
 
