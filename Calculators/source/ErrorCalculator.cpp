@@ -13,6 +13,8 @@
 
 using namespace std;
 
+static const int numSamples=1e5;  //!< The number of MC tries for Eff calc
+
 double ErrorCalculator::CalcBgtErr(const double &bgt, const Variable &br,
                                    const Variable &halfLife) {
     double brPart = br.GetError() / br.GetValue();
