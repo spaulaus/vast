@@ -26,17 +26,21 @@ void usage(void) {
          << "   -b = Beta Efficiency for the provided energy" << endl
          << "   -g = Ge Efficiency" << endl
          << "   -m = Vandle Efficiency using MMF Banana 1" << endl
-         << "   -c = Vandle Efficiency using SVP Banana 4"
+         << "   -c = Vandle Efficiency using SVP Banana 4" << endl
          << "   -v = Basic Vandle Efficiency" << endl
          << "   -t = VANDLE Efficiency using Sergey's Simulation for MMF Banana 1" << endl
          << "   -d <val> = The distance to be used for ToF Calculation. " <<
             "Used in conjunction with the -m flag" << endl
          << "Now let's try this again." << endl;
-    exit(2);
 }
 
 //!The main function for the efficiency calculation
 int main(int argc, char* argv[]) {
+    if(argc == 1) {
+        usage();
+        return 0;
+    }
+
     EffCalculator eff;
     int opt = -1;
     EffCalculator::EffTypes curve;
@@ -92,4 +96,6 @@ int main(int argc, char* argv[]) {
     else
         cout << "The efficiency for " << en.Output() << " is "
              << result.Output() << endl;
+
+    return 0;
 }
