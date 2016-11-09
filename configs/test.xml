@@ -2,14 +2,14 @@
 <Configuration>
     <Author>
         <Name>S. V. Paulauskas</Name>
-        <Email>stanpaulauskas@gmail.com</Email>
+        <Email>spaulaus @ utk DOT edu</Email>
         <Date>November 2013</Date>
-        <Updated>June 08 2014</Updated>
+        <Updated>June 8, 2014</Updated>
     </Author>
 
     <Description>
         LeRIBSS 2012 VANDLE experiment, 2 Clovers, 2 Beta scintillators,
-        MTC, 48 small VANDLE modules
+        MTC, 48 small VANDLE modules.
 
         This is a testing configuration for the program. I will probably stick
         to analyzing the 77Cu data with this guy.

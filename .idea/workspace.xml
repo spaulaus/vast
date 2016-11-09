@@ -39,63 +39,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="efff6843-72c6-46c8-9b94-a8609228bb48" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Calculators/source/CMakeLists.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Core/source/CMakeLists.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/FileIo/CMakeLists.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/FileIo/source/CMakeLists.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/FileIo/tests/CMakeLists.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Fitters/CMakeLists.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Fitters/source/CMakeLists.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Fitters/tests/CMakeLists.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/ThirdParty/CMakeLists.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/ThirdParty/source/CMakeLists.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Utilities/CMakeLists.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Utilities/source/CMakeLists.txt" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Makefile" afterPath="" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/inc/BGTCalculator.hpp" afterPath="$PROJECT_DIR$/Calculators/include/BGTCalculator.hpp" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/inc/Configuration.hpp" afterPath="$PROJECT_DIR$/FileIo/include/Configuration.hpp" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/inc/Decay.hpp" afterPath="$PROJECT_DIR$/Core/include/Decay.hpp" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/inc/EffCalculator.hpp" afterPath="$PROJECT_DIR$/Calculators/include/EffCalculator.hpp" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/inc/ErrorCalculator.hpp" afterPath="$PROJECT_DIR$/Calculators/include/ErrorCalculator.hpp" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/inc/Experiment.hpp" afterPath="$PROJECT_DIR$/Core/include/Experiment.hpp" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/inc/FileChecker.hpp" afterPath="$PROJECT_DIR$/FileIo/include/FileChecker.hpp" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/inc/FileHandler.hpp" afterPath="$PROJECT_DIR$/FileIo/include/FileHandler.hpp" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/inc/FitHandler.hpp" afterPath="$PROJECT_DIR$/Core/include/FitHandler.hpp" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/inc/FlagHandler.hpp" afterPath="$PROJECT_DIR$/Core/include/FlagHandler.hpp" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/inc/Gamma.hpp" afterPath="$PROJECT_DIR$/Core/include/Gamma.hpp" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/inc/InputHandler.hpp" afterPath="$PROJECT_DIR$/FileIo/include/InputHandler.hpp" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/inc/Integrator.hpp" afterPath="$PROJECT_DIR$/Calculators/include/Integrator.hpp" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/inc/LimitFinder.hpp" afterPath="$PROJECT_DIR$/Utilities/include/LimitFinder.hpp" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/inc/Neutron.hpp" afterPath="$PROJECT_DIR$/Core/include/Neutron.hpp" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/inc/NeutronDensity.hpp" afterPath="$PROJECT_DIR$/Calculators/include/NeutronDensity.hpp" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/inc/OutputHandler.hpp" afterPath="$PROJECT_DIR$/FileIo/include/OutputHandler.hpp" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/inc/ParamCalculator.hpp" afterPath="$PROJECT_DIR$/Calculators/include/ParamCalculator.hpp" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/inc/SimConvoluter.hpp" afterPath="$PROJECT_DIR$/Fitters/include/SimConvoluter.hpp" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/inc/TofFitter.hpp" afterPath="$PROJECT_DIR$/Fitters/include/TofFitter.hpp" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/inc/mainPage.hpp" afterPath="$PROJECT_DIR$/Core/include/mainPage.hpp" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/BGTCalculator.cpp" afterPath="$PROJECT_DIR$/Calculators/source/BGTCalculator.cpp" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/Configuration.cpp" afterPath="$PROJECT_DIR$/FileIo/source/Configuration.cpp" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/Decay.cpp" afterPath="$PROJECT_DIR$/Core/source/Decay.cpp" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/EffCalculator.cpp" afterPath="$PROJECT_DIR$/Calculators/source/EffCalculator.cpp" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/ErrorCalculator.cpp" afterPath="$PROJECT_DIR$/Calculators/source/ErrorCalculator.cpp" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/FileChecker.cpp" afterPath="$PROJECT_DIR$/FileIo/source/FileChecker.cpp" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/FileHandler.cpp" afterPath="$PROJECT_DIR$/FileIo/source/FileHandler.cpp" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/Gamma.cpp" afterPath="$PROJECT_DIR$/Core/source/Gamma.cpp" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/InputHandler.cpp" afterPath="$PROJECT_DIR$/FileIo/source/InputHandler.cpp" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/Integrator.cpp" afterPath="$PROJECT_DIR$/Calculators/source/Integrator.cpp" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/LimitFinder.cpp" afterPath="$PROJECT_DIR$/Utilities/source/LimitFinder.cpp" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/Neutron.cpp" afterPath="$PROJECT_DIR$/Core/source/Neutron.cpp" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/NeutronDensity.cpp" afterPath="$PROJECT_DIR$/Calculators/source/NeutronDensity.cpp" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/OutputHandler.cpp" afterPath="$PROJECT_DIR$/FileIo/source/OutputHandler.cpp" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/ParamCalculator.cpp" afterPath="$PROJECT_DIR$/Calculators/source/ParamCalculator.cpp" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/SimConvoluter.cpp" afterPath="$PROJECT_DIR$/Fitters/source/SimConvoluter.cpp" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/TofFitter.cpp" afterPath="$PROJECT_DIR$/Fitters/source/TofFitter.cpp" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/cfgtst.cpp" afterPath="$PROJECT_DIR$/FileIo/tests/cfgtst.cpp" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/eff.cpp" afterPath="$PROJECT_DIR$/Utilities/source/efficiency.cpp" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main.cpp" afterPath="$PROJECT_DIR$/Core/source/vast.cpp" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/sensitivity.cpp" afterPath="$PROJECT_DIR$/Utilities/source/sensitivity.cpp" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/simtest.cpp" afterPath="$PROJECT_DIR$/Fitters/tests/simtest.cpp" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/configs/Config.xml.077cu" afterPath="$PROJECT_DIR$/configs/077cu.xml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/configs/Config.xml.084ga" afterPath="$PROJECT_DIR$/configs/084ga.xml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/configs/Config.xml.example" afterPath="$PROJECT_DIR$/configs/example.xml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/configs/Config.xml.response" afterPath="$PROJECT_DIR$/configs/response.xml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/configs/Config.xml.test" afterPath="$PROJECT_DIR$/configs/test.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Core/source/vast.cpp" afterPath="$PROJECT_DIR$/Core/source/vast.cpp" />
     </list>
     <ignored path="vast.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -115,41 +65,21 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="CMakeLists.txt" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
+      <file leaf-file-name="vast.cpp" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Core/source/vast.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="152">
-              <caret line="73" column="66" selection-start-line="73" selection-start-column="66" selection-end-line="73" selection-end-column="66" />
+            <state relative-caret-position="180">
+              <caret line="35" column="0" selection-start-line="35" selection-start-column="0" selection-end-line="35" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="CMakeLists.txt" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Core/source/CMakeLists.txt">
+      <file leaf-file-name="test.xml" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/configs/test.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="165">
-              <caret line="11" column="17" selection-start-line="11" selection-start-column="17" selection-end-line="11" selection-end-column="17" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="TODO" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/TODO">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="30">
-              <caret line="2" column="59" selection-start-line="2" selection-start-column="59" selection-end-line="2" selection-end-column="59" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="CMakeLists.txt" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Utilities/source/CMakeLists.txt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="15">
-              <caret line="1" column="46" selection-start-line="1" selection-start-column="46" selection-end-line="1" selection-end-column="46" />
+            <state relative-caret-position="1598">
+              <caret line="126" column="0" selection-start-line="126" selection-start-column="0" selection-end-line="126" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -186,6 +116,8 @@
         <option value="$PROJECT_DIR$/CMakeLists.txt" />
         <option value="$PROJECT_DIR$/Utilities/source/CMakeLists.txt" />
         <option value="$PROJECT_DIR$/Core/source/CMakeLists.txt" />
+        <option value="$PROJECT_DIR$/configs/Config.xml.test" />
+        <option value="$PROJECT_DIR$/Core/source/vast.cpp" />
       </list>
     </option>
   </component>
@@ -240,6 +172,52 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="vast" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="vast" />
+              <option name="myItemType" value="com.jetbrains.cidr.projectView.CidrFilesViewHelper$MyProjectTreeStructure$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="vast" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Core" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="source" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="vast" />
+              <option name="myItemType" value="com.jetbrains.cidr.projectView.CidrFilesViewHelper$MyProjectTreeStructure$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="vast" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Core" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="vast" />
+              <option name="myItemType" value="com.jetbrains.cidr.projectView.CidrFilesViewHelper$MyProjectTreeStructure$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="vast" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="configs" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -428,7 +406,7 @@
       <envs />
       <method />
     </configuration>
-    <configuration default="false" name="vast" type="CMakeRunConfiguration" factoryName="Application" WORKING_DIR="" PASS_PARENT_ENVS_2="true" PROJECT_NAME="VAST" TARGET_NAME="vast" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="VAST" RUN_TARGET_NAME="vast">
+    <configuration default="false" name="vast" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="$PROJECT_DIR$/configs/test.xml" WORKING_DIR="" PASS_PARENT_ENVS_2="true" PROJECT_NAME="VAST" TARGET_NAME="vast" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="VAST" RUN_TARGET_NAME="vast">
       <envs />
       <method />
     </configuration>
@@ -495,12 +473,12 @@
       <workItem from="1478537771983" duration="1231000" />
       <workItem from="1478698601677" duration="909000" />
       <workItem from="1478700189251" duration="3983000" />
-      <workItem from="1478722837505" duration="1300000" />
+      <workItem from="1478722837505" duration="1893000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="27464000" />
+    <option name="totallyTimeSpent" value="28057000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1366" height="709" extended-state="6" />
@@ -562,15 +540,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/cmake/modules/FindCONSTANTS.cmake" />
-    <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/cmake/modules/FindROOT.cmake">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="180">
@@ -860,8 +829,8 @@
         <state relative-caret-position="330">
           <caret line="34" column="0" selection-start-line="34" selection-start-column="0" selection-end-line="34" selection-end-column="0" />
           <folding>
-            <marker date="1415976711074" expanded="false" signature="160:427" ph="..." />
-            <marker date="1415976711074" expanded="true" signature="484:1366" ph="{...}" />
+            <marker date="1478724309673" expanded="false" signature="160:427" ph="..." />
+            <marker date="1478724309673" expanded="true" signature="484:1366" ph="{...}" />
           </folding>
         </state>
       </provider>
@@ -882,18 +851,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
+    <entry file="file://$PROJECT_DIR$/TODO">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="152">
-          <caret line="73" column="66" selection-start-line="73" selection-start-column="66" selection-end-line="73" selection-end-column="66" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Utilities/source/CMakeLists.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="15">
-          <caret line="1" column="46" selection-start-line="1" selection-start-column="46" selection-end-line="1" selection-end-column="46" />
+        <state relative-caret-position="30">
+          <caret line="2" column="50" selection-start-line="2" selection-start-column="50" selection-end-line="2" selection-end-column="50" />
           <folding />
         </state>
       </provider>
@@ -906,10 +867,34 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/TODO">
+    <entry file="file://$PROJECT_DIR$/Utilities/source/CMakeLists.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="30">
-          <caret line="2" column="59" selection-start-line="2" selection-start-column="59" selection-end-line="2" selection-end-column="59" />
+        <state relative-caret-position="15">
+          <caret line="1" column="46" selection-start-line="1" selection-start-column="46" selection-end-line="1" selection-end-column="46" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="152">
+          <caret line="73" column="66" selection-start-line="73" selection-start-column="66" selection-end-line="73" selection-end-column="66" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Core/source/vast.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="35" column="0" selection-start-line="35" selection-start-column="0" selection-end-line="35" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/configs/test.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1598">
+          <caret line="126" column="0" selection-start-line="126" selection-start-column="0" selection-end-line="126" selection-end-column="0" />
           <folding />
         </state>
       </provider>
