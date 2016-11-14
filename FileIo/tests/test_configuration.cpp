@@ -26,7 +26,7 @@ int main(int argc, char** argv) {
     cout << "Testing ConfigurationReader::ReadDecay" << endl;
     try {
         dky = cfg.ReadDecay();
-    } catch (std::exception ex) {
+    } catch (std::exception &ex) {
         cout << ex.what() << endl;
     }
 
