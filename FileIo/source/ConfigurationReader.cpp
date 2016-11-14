@@ -1,4 +1,4 @@
-/** \file Configuration.cpp
+/** \file ConfigurationReader.cpp
  * \brief A class to handle the confiruation xml file
  * \author S. V. Paulauskas
  * \date 30 November 2013
@@ -7,23 +7,34 @@
 #include <map>
 #include <vector>
 
-#include "Configuration.hpp"
+#include "ConfigurationReader.hpp"
+#include "Exception.hpp"
 
 using namespace std;
 
-Configuration::Configuration(const std::string &file) {
-    pugi::xml_parse_result result = doc_.load_file(file.c_str());
-
-    if(result) {
-        cout << "We opened up the configuration file : " << file << endl;
-        cfg_ = doc_.child("Configuration");
-    } else {
-        cout << "We had errors with the config file. " << endl
-             << "Error Description: " << result.description() << endl;
+ConfigurationReader::ConfigurationReader(const std::string &file) {
+    try{
+        OpenConfigurationFile(file);
+    } catch(...) {
+        throw;
     }
 }
 
-Experiment Configuration::ReadExperiment(void) {
+void ConfigurationReader::OpenConfigurationFile(const std::string &file) {
+    pugi::xml_parse_result result = doc_.load_file(file.c_str());
+    if(result) {
+        cout << "We opened up the configuration file : " << file << endl;
+        cfg_ = doc_.child("ConfigurationReader");
+    } else {
+        stringstream msg;
+        msg << "ConfigurationReader threw exception when opening the"
+            << " configuration file. "
+            << result.description();
+        throw Exception(msg.str());
+    }
+}
+
+Experiment ConfigurationReader::ReadExperiment(void) {
     Experiment exp;
     pugi::xml_node expInfo = cfg_.child("Experiment");
 
@@ -46,7 +57,7 @@ Experiment Configuration::ReadExperiment(void) {
     return(exp);
 }
 
-FileHandler Configuration::ReadFiles(void) {
+FileHandler ConfigurationReader::ReadFiles(void) {
     FileHandler fhandle;
     pugi::xml_node inode = cfg_.child("Files").child("Input");
     pugi::xml_node onode = cfg_.child("Files").child("Output");
@@ -58,7 +69,7 @@ FileHandler Configuration::ReadFiles(void) {
     return(fhandle);
 }
 
-FitHandler Configuration::ReadFit(void) {
+FitHandler ConfigurationReader::ReadFit(void) {
     FitHandler fit;
     pugi::xml_node ft = cfg_.child("Fitting");
     vector<double> snglPeaks, g1Peaks, g2Peaks;
@@ -86,14 +97,14 @@ FitHandler Configuration::ReadFit(void) {
     return(fit);
 }
 
-FlagHandler Configuration::ReadFlags(void) {
+FlagHandler ConfigurationReader::ReadFlags(void) {
     FlagHandler flags;
     for(pugi::xml_node chld : cfg_.child("Flags").children())
         flags.SetFlag(chld.name(), chld.attribute("value").as_bool());
     return(flags);
 }
 
-Decay Configuration::ReadDecay(void) {
+Decay ConfigurationReader::ReadDecay(void) {
     Decay decay;
     string nodeName = "Decay";
     pugi::xml_node dky = cfg_.child(nodeName.c_str());
@@ -126,7 +137,7 @@ Decay Configuration::ReadDecay(void) {
     return(decay);
 }
 
-EffCalculator::EffTypes Configuration::StringToEffType(const std::string &a) {
+EffCalculator::EffTypes ConfigurationReader::StringToEffType(const std::string &a) {
     if(a == "mmfCalc")
         return(EffCalculator::EffTypes::mmfCalc);
     if(a == "mmfTheory")
@@ -142,14 +153,14 @@ EffCalculator::EffTypes Configuration::StringToEffType(const std::string &a) {
     return(EffCalculator::EffTypes::svpBan4);
 }
 
-Variable Configuration::NodeToVar(const pugi::xml_node &node) {
+Variable ConfigurationReader::NodeToVar(const pugi::xml_node &node) {
     Variable var = Variable(node.attribute("value").as_double(),
                             node.attribute("error").as_double(),
                             node.attribute("unit").value());
     return(var);
 }
 
-void Configuration::SpitWarning(const string &node,
+void ConfigurationReader::SpitWarning(const string &node,
                                 const string &name) {
     cerr << endl << "WARNING!!!!  "
          << "You put something in the " << node

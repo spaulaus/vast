@@ -146,8 +146,8 @@ public:
 	}
 
 	unsigned int n;
-	unsigned int cur;
 	unsigned short pct; // Stored as 0-1000, so 2.5% is encoded as 25.
+	unsigned int cur;
 	unsigned char width; // How many chars the entire line can be.
 	long long startTime, endTime;
 	#ifdef WIN32

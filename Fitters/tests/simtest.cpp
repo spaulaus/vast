@@ -2,7 +2,7 @@
 #include <vector>
 #include <utility>
 
-#include "Configuration.hpp"
+#include "ConfigurationReader.hpp"
 #include "SimConvoluter.hpp"
 
 using namespace std;

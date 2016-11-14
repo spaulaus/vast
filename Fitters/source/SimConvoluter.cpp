@@ -35,7 +35,7 @@ SimConvoluter::SimConvoluter(const std::string &cfg) {
     if(result) {
         cout << "Successfully opened the configuration file, proceeding to "
              << "fill up all of my naughty bits." << endl << endl;
-        pugi::xml_node base = doc.child("Configuration").child("Simulation");
+        pugi::xml_node base = doc.child("ConfigurationReader").child("Simulation");
 
         flightPath_ = base.child("flightPath").attribute("value").as_double();
 

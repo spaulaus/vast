@@ -10,7 +10,7 @@
 #include <vector>
 
 #include "BGTCalculator.hpp"
-#include "Configuration.hpp"
+#include "ConfigurationReader.hpp"
 #include "Decay.hpp"
 #include "FileHandler.hpp"
 #include "Integrator.hpp"
@@ -20,7 +20,7 @@
 using namespace std;
 
 int main(int argc, char* argv[]) {
-    Configuration cfg("Config.xml");
+    ConfigurationReader cfg("Config.xml");
     FileHandler fls = cfg.ReadFiles();
     LimitFinder lim;
     Decay dky = cfg.ReadDecay();

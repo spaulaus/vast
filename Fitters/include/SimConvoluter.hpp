@@ -28,7 +28,7 @@
 #include <vector>
 #include <utility>
 
-#include "Configuration.hpp"
+#include "ConfigurationReader.hpp"
 
 ///A class to perform the analysis and convolution of the simulated data.
 class SimConvoluter {

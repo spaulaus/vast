@@ -12,21 +12,27 @@
       <sourceFolder url="file://$MODULE_DIR$/ThirdParty/CMakeLists.txt" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/ThirdParty/source/pugixml.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/ThirdParty/source/CMakeLists.txt" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Fitters/tests/CMakeLists.txt" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Fitters/CMakeLists.txt" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Fitters/source/SimConvoluter.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Fitters/source/CMakeLists.txt" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Fitters/source/TofFitter.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/CMakeLists.txt" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/FileIo/tests/test_configuration.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/FileIo/tests/CMakeLists.txt" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/FileIo/CMakeLists.txt" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/FileIo/source/FileHandler.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/FileIo/source/OutputHandler.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/FileIo/source/FileChecker.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/FileIo/source/CMakeLists.txt" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/FileIo/source/InputHandler.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/FileIo/source/Configuration.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/FileIo/source/ConfigurationReader.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Core/tests/test_exception.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Core/tests/CMakeLists.txt" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Core/CMakeLists.txt" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Core/source/vast.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/Core/source/Decay.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Core/source/Neutron.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Core/source/Decay.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Core/source/CMakeLists.txt" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Core/source/Gamma.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/cmake/modules/FindROOT.cmake" isTestSource="false" />

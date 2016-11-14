@@ -11,26 +11,24 @@
 #include <TGraphAsymmErrors.h>
 
 #include "BGTCalculator.hpp"
-#include "ErrorCalculator.hpp"
-#include "NeutronDensity.hpp"
 #include "OutputHandler.hpp"
 
 using namespace std;
 
 bool OutputHandler::NotInfOrNan(const double &val) {
-    return(!std::isnan(val) && !std::isinf(val));
+    return (!std::isnan(val) && !std::isinf(val));
 }
 
 void OutputHandler::FillHistogram(TH1D &hist,
-                                  const std::map<double,double> & data) {
-    for(const auto &it : data)
+                                  const std::map<double, double> &data) {
+    for (const auto &it : data)
         hist.Fill(it.first, it.second);
 }
 
 void OutputHandler::OutputBasics(vector<Neutron> &nvec, Decay &dky,
-                  Experiment &exp, const string &file) {
+                                 Experiment &exp, const string &file) {
     ofstream out(file.c_str());
-    if(out.fail()) {
+    if (out.fail()) {
         cerr << endl << endl
              << "Woah! Could not open up the output file. Check this  "
              << file << endl << endl;
@@ -38,16 +36,16 @@ void OutputHandler::OutputBasics(vector<Neutron> &nvec, Decay &dky,
     }
 
     Variable omega = exp.GetOmegaPerBar() * exp.GetNumBars();
-    double totN  = 0., rawN = 0., intN = 0;
+    double totN = 0., rawN = 0., intN = 0;
     out << setw(7) << "#Mu(ns) MuErr(ns) E(MeV) EErr(MeV) IntYld IntYldErr "
         << "BR BRerr B(GT) B(GT)err log(ft) log(ft)err" << endl;
     EffCalculator eff;
-    for(auto it = nvec.begin();
-        it != nvec.end(); it++) {
+    for (auto it = nvec.begin();
+         it != nvec.end(); it++) {
         intN += it->GetRawIntegratedYield().GetValue();
         totN += it->GetIntegratedYield().GetValue() /
-            eff.GetBetaEff(it->GetEnergy(), dky).GetValue() /
-            omega.GetValue();
+                eff.GetBetaEff(it->GetEnergy(), dky).GetValue() /
+                omega.GetValue();
         rawN += it->GetRawYield().GetValue();
 
         out << setprecision(5) << it->GetMu().OutputData() << " "
@@ -60,7 +58,7 @@ void OutputHandler::OutputBasics(vector<Neutron> &nvec, Decay &dky,
     }
     double pn = totN / dky.GetNumberDecays().GetValue();
     ErrorCalculator err;
-    double pnErr = err.CalcPnErr(pn,nvec,dky);
+    double pnErr = err.CalcPnErr(pn, nvec, dky);
     out << "#Pn = " << totN << " / " << dky.GetNumberDecays().GetValue()
         << " = " << pn << " +- " << pnErr << "  RawN = "
         << rawN << " " << "  RawIntN = " << intN << endl;
@@ -79,10 +77,10 @@ void OutputHandler::OutputDensity(const NeutronDensity &nden, const Decay &dky,
     TFile f(file.c_str(), "RECREATE");
 
     TH1D density("density", "", nbins, minEnergy_, maxEnergy_);
-    SetHistOptions(density,"den");
+    SetHistOptions(density, "den");
     FillHistogram(density, *ndenBgt.GetSDensity());
 
-    TH1D densityErrLow("densityLow", "", nbins, minEnergy_,maxEnergy_);
+    TH1D densityErrLow("densityLow", "", nbins, minEnergy_, maxEnergy_);
     SetHistOptions(densityErrLow, "den");
     FillHistogram(densityErrLow, *ndenBgtLow.GetSDensity());
 
@@ -92,9 +90,9 @@ void OutputHandler::OutputDensity(const NeutronDensity &nden, const Decay &dky,
 
     TH1D bgt("bgt", "", nbins, minEnergy_, maxEnergy_);
     SetHistOptions(bgt, "bgt");
-    FillHistogram(bgt,*ndenBgt.GetBgtMap());
+    FillHistogram(bgt, *ndenBgt.GetBgtMap());
 
-    TH1D bgtErrLow("bgtLow", "", nbins, minEnergy_,maxEnergy_);
+    TH1D bgtErrLow("bgtLow", "", nbins, minEnergy_, maxEnergy_);
     SetHistOptions(bgtErrLow, "bgt");
     FillHistogram(bgtErrLow, *ndenBgtLow.GetBgtMap());
 
@@ -108,13 +106,13 @@ void OutputHandler::OutputDensity(const NeutronDensity &nden, const Decay &dky,
 
 void OutputHandler::OutputTheory(vector<Neutron> &nvec, const string &file) {
     ofstream outTheory(file.c_str());
-    for(auto it = nvec.begin(); it != nvec.end(); it++) {
+    for (auto it = nvec.begin(); it != nvec.end(); it++) {
         outTheory << it->GetExcitationEnergy().GetValue() << "  "
                   << it->GetBgt().GetValue() << " "
                   << it->GetEnergy().GetError();
         auto itNext = it;
         itNext++;
-        if(itNext != nvec.end())
+        if (itNext != nvec.end())
             outTheory << endl;
     }
     outTheory.close();
@@ -122,9 +120,9 @@ void OutputHandler::OutputTheory(vector<Neutron> &nvec, const string &file) {
 
 void OutputHandler::SetHistOptions(TH1D &hist, const std::string &type) {
     stringstream label;
-    if(type == "bgt")
+    if (type == "bgt")
         label << "B(GT) / ";
-    if(type == "den")
+    if (type == "den")
         label << "Intensity / ";
     label << "(" << resolution_ << " MeV)";
 
