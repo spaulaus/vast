@@ -3,8 +3,6 @@
  *  \author S. V. Paulauskas
  *  \date 04 September 2013
  */
-#include <iostream>
-
 #include "Decay.hpp"
 #include "ErrorCalculator.hpp"
 

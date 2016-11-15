@@ -26,38 +26,54 @@ int main(int argc, char** argv) {
     cout << "Testing ConfigurationReader::ReadDecay" << endl;
     try {
         dky = cfg.ReadDecay();
-    } catch (std::exception ex) {
-        cout << ex.what() << endl;
+    } catch (std::exception &ex) {
+        cerr << ex.what() << endl;
+        return 1;
     }
 
-//    cout << "Q Value = " << dky.GetQValue().GetValue() << " +- "
-//         << dky.GetQValue().GetError() << " "
-//         << dky.GetQValue().GetUnits() << " " << endl;
-//    cout << "Number of Decays = " << dky.GetNumberDecays().GetValue()
-//         << " +- " << dky.GetNumberDecays().GetError() << " "
-//         << dky.GetNumberDecays().GetUnits() << endl;
-//
-//    cout << endl << "Outputting info for the Experiment : " << endl;
-//    exp = cfg.ReadExperiment();
-//    cout << "numBars = " << exp.GetNumBars().GetValue() << endl;
-//    cout << "betaEff = " << exp.GetBetaEff().GetValue() << " +- "
-//         << exp.GetBetaEff().GetError() << " "
-//         << exp.GetBetaEff().GetUnits() << endl;
-//
-//    cout << endl << "Outputting info from the FileHandler : " << endl;
-//    files = cfg.ReadFiles();
-//    cout << "gsTof = " << files.GetInputName("gsTof") << " " << endl
-//         << "neutrons output = " << files.GetOutputName("neutrons") << endl;
-//
-//    cout << endl << "Outputting info from the FlagHandler : " << endl;
-//    flags = cfg.ReadFlags();
-//    cout << "doFit = " << flags.GetFlag("doFit") << endl
-//         << "outputDensity = " << flags.GetFlag("density") << endl;
-//
-//    cout << endl << "Outputting info from the FitHandler: " << endl;
-//    fitInfo = cfg.ReadFit();
-//    vector<double> temp = fitInfo.GetSnglPeaks();
-//    for(vector<double>::const_iterator it = temp.begin(); it != temp.end();
-//        it++)
-//        cout << *it << endl;
+    cout << "Q Value = " << dky.GetQValue().Output() << endl;
+    cout << "Number of Decays = " << dky.GetNumberDecays().Output() << endl;
+
+    cout << endl << "Testing ConfigurationReader::ReadExperiment" << endl;
+    try {
+        exp = cfg.ReadExperiment();
+    } catch (std::exception &ex) {
+        cerr << ex.what() << endl;
+        return 1;
+    }
+
+    cout << "numBars = " << exp.GetNumBars().Output() << endl;
+    cout << "betaEff = " << exp.GetBetaEff().Output() << endl;
+
+    cout << endl << "Testing ConfigurationReader::ReadFiles" << endl;
+    try {
+        files = cfg.ReadFiles();
+    }catch(exception &ex) {
+        cerr << ex.what() << endl;
+        return 1 ;
+    }
+    cout << "gsTof = " << files.GetInputName("gsTof") << " " << endl
+         << "neutrons output = " << files.GetOutputName("neutrons") << endl;
+
+    cout << endl << "Testing ConfigurationReader::ReadFlags : " << endl;
+    try {
+        flags = cfg.ReadFlags();
+    }catch (exception &ex){
+        cerr << ex.what() << endl;
+        return(1);
+    }
+    cout << "doFit = " << flags.GetFlag("doFit") << endl
+         << "outputDensity = " << flags.GetFlag("density") << endl;
+
+    cout << endl << "Testing ConfigurationReader::ReadFit :" << endl;
+    try {
+        fitInfo = cfg.ReadFit();
+    } catch (exception &ex) {
+        cerr << ex.what() << endl;
+        return(1);
+    }
+    vector<double> temp = fitInfo.GetSnglPeaks();
+    for(vector<double>::const_iterator it = temp.begin(); it != temp.end();
+        it++)
+        cout << *it << endl;
 }

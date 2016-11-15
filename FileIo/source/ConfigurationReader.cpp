@@ -12,107 +12,137 @@
 
 using namespace std;
 
+///Constructor that takes the full path to the configuration file and tries
+/// to open it for parsing. This attempt is made inside a try/catch block for
+/// proper error handling.
 ConfigurationReader::ConfigurationReader(const std::string &file) {
-    try{
+    try {
         OpenConfigurationFile(file);
-    } catch(...) {
-        throw;
+    } catch (std::exception &ex) {
+        cerr << ex.what() << endl;
     }
 }
 
 void ConfigurationReader::OpenConfigurationFile(const std::string &file) {
-    pugi::xml_parse_result result = doc_.load_file(file.c_str());
-    if(result) {
-        cout << "We opened up the configuration file : " << file << endl;
-        cfg_ = doc_.child("ConfigurationReader");
-    } else {
-        stringstream msg;
-        msg << "ConfigurationReader threw exception when opening the"
-            << " configuration file. "
-            << result.description();
-        throw Exception(msg.str());
-    }
+    if (doc_.load_file(file.c_str())) {
+        cout << "Using configuration file : " << file << endl;
+        cfg_ = doc_.child("Configuration");
+    } else
+        throw Exception("ConfigurationReader::OpenConfigurationFile : The "
+                                "configuration file was not opened properly, "
+                                "check the path and try again. ");
 }
 
 Experiment ConfigurationReader::ReadExperiment(void) {
     Experiment exp;
     pugi::xml_node expInfo = cfg_.child("Experiment");
+    if(expInfo.empty())
+        throw Exception(EmptyNodeExceptionMessage("ReadExperiment",
+                                                  "Experiment"));
 
-    for(pugi::xml_node node : expInfo.children()) {
+    for (pugi::xml_node node : expInfo.children()) {
         string name = node.name();
         Variable temp = NodeToVar(node);
-        if(name == "NumberOfBars")
+        if (name == "NumberOfBars")
             exp.SetNumBars(temp);
-        else if(name == "OmegaPerBar")
+        else if (name == "OmegaPerBar")
             exp.SetOmegaPerBar(temp);
-        else if(name =="DensityResolution")
+        else if (name == "DensityResolution")
             exp.SetDensityRes(temp);
-        else if(name == "FlightPath")
+        else if (name == "FlightPath")
             exp.SetFlightPath(temp);
-        else if(name == "EfficiencyCurve")
+        else if (name == "EfficiencyCurve")
             exp.SetEfficiencyCurveName(StringToEffType(node.child_value()));
         else
-            SpitWarning("Experiment", name);
+            throw Exception(UnknownEntryExceptionMessage("ReadExperiment",
+                                                         "Experiment", name));
     }
-    return(exp);
+    return (exp);
 }
 
 FileHandler ConfigurationReader::ReadFiles(void) {
     FileHandler fhandle;
+    if(cfg_.child("Files").empty())
+        throw Exception(EmptyNodeExceptionMessage("ReadFiles", "Files"));
+
     pugi::xml_node inode = cfg_.child("Files").child("Input");
     pugi::xml_node onode = cfg_.child("Files").child("Output");
 
-    for(pugi::xml_node attr : inode.children())
+    for (pugi::xml_node attr : inode.children())
         fhandle.SetInputNames(attr.name(), attr.child_value());
-    for(pugi::xml_node attr : onode.children())
+    for (pugi::xml_node attr : onode.children())
         fhandle.SetOutputNames(attr.name(), attr.child_value());
-    return(fhandle);
+    return (fhandle);
 }
 
 FitHandler ConfigurationReader::ReadFit(void) {
     FitHandler fit;
     pugi::xml_node ft = cfg_.child("Fitting");
+
+    if (ft.empty())
+        throw Exception(EmptyNodeExceptionMessage("ReadFit", "Fitting"));
+
+    string pklist = ft.child("pkList").attribute("value").as_string();
+    fit.SetPeakList(pklist);
+
     vector<double> snglPeaks, g1Peaks, g2Peaks;
-    for(pugi::xml_node pks : ft.child("peaks").child("sngl").children())
+
+    for (pugi::xml_node pks : ft.child("peaks").child("sngl").children())
         snglPeaks.push_back(pks.attribute("value").as_double());
+
+    if(snglPeaks.empty() && pklist == "sngl")
+        throw Exception("ConfigurationReader::ReadFit - The singles peak list"
+                                " is empty. You will have to add peaks for "
+                                "fitting.");
     fit.SetSnglPeaks(snglPeaks);
 
-    for(pugi::xml_node pks : ft.child("peaks").child("g1").children())
+    for (pugi::xml_node pks : ft.child("peaks").child("g1").children())
         g1Peaks.push_back(pks.attribute("value").as_double());
+    if(g1Peaks.empty() && pklist == "g1")
+        throw Exception("ConfigurationReader::ReadFit - The gamma 1 gated  "
+                                "peak list is empty. You will have to add "
+                                "peaks for fitting.");
     fit.SetGate1Peaks(g1Peaks);
 
-    for(pugi::xml_node pks : ft.child("peaks").child("g2").children())
+    for (pugi::xml_node pks : ft.child("peaks").child("g2").children())
         g2Peaks.push_back(pks.attribute("value").as_double());
+    if(g2Peaks.empty() && pklist == "g2")
+        throw Exception("ConfigurationReader::ReadFit - The gamma 2 gated  "
+                                "peak list is empty. You will have to add "
+                                "peaks for fitting.");
     fit.SetGate2Peaks(g2Peaks);
 
     fit.SetBinning(ft.child("binning").attribute("value").as_double(0.5));
-    fit.SetPeakList(ft.child("pkList").attribute("value").as_string());
     fit.SetPrintLevel(ft.child("PrintLevel").attribute("value").as_int(1));
 
     double low =
-        ft.child("range").child("low").attribute("value").as_double();
+            ft.child("range").child("low").attribute("value").as_double();
     double high =
-        ft.child("range").child("high").attribute("value").as_double();
-    fit.SetRange(make_pair(low,high));
-    return(fit);
+            ft.child("range").child("high").attribute("value").as_double();
+    fit.SetRange(make_pair(low, high));
+    return (fit);
 }
 
 FlagHandler ConfigurationReader::ReadFlags(void) {
     FlagHandler flags;
-    for(pugi::xml_node chld : cfg_.child("Flags").children())
+    if (cfg_.child("Flags").empty())
+        throw Exception(EmptyNodeExceptionMessage("ReadFlags", "Flags"));
+    for (pugi::xml_node chld : cfg_.child("Flags").children())
         flags.SetFlag(chld.name(), chld.attribute("value").as_bool());
-    return(flags);
+    return (flags);
 }
 
 Decay ConfigurationReader::ReadDecay(void) {
     Decay decay;
-    string nodeName = "Decay";
-    pugi::xml_node dky = cfg_.child(nodeName.c_str());
+    pugi::xml_node dky = cfg_.child("Decay");
 
-    for(auto node1 : dky.children()) {
+    if (dky.empty())
+        throw Exception(EmptyNodeExceptionMessage("ReadDecay", "Decay"));
+
+    for (auto node1 : dky.children()) {
         string name = node1.name();
         Variable temp = NodeToVar(node1);
-        if(name == "z")
+        if (name == "z")
             decay.SetParentZ(temp);
         else if (name == "q")
             decay.SetQValue(temp);
@@ -126,45 +156,57 @@ Decay ConfigurationReader::ReadDecay(void) {
             Variable area = NodeToVar(node1.child("area"));
             Variable en = NodeToVar(node1.child("en"));
             Variable abr = NodeToVar(node1.child("abr"));
-            decay.SetNumDecay(en,area,abr);
+            decay.SetNumDecay(en, area, abr);
         } else if (name == "g1") {
             //unused for now
         } else if (name == "g2") {
             //unused for now
         } else
-            SpitWarning(nodeName,name);
+            throw Exception(UnknownEntryExceptionMessage("ReadDecay",
+                                                         "Decay", name));
     }
-    return(decay);
+    return (decay);
 }
 
-EffCalculator::EffTypes ConfigurationReader::StringToEffType(const std::string &a) {
-    if(a == "mmfCalc")
-        return(EffCalculator::EffTypes::mmfCalc);
-    if(a == "mmfTheory")
-        return(EffCalculator::EffTypes::mmfTheory);
-    if(a == "rolling")
-        return(EffCalculator::EffTypes::rolling);
-    if(a == "svpBan4")
-        return(EffCalculator::EffTypes::svpBan4);
-    if(a == "svpTestBan1")
-        return(EffCalculator::EffTypes::svpTestBan1);
-    if(a == "vandle")
-        return(EffCalculator::EffTypes::vandle);
-    return(EffCalculator::EffTypes::svpBan4);
+EffCalculator::EffTypes
+ConfigurationReader::StringToEffType(const std::string &a) {
+    if (a == "mmfCalc")
+        return (EffCalculator::EffTypes::mmfCalc);
+    if (a == "mmfTheory")
+        return (EffCalculator::EffTypes::mmfTheory);
+    if (a == "rolling")
+        return (EffCalculator::EffTypes::rolling);
+    if (a == "svpBan4")
+        return (EffCalculator::EffTypes::svpBan4);
+    if (a == "svpTestBan1")
+        return (EffCalculator::EffTypes::svpTestBan1);
+    if (a == "vandle")
+        return (EffCalculator::EffTypes::vandle);
+    return (EffCalculator::EffTypes::svpBan4);
 }
 
 Variable ConfigurationReader::NodeToVar(const pugi::xml_node &node) {
     Variable var = Variable(node.attribute("value").as_double(),
                             node.attribute("error").as_double(),
                             node.attribute("unit").value());
-    return(var);
+    return (var);
 }
 
-void ConfigurationReader::SpitWarning(const string &node,
-                                const string &name) {
-    cerr << endl << "WARNING!!!!  "
-         << "You put something in the " << node
-         << " node that has confused the shit out of me." << endl
-         << "If you need access to the information in "
-         << name << "; add it yourself." << endl << endl;
+string ConfigurationReader::EmptyNodeExceptionMessage(const std::string &method,
+                                                      const std::string &node) {
+    stringstream ss;
+    ss << "ConfigurationReader::" << method << " - The " << node
+       << " node does not exist!";
+    return ss.str();
+}
+
+string ConfigurationReader::UnknownEntryExceptionMessage(
+        const std::string &method, const std::string &node,
+        const std::string &name) {
+    stringstream ss;
+    ss << "ConfigurationReader::" << method << " - " << "There was an "
+            "unrecognized entry into the " << node << " node with the name: "
+            << name << ". If you need access to this variable you will need to "
+            "edit the source code.";
+    return ss.str();
 }
