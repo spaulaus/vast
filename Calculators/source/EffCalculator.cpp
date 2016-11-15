@@ -164,7 +164,6 @@ Variable EffCalculator::GetEff(const Variable &energy, const EffTypes &curve) {
             return(CalcSimRollingEff(energy));
         default :
             return(Variable(0.0,0.0,""));
-            break;
     }
     return(CalcEff(en, coeffs));
 }

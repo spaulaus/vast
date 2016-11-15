@@ -21,7 +21,7 @@ public:
     ///The default constructor
     ConfigurationReader(void) {};
 
-    ///A constructor taking the configuration file as input
+    ///@brief A constructor taking the configuration file as input
     ///@param [in] file The name of the configuration
     ConfigurationReader(const std::string &file);
 
@@ -31,27 +31,27 @@ public:
     ///@return A pointer to the opened configuration document
     pugi::xml_document *GetDocument(void) { return (&doc_); };
 
-    ///A method that parses the decay information
+    ///@brief A method that parses the decay information
     ///@return Decay information from config file
     Decay ReadDecay(void);
 
-    ///A method that parses the experimental information
+    ///@brief A method that parses the experimental information
     ///@return Experimental information from config file
     Experiment ReadExperiment(void);
 
-    ///A method that parses the input and output files
+    ///@brief A method that parses the input and output files
     ///@return File lists from the config file
     FileHandler ReadFiles(void);
 
-    ///A method that parses the fitting information
+    ///@brief A method that parses the fitting information
     ///@return information necessary for the fit from the config file
     FitHandler ReadFit(void);
 
-    ///A method that parses the logic handling flags
+    ///@brief A method that parses the logic handling flags
     ///@return Logic handling flags
     FlagHandler ReadFlags(void);
 
-    ///This setter provides the program with the configuration file.
+    ///@brief This setter provides the program with the configuration file.
     ///@param[in] file Path and file name that we are goign to be using as
     /// the input to the program.
     void SetConfigurationFile(const std::string &file) { file_ = file; }
@@ -61,26 +61,32 @@ private:
     pugi::xml_node cfg_; //!< the node for the configuration
     std::string file_;//!< the name of the file that we are going to open.
 
-    ///Method that converts a string read in from the configuration file into
+    ///@brief Method that converts a string read in from the configuration file into
     /// an efficiency type
     ///@param[in] a : The string value that we are going to convert
     EffCalculator::EffTypes StringToEffType(const std::string &a);
 
-    ///Method that will convert a number read in from the node to a Variable
+    ///@brief Method that will convert a number read in from the node to a Variable
     /// type
     ///@param[in] node : The node that we are going to convert
     Variable NodeToVar(const pugi::xml_node &node);
 
-    ///Method that is goign to warn us when we have read in something that we
-    /// do not understand
-    ///@param[in] node : The node where we found the error
-    ///@param[in] name : The name of the child node that we didn't understand
-    void SpitWarning(const std::string &node,
-                     const std::string &name);
-
-    ///Method that will actually open up the configuration file and throw
+    ///@brief Method that will actually open up the configuration file and throw
     /// some errors if we did not successfully do so.
     void OpenConfigurationFile(const std::string &file);
+
+    ///@brief A method to format an exception for an empty node.
+    ///@param[in] method : The name of the method throwing the exception
+    ///@param[in] node : The name of the node where the exception occured.
+    std::string EmptyNodeExceptionMessage(const std::string &method,
+                                          const std::string &node);
+    ///@brief A method to format an exception for an unrecognized entry into
+    /// a node.
+    ///@param[in] method : The name of the method that throws the exception
+    ///@param[in] node : The name of the node where the exception occured
+    ///@param[in] name : The name of the unrecognized value.
+    std::string UnknownEntryExceptionMessage(const std::string &method,
+        const std::string &node, const std::string &name);
 };
 
 #endif //__CONFIGURATION_READER_HPP__

@@ -79,6 +79,8 @@
     </Flags>
 
     <Fitting>
+        <pkList value="sngl"/>
+
         <peaks>
             <sngl>
                 <pk value="16.0"/>
@@ -92,15 +94,12 @@
                 <pk value="75.151"/>
                 <pk value="85.826"/>
             </sngl>
-
             <g1>
                 <pk value="20.0"/>
                 <pk value="50.0"/>
                 <pk value="120.0"/>
             </g1>
         </peaks>
-
-        <pkList value="sngl"/>
 
         <range>
             <low value="0.0"/>
