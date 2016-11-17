@@ -6,7 +6,6 @@ install(TARGETS Core DESTINATION lib)
 
 if(BUILD_VAST)
     add_executable(vast vast.cpp)
-    target_link_libraries(vast ${ROOT_LIBRARIES} Calculators Core Fitters
-            FileInput FileOutput SignalGenerator ThirdParty PhysConstants
-            RooFit RooFitCore)
+    target_link_libraries(vast Calculators VastCore Fitters FileInput
+            FileOutput ThirdParty RooFit RooFitCore ${ROOT_LIBRARIES})
 endif(BUILD_VAST)
