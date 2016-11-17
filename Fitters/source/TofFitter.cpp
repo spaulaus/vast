@@ -6,16 +6,12 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
-#include <string>
-
-#include <cstdio>
 
 #include <RooAddPdf.h>
 #include <RooCBShape.h>
 #include <RooConstVar.h>
 #include <RooDataSet.h>
 #include <RooFitResult.h>
-#include <RooFormulaVar.h>
 #include <RooMCStudy.h>
 #include <RooPlot.h>
 #include <RooRealVar.h>
@@ -89,19 +85,30 @@ void TofFitter::PerformFit(void) {
     RooRealVar tof("tof","tof", 0.0, rng_.first, rng_.second);
     RooArgList cbs, ylds;
 
+
+    //We are going to get the parameters for the calculation here. This is
+    // going to take some doing to get exactly right, but we're working on it.
     ParamCalculator params;
-    RooConstVar e("e","",params.GetE().GetValue());
-    RooConstVar d("d","",params.GetD().GetValue());
-    RooConstVar c("c","",params.GetC().GetValue());
-    RooConstVar b("b","",params.GetB().GetValue());
-    RooConstVar a("a","",params.GetA().GetValue());
-    RooConstVar ci("ci","",params.GetI().GetValue());
-    RooConstVar h("h","",params.GetH().GetValue());
-    RooConstVar g("g","",params.GetG().GetValue());
-    RooConstVar f("f","",params.GetF().GetValue());
-    RooConstVar j("j","",params.GetJ().GetValue());
-    RooConstVar k("k","",params.GetK().GetValue());
-    RooConstVar l("l","",params.GetL().GetValue());
+
+    ///Could we make this a little cleaner like we do below? Make a loop that
+    /// way we don't have to worry about setting all these by hand?
+    vector<Variable> alphaCoefficients = params.GetAlphaCoefficients();
+    RooConstVar a3("a3","", alphaCoefficients[3].GetValue());
+    RooConstVar a2("a2","",alphaCoefficients[2].GetValue());
+    RooConstVar a1("a1","",alphaCoefficients[1].GetValue());
+    RooConstVar a0("a0","",alphaCoefficients[0].GetValue());
+
+    vector<Variable> nCoefficients = params.GetNCoefficients();
+    RooConstVar n2("n2","", nCoefficients[2].GetValue());
+    RooConstVar n1("n1","",nCoefficients[1].GetValue());
+    RooConstVar n0("n0","",nCoefficients[0].GetValue());
+
+    vector<Variable> sigmaCoefficients = params.GetSigmaCoefficients();
+    RooConstVar s4("s4","",sigmaCoefficients[4].GetValue());
+    RooConstVar s3("s3","",sigmaCoefficients[3].GetValue());
+    RooConstVar s2("s2","",sigmaCoefficients[2].GetValue());
+    RooConstVar s1("s1","",sigmaCoefficients[1].GetValue());
+    RooConstVar s0("s0","",sigmaCoefficients[0].GetValue());
 
    for(unsigned int i = 0; i < yields_.size(); i++) {
         stringstream fSig, fAlph, fN;
@@ -109,24 +116,18 @@ void TofFitter::PerformFit(void) {
                                            yLow_, yHigh_);
         RooRealVar *mu = new RooRealVar(mus_[i].c_str(), "", peaks_[i],
                                         rng_.first, rng_.second);
-
-        fSig << "e*pow(" << mus_[i] << ",4)+ d*pow(" << mus_[i] <<",3) + "
-             << "c*pow(" << mus_[i] << ",2) + b*" << mus_[i] << "+a";
-        RooFormulaVar *sigma =
-            new RooFormulaVar(sigmas_[i].c_str(), fSig.str().c_str(),
-                    RooArgList(e,d,c,b,a,*mu));
-
-        fAlph << "ci*pow(" << mus_[i] <<",3) + " << "h*pow(" << mus_[i]
-              << ",2) + g*" << mus_[i] << "+f";
-        RooFormulaVar *alpha =
-            new RooFormulaVar(alphas_[i].c_str(), fAlph.str().c_str(),
-                    RooArgList(ci,h,g,f,*mu));
-
-        fN << "j/" << mus_[i] << " + k*" << mus_[i] << "+l";
-        RooFormulaVar *n =
-            new RooFormulaVar(ns_[i].c_str(), fN.str().c_str(),
-                    RooArgList(j,k,l,*mu));
-
+       RooFormulaVar *alpha =
+               new RooFormulaVar(alphas_[i].c_str(),
+                                 params.GetAlphaFunction(mus_[i]).c_str(),
+                                 RooArgList(a3,a2,a1,a0,*mu));
+       RooFormulaVar *n =
+               new RooFormulaVar(ns_[i].c_str(),
+                                 params.GetNFunction(mus_[i]).c_str(),
+                                 RooArgList(n2,n1,n0,*mu));
+       RooFormulaVar *sigma =
+            new RooFormulaVar(sigmas_[i].c_str(),
+                              params.GetSigmaFunction(mus_[i]).c_str(),
+                              RooArgList(s4,s3,s2,s1,s0,*mu));
         RooCBShape *cb = new RooCBShape(components_[i].c_str(), "", tof, *mu,
                                         *sigma, *alpha, *n);
         cbs.add(*cb);

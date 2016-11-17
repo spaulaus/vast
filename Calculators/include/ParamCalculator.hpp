@@ -1,108 +1,149 @@
 /** \file ParamCalculator.hpp
- *  \brief A class to calculate the parameterized alpha,n, and sigma for CBs
  *  \author S. V. Paulauskas
  *  \date 12 November 2013
  */
 #ifndef __PARAMCALCULATOR_HPP_
 #define __PARAMCALCULATOR_HPP_
 
-#include <Variable.hpp>
+#include <vector>
 
-///A class to calculate the parameterized alpha, n, and sigma for CBs
+#include "Exception.hpp"
+#include "StringManipulation.hpp"
+#include "Variable.hpp"
+
+///A class to calculate the parameterized alpha, n, and sigma for Crystal Balls
 class ParamCalculator {
 public:
-    /*! Default constructor */
-    ParamCalculator();
-    /*! Default destructor */
-    ~ParamCalculator(){};
+    ///@brief Default constructor
+    ParamCalculator() {}
 
-    /*! \return the value for a_ (sigma)*/
-    Variable GetA(void) const {return(a_);};
-    /*! \return the value for b_ (sigma)*/
-    Variable GetB(void) const {return(b_);};
-    /*! \return the value for c_ (sigma)*/
-    Variable GetC(void) const {return(c_);};
-    /*! \return the value for d_ (sigma)*/
-    Variable GetD(void) const {return(d_);};
-    /*! \return the value for e_ (sigma)*/
-    Variable GetE(void) const {return(e_);};
-    /*! \return the value for f_ (alpha)*/
-    Variable GetF(void) const {return(f_);};
-    /*! \return the value for g_ (alpha)*/
-    Variable GetG(void) const {return(g_);};
-    /*! \return the value for h_ (alpha)*/
-    Variable GetH(void) const {return(h_);};
-    /*! \return the value for i_ (alpha)*/
-    Variable GetI(void) const {return(i_);};
-    /*! \return the value for j_ (n)*/
-    Variable GetJ(void) const {return(j_);};
-    /*! \return the value for k_ (n)*/
-    Variable GetK(void) const {return(k_);};
-    /*! \return the value for l_ (n)*/
-    Variable GetL(void) const {return(l_);};
+    ///@brief A constructor directly setting the values of the coefficients
+    ///@param[in] a : A vector of variables to assign to the private
+    /// variable alphaCoeff_
+    ///@param[in] n : A vector of variables to assign to the private
+    /// variable nCoeff_
+    ///@param[in] s : A vector of variables to assign to the private
+    /// variable sigmaCoeff_
+    ParamCalculator(const std::vector<Variable> &a,
+                    const std::vector<Variable> &n,
+                    const std::vector<Variable> &s) {
+        SetAlphaCoefficients(a);
+        SetNCoefficients(n);
+        SetSigmaCoefficients(s);
+    }
 
-    /*! Sets the value for sigma parameter a
-     * \param [in] a : the value to set */
-    void SetA(const Variable &a) {a_ = a;};
-    /*! Sets the value for sigma parameter b
-     * \param [in] a : the value to set */
-    void SetB(const Variable &a) {b_ = a;};
-    /*! Sets the value for sigma parameter c
-     * \param [in] a : the value to set */
-    void SetC(const Variable &a) {c_ = a;};
-    /*! Sets the value for sigma parameter d
-     * \param [in] a : the value to set */
-    void SetD(const Variable &a) {d_ = a;};
-    /*! Sets the value for sigma parameter e
-     * \param [in] a : the value to set */
-    void SetE(const Variable &a) {e_ = a;};
-    /*! Sets the value for alpha parameter f
-     * \param [in] a : the value to set */
-    void SetF(const Variable &a) {f_ = a;};
-    /*! Sets the value for alpha parameter g
-     * \param [in] a : the value to set */
-    void SetG(const Variable &a) {g_ = a;};
-    /*! Sets the value for alpha parameter h
-     * \param [in] a : the value to set */
-    void SetH(const Variable &a) {h_ = a;};
-    /*! Sets the value for alpha parameter i
-     * \param [in] a : the value to set */
-    void SetI(const Variable &a) {i_ = a;};
-    /*! Sets the value for n parameter j
-     * \param [in] a : the value to set */
-    void SetJ(const Variable &a) {j_ = a;};
-    /*! Sets the value for n parameter k
-     * \param [in] a : the value to set */
-    void SetK(const Variable &a) {k_ = a;};
-    /*! Sets the value for n parameter l
-     * \param [in] a : the value to set */
-    void SetL(const Variable &a) {l_ = a;};
+    ///@brief Default destructor
+    ~ParamCalculator() {}
 
-    /*! Calculate the alpha parameter from the CB
-    *   \param[in] tof the time of flight
-    *   \return The break point for the Gaussian and Power parts of the CB */
+    ///@brief Calculate the alpha parameter from the CB
+    ///@param[in] tof the time of flight
+    ///@return The break point for the Gaussian and Power parts of the CB
     double CalcAlpha(const double &tof);
-    /*! Calculate the n parameter for the CB
-    *   \param[in] tof the time of flight
-    *   \return The power parameter of the CB */
+
+    ///@brief Calculate the n parameter for the CB
+    ///@param[in] tof the time of flight
+    ///@return The power parameter of the CB */
     double CalcN(const double &tof);
-    /*! Calculate the sigma parameter for the CB
-    *   \param[in] tof the time of flight
-    *   \return The width of the Gaussian part of the CB */
+
+    ///@brief Calculate the sigma parameter for the CB
+    ///@param[in] tof the time of flight
+    ///@return The width of the Gaussian part of the CB
     double CalcSigma(const double &tof);
+
+    ///@brief A method that gets the coeffieicnts for alpha
+    ///@return A vector of Variables for the coefficients in ascending power
+    std::vector<Variable> GetAlphaCoefficients(void) { return alphaCoeff_; }
+
+    ///@brief A method that gets the coeffieicnts for n
+    ///@return A vector of Variables for the coefficients in ascending power
+    std::vector<Variable> GetNCoefficients(void) { return nCoeff_; }
+
+    ///@brief A method that gets the coeffieicnts for sigma
+    ///@return A vector of Variables for the coefficients in ascending power
+    std::vector<Variable> GetSigmaCoefficients(void) { return sigmaCoeff_; }
+
+    ///@brief A method to return the functional form of alpha(ToF) with the
+    /// tof variable replaced by the input argument.
+    ///@param[in] a : The argument to replace tof with
+    ///@return The functional form of the parameter with the new tof variable
+    std::string GetAlphaFunction(const std::string &tof) {
+        if(alphaFunction_ == "")
+            throw Exception("ParamCalculator::GetAlphaFunction - The "
+                                    "functional string was empty!");
+        return StringManipulation::ReplaceString(alphaFunction_, "tof", tof);
+    }
+
+    ///@brief A method to return the functional form of n(ToF) with the
+    /// tof variable replaced by the input argument.
+    ///@param[in] a : The argument to replace tof with
+    ///@return The functional form of the parameter with the new tof variable
+    std::string GetNFunction(const std::string &tof) {
+        if(nFunction_ == "")
+            throw Exception("ParamCalculator::GetNFunction - The "
+                                    "functional string was empty!");
+        return StringManipulation::ReplaceString(nFunction_, "tof", tof);
+    }
+
+    ///@brief A method to return the functional form of sigma(ToF) with the
+    /// tof variable replaced by the input argument.
+    ///@param[in] a : The argument to replace tof with
+    ///@return The functional form of the parameter with the new tof variable
+    std::string GetSigmaFunction(const std::string &tof) {
+        if(sigmaFunction_ == "")
+            throw Exception("ParamCalculator::GetSigmaFunction - The "
+                                    "functional string was empty!");
+        return StringManipulation::ReplaceString(sigmaFunction_, "tof", tof);
+    }
+
+    ///@brief A method that gets the coeffieicnts for alpha
+    ///@param[in] a : A vector of Variables for the coefficients in ascending
+    /// power order.
+    void
+    SetAlphaCoefficients(const std::vector<Variable> &a) {
+        if (a.size() != 4)
+            throw Exception("ParamCalculator::SetAlphaCoefficients - alpha"
+                                    "(ToF) needs to have 4 coefficients!");
+        alphaCoeff_ = a;
+    }
+
+    ///@brief A method that gets the coeffieicnts for n
+    ///@param[in] a : A vector of Variables for the coefficients in ascending
+    /// power order.
+    void SetNCoefficients(const std::vector<Variable> &a) {
+        if (a.size() != 3)
+            throw Exception("ParamCalculator::SetNCoefficients - n"
+                                    "(ToF) needs to have 3 coefficients!");
+        nCoeff_ = a;
+    }
+
+    ///@brief A method that gets the coeffieicnts for sigma
+    ///@param[in] a : A vector of Variables for the coefficients in ascending
+    /// power order.
+    void
+    SetSigmaCoefficients(const std::vector<Variable> &a) {
+        if (a.size() != 5)
+            throw Exception("ParamCalculator::SetSigmaCoefficients - sigma"
+                                    "(ToF) needs to have 5 coefficients!");
+        sigmaCoeff_ = a;
+    }
+
+    ///@brief A method to set the functional form of alpha(ToF)
+    void SetAlphaFunction(const std::string &a) { alphaFunction_ = a; }
+
+    ///@brief A method to set the functional form of alpha(ToF)
+    void SetNFunction(const std::string &a) { nFunction_ = a; }
+
+    ///@brief A method to set the functional form of alpha(ToF)
+    void SetSigmaFunction(const std::string &a) { sigmaFunction_ = a; }
+
 private:
-    Variable a_;//!< Coefficient for sigma parameter
-    Variable b_;//!< Coefficient for sigma parameter
-    Variable c_;//!< Coefficient for sigma parameter
-    Variable d_;//!< Coefficient for sigma parameter
-    Variable e_;//!< Coefficient for sigma parameter
-    Variable f_;//!< Coefficient for alpha parameter
-    Variable g_;//!< Coefficient for alpha parameter
-    Variable h_;//!< Coefficient for alpha parameter
-    Variable i_;//!< Coefficient for alpha parameter
-    Variable j_;//!< Coefficient for n parameter
-    Variable k_;//!< Coefficient for n parameter
-    Variable l_;//!< Coefficient for n parameter
+    std::string alphaFunction_; //!< The fucntional form of alpha(ToF)
+    std::string nFunction_; //!< The fucntional form of n(ToF)
+    std::string sigmaFunction_; //!< The fucntional form of sigma(ToF)
+
+    std::vector<Variable> alphaCoeff_; //!<The vector containing alpha coeff.
+    std::vector<Variable> nCoeff_; //!< The vector containing n coefficients.
+    std::vector<Variable> sigmaCoeff_; //!<The vector containing sigma coeff.
 };
 
 #endif //__PARAMCALCULATOR_HPP_

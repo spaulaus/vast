@@ -7,11 +7,10 @@
 
 #include <cmath>
 
-#include <PhysConstants.hpp>
-
 #include "Decay.hpp"
 #include "EffCalculator.hpp"
 #include "ErrorCalculator.hpp"
+#include "PhysConstants.hpp"
 
 using namespace std;
 

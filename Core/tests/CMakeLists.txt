@@ -1,1 +1,2 @@
 add_executable(test_exception test_exception.cpp)
+add_executable(tests_stringmanipulation test_stringmanipulation.cpp)

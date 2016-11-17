@@ -1,5 +1,5 @@
 add_executable(efficiency efficiency.cpp)
-target_link_libraries(efficiency Calculators Core ThirdParty)
+target_link_libraries(efficiency Calculators Core ThirdParty PhysConstants)
 install(TARGETS efficiency DESTINATION bin)
 
 add_executable(sensitivity LimitFinder.cpp sensitivity.cpp)

@@ -13,6 +13,7 @@
 #include "FileHandler.hpp"
 #include "FlagHandler.hpp"
 #include "FitHandler.hpp"
+#include "ParamCalculator.hpp"
 #include "pugixml.hpp"
 
 //! A class that handles the parsing of the xml configuration file.
@@ -50,6 +51,10 @@ public:
     ///@brief A method that parses the logic handling flags
     ///@return Logic handling flags
     FlagHandler ReadFlags(void);
+
+    ///@brief A method that handles the reading of the Crystal Ball
+    /// ParamCalculator
+    ParamCalculator ReadCrystalBallParameters(void);
 
     ///@brief This setter provides the program with the configuration file.
     ///@param[in] file Path and file name that we are goign to be using as

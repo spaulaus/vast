@@ -49,8 +49,8 @@ endif (CMAKE_BUILD_TYPE MATCHES "Debug")
 
 #Install options
 option(BUILD_TESTS "Build tests" ON)
-option(BUILD_UTILITIES "Build Useful Calculators" ON)
-option(BUILD_VAST "Build Vandle Analaysis Software Toolkit VAST" OFF)
+option(BUILD_UTILITIES "Build Useful Utility programs" ON)
+option(BUILD_VAST "Build Vandle Analaysis Software Toolkit VAST" ON)
 
 #------------------------------------------------------------------------------
 
@@ -85,7 +85,7 @@ find_library(SignalGenerator SignalGenerator PATH
 include_directories(Calculators/include Core/include FileIo/include
         Fitters/include ThirdParty/include)
 
-add_subdirectory(Calculators/source)
+add_subdirectory(Calculators)
 add_subdirectory(Core)
 add_subdirectory(FileIo)
 add_subdirectory(Fitters)

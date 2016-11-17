@@ -123,6 +123,10 @@ FitHandler ConfigurationReader::ReadFit(void) {
     return (fit);
 }
 
+ParamCalculator ConfigurationReader::ReadCrystalBallParameters() {
+    return ParamCalculator();
+}
+
 FlagHandler ConfigurationReader::ReadFlags(void) {
     FlagHandler flags;
     if (cfg_.child("Flags").empty())
