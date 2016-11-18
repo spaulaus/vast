@@ -14,7 +14,6 @@
 #include "Integrator.hpp"
 #include "OutputHandler.hpp"
 #include "TofFitter.hpp"
-#include "Variable.hpp"
 
 using namespace std;
 
@@ -34,6 +33,7 @@ int main(int argc, char* argv[]) {
     FlagHandler flags;
     FitHandler fit;
     Decay decay;
+    CrystalBallParameters cbpars;
     bool basic;
 
     cout << "vast.cpp : Reading in the configuration file " << argv[1] << endl;
@@ -52,9 +52,10 @@ int main(int argc, char* argv[]) {
     basic = flags.GetFlag("basic");
 
     fit = cfg.ReadFit();
+    cbpars = cfg.ReadCrystalBallParameters();
     if(flags.GetFlag("doFit")) {
         cout << "Performing the Fit and reading the Fit configuration" << endl;
-        TofFitter fitter(fit, fls);
+        TofFitter fitter(fit, fls, cbpars);
     }
 
     cout << "Reading the Decay information" << endl;

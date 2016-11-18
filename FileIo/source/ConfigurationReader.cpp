@@ -8,7 +8,6 @@
 #include <vector>
 
 #include "ConfigurationReader.hpp"
-#include "Exception.hpp"
 
 using namespace std;
 
@@ -19,7 +18,15 @@ ConfigurationReader::ConfigurationReader(const std::string &file) {
     try {
         OpenConfigurationFile(file);
     } catch (std::exception &ex) {
-        cerr << ex.what() << endl;
+        throw Exception(ex.what());
+    }
+}
+
+void ConfigurationReader::SetConfigurationFile(const std::string &file) {
+    try {
+        OpenConfigurationFile(file);
+    } catch (std::exception &ex) {
+        throw Exception(ex.what());
     }
 }
 
@@ -36,7 +43,7 @@ void ConfigurationReader::OpenConfigurationFile(const std::string &file) {
 Experiment ConfigurationReader::ReadExperiment(void) {
     Experiment exp;
     pugi::xml_node expInfo = cfg_.child("Experiment");
-    if(expInfo.empty())
+    if (expInfo.empty())
         throw Exception(EmptyNodeExceptionMessage("ReadExperiment",
                                                   "Experiment"));
 
@@ -62,7 +69,7 @@ Experiment ConfigurationReader::ReadExperiment(void) {
 
 FileHandler ConfigurationReader::ReadFiles(void) {
     FileHandler fhandle;
-    if(cfg_.child("Files").empty())
+    if (cfg_.child("Files").empty())
         throw Exception(EmptyNodeExceptionMessage("ReadFiles", "Files"));
 
     pugi::xml_node inode = cfg_.child("Files").child("Input");
@@ -90,7 +97,7 @@ FitHandler ConfigurationReader::ReadFit(void) {
     for (pugi::xml_node pks : ft.child("peaks").child("sngl").children())
         snglPeaks.push_back(pks.attribute("value").as_double());
 
-    if(snglPeaks.empty() && pklist == "sngl")
+    if (snglPeaks.empty() && pklist == "sngl")
         throw Exception("ConfigurationReader::ReadFit - The singles peak list"
                                 " is empty. You will have to add peaks for "
                                 "fitting.");
@@ -98,7 +105,7 @@ FitHandler ConfigurationReader::ReadFit(void) {
 
     for (pugi::xml_node pks : ft.child("peaks").child("g1").children())
         g1Peaks.push_back(pks.attribute("value").as_double());
-    if(g1Peaks.empty() && pklist == "g1")
+    if (g1Peaks.empty() && pklist == "g1")
         throw Exception("ConfigurationReader::ReadFit - The gamma 1 gated  "
                                 "peak list is empty. You will have to add "
                                 "peaks for fitting.");
@@ -106,7 +113,7 @@ FitHandler ConfigurationReader::ReadFit(void) {
 
     for (pugi::xml_node pks : ft.child("peaks").child("g2").children())
         g2Peaks.push_back(pks.attribute("value").as_double());
-    if(g2Peaks.empty() && pklist == "g2")
+    if (g2Peaks.empty() && pklist == "g2")
         throw Exception("ConfigurationReader::ReadFit - The gamma 2 gated  "
                                 "peak list is empty. You will have to add "
                                 "peaks for fitting.");
@@ -121,6 +128,56 @@ FitHandler ConfigurationReader::ReadFit(void) {
             ft.child("range").child("high").attribute("value").as_double();
     fit.SetRange(make_pair(low, high));
     return (fit);
+}
+
+CrystalBallParameters ConfigurationReader::ReadCrystalBallParameters() {
+    CrystalBallParameters cbpar;
+    string var_name = "", function = "";
+    vector<Variable> coefficients;
+    if (cfg_.child("CrystalBallParameters").empty())
+        throw Exception(EmptyNodeExceptionMessage("ReadCrystalBallParameters",
+                                                  "CrystalBallParameters"));
+    for (const auto vars : cfg_.child("CrystalBallParameters").children()) {
+        var_name = vars.name();
+
+        function = vars.child("function").attribute("value").as_string("");
+        if (function == "")
+            throw Exception("ConfigurationReader::ReadCrystalBallParameters -"
+                                    " The function for " + var_name + " was "
+                                    "empty.");
+
+        if (vars.child("coefficients").empty())
+            throw Exception("ConfigurationReader::ReadCrystalBallParameters -"
+                                    " The coefficients for " + var_name +
+                            "were not input.");
+        for (const auto coeffs : vars.child("coefficients").children())
+            coefficients.push_back(NodeToVar(coeffs));
+        if (var_name == "alpha") {
+            try {
+                cbpar.SetAlphaFunction(function);
+                cbpar.SetAlphaCoefficients(coefficients);
+            } catch (exception &ex) {
+                throw Exception(ex.what());
+            }
+        } else if (var_name == "n") {
+            try {
+                cbpar.SetNFunction(function);
+                cbpar.SetNCoefficients(coefficients);
+            } catch (exception &ex) {
+                throw Exception(ex.what());
+            }
+        } else if (var_name == "sigma") {
+            try {
+                cbpar.SetSigmaFunction(function);
+                cbpar.SetSigmaCoefficients(coefficients);
+            } catch (exception &ex) {
+                throw Exception(ex.what());
+            }
+        }
+        coefficients.clear();
+        function = "";
+    }
+    return cbpar;
 }
 
 FlagHandler ConfigurationReader::ReadFlags(void) {
@@ -206,7 +263,7 @@ string ConfigurationReader::UnknownEntryExceptionMessage(
     stringstream ss;
     ss << "ConfigurationReader::" << method << " - " << "There was an "
             "unrecognized entry into the " << node << " node with the name: "
-            << name << ". If you need access to this variable you will need to "
-            "edit the source code.";
+       << name << ". If you need access to this variable you will need to "
+               "edit the source code.";
     return ss.str();
 }

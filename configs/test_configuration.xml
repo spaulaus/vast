@@ -23,38 +23,22 @@
 
     <Files>
         <Input>
-            <gsTof>
-                /home/vincent/proj/c++/vast/data/084ga/084ga-mmfBan/084ga-mmfBan.dat
-            </gsTof>
-            <g1Tof>
-                /home/vincent/proj/c++/vast/data/084ga/084ga-mmfBan/084ga-mmfBan-247keV.dat
-            </g1Tof>
+            <gsTof>/home/vincent/proj/c++/vast/data/084ga/084ga-mmfBan/084ga-mmfBan.dat</gsTof>
+            <g1Tof>/home/vincent/proj/c++/vast/data/084ga/084ga-mmfBan/084ga-mmfBan-247keV.dat</g1Tof>
         </Input>
 
         <Output>
             <resultsDir>/home/vincent/proj/c++/vast/results/working</resultsDir>
             <picDir>/home/vincent/proj/c++/vast/pics/tof/working</picDir>
-            <picGs>/home/vincent/proj/c++/vast/pics/tof/working/working.eps
-            </picGs>
-            <gsFit>/home/vincent/proj/c++/vast/results/tof/working/working.fit
-            </gsFit>
-            <g1Fit>
-                /home/vincent/proj/c++/vast/results/tof/working/working-g1.fit
-            </g1Fit>
-            <g2Fit>
-                /home/vincent/proj/c++/vast/results/tof/working/working-g2.fit
-            </g2Fit>
+            <picGs>/home/vincent/proj/c++/vast/pics/tof/working/working.eps</picGs>
+            <gsFit>/home/vincent/proj/c++/vast/results/tof/working/working.fit</gsFit>
+            <g1Fit>/home/vincent/proj/c++/vast/results/tof/working/working-g1.fit</g1Fit>
+            <g2Fit>/home/vincent/proj/c++/vast/results/tof/working/working-g2.fit</g2Fit>
 
-            <neutrons>
-                /home/vincent/proj/c++/vast/results/vast/working/working.dat
-            </neutrons>
-            <cgm>/home/vincent/proj/c++/vast/results/vast/working/working.mgb
-            </cgm>
-            <density>/home/vincent/proj/c++/vast/results/vast/working/bgt.root
-            </density>
-            <sensitivity>
-                /home/vincent/proj/c++/vast/results/vast/working/working.sens
-            </sensitivity>
+            <neutrons>/home/vincent/proj/c++/vast/results/vast/working/working.dat</neutrons>
+            <cgm>/home/vincent/proj/c++/vast/results/vast/working/working.mgb</cgm>
+            <density>/home/vincent/proj/c++/vast/results/vast/working/bgt.root</density>
+            <sensitivity>/home/vincent/proj/c++/vast/results/vast/working/working.sens</sensitivity>
         </Output>
     </Files>
 
@@ -107,25 +91,45 @@
         </range>
 
         <binning value="1" unit="ns/bin"/>
-        <PrintLevel value="1"/>
+        <PrintLevel value="0"/>
     </Fitting>
 
-    <CbParameterization>
+    <!--
+    The coefficients in the coefficients node should be insert in
+    ascending power order so that the software records them properly. The
+    dependent variable must be named tof.
+    -->
+    <CrystalBallParameters>
         <alpha>
-            <aI value="0.0130289072593045"/>
-            <aH value="-0.641803483244778"/>
+            <function
+                    value="a3*pow(tof,3)+a2*pow(tof,2)+a1*tof+a0"/>
+            <coefficients>
+                <a0 value="-0.73110" error="0.10206" units=""/>
+                <a1 value="-0.00101" error="0.00574" units=""/>
+                <a2 value="2.52616e-05" error="8.81266e-05" units=""/>
+                <a3 value="-1.07220e-07" error="3.89451e-07" units=""/>
+            </coefficients>
         </alpha>
 
-        <sigma>
-            <sM value="-0.000121210451962825"/>
-            <sN value="0.0416568757021418"/>
-            <sO value="0.550158923590531"/>
-        </sigma>
-
         <n>
-            <nJ value="2.21591018795502e-06"/>
-            <nK value="0.00189178692442985"/>
-            <nL value="1.33190840921066"/>
+            <function value="n2*tof+n1+n0/tof"/>
+            <coefficients>
+                <n0 value="-4.33787" error="1.60649" units=""/>
+                <n1 value="1.65099" error="0.09231" units=""/>
+                <n2 value="0.00179" error="0.00095" units=""/>
+            </coefficients>
         </n>
-    </CbParameterization>
+
+        <sigma>
+            <function
+                    value="s4*pow(tof,4)+s3*pow(tof,3)+s2*pow(tof,2)+s1*tof+s0"/>
+            <coefficients>
+                <s0 value="0.18205" error="0.120600" units=""/>
+                <s1 value="0.070225" error="0.010693" units=""/>
+                <s2 value="-0.00075" error="0.00029" units=""/>
+                <s3 value="4.90374e-06" error="3.14410e-06" units=""/>
+                <s4 value="-1.19754e-08" error="1.09884e-08" units=""/>
+            </coefficients>
+        </sigma>
+    </CrystalBallParameters>
 </Configuration>

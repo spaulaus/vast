@@ -1,12 +1,14 @@
+///@file test_configuration.cpp
+///@author S. V. Paulauskas
+///@date November 17, 2016
 #include <iostream>
-#include <string>
 
 #include "ConfigurationReader.hpp"
 
 using namespace std;
 
-int main(int argc, char** argv) {
-    if(argc < 2) {
+int main(int argc, char **argv) {
+    if (argc < 2) {
         cerr << "test_configuration : You need to provide the name of the "
                 "configuration file. " << endl << "Usage: "
                      "test_configuration /path/to/configuration/file" << endl;
@@ -21,7 +23,16 @@ int main(int argc, char** argv) {
     FileHandler files;
     FlagHandler flags;
     FitHandler fitInfo;
-    ConfigurationReader cfg(argv[1]);
+    CrystalBallParameters params;
+
+    ConfigurationReader cfg;
+
+    try {
+        cfg.SetConfigurationFile(argv[1]);
+    } catch (exception &ex) {
+        cerr << ex.what() << endl;
+        return 1;
+    }
 
     cout << "Testing ConfigurationReader::ReadDecay" << endl;
     try {
@@ -48,9 +59,9 @@ int main(int argc, char** argv) {
     cout << endl << "Testing ConfigurationReader::ReadFiles" << endl;
     try {
         files = cfg.ReadFiles();
-    }catch(exception &ex) {
+    } catch (exception &ex) {
         cerr << ex.what() << endl;
-        return 1 ;
+        return 1;
     }
     cout << "gsTof = " << files.GetInputName("gsTof") << " " << endl
          << "neutrons output = " << files.GetOutputName("neutrons") << endl;
@@ -58,9 +69,9 @@ int main(int argc, char** argv) {
     cout << endl << "Testing ConfigurationReader::ReadFlags : " << endl;
     try {
         flags = cfg.ReadFlags();
-    }catch (exception &ex){
+    } catch (exception &ex) {
         cerr << ex.what() << endl;
-        return(1);
+        return 1;
     }
     cout << "doFit = " << flags.GetFlag("doFit") << endl
          << "outputDensity = " << flags.GetFlag("density") << endl;
@@ -70,10 +81,24 @@ int main(int argc, char** argv) {
         fitInfo = cfg.ReadFit();
     } catch (exception &ex) {
         cerr << ex.what() << endl;
-        return(1);
+        return 1;
     }
     vector<double> temp = fitInfo.GetSnglPeaks();
-    for(vector<double>::const_iterator it = temp.begin(); it != temp.end();
-        it++)
+    for (vector<double>::const_iterator it = temp.begin(); it != temp.end();
+         it++)
         cout << *it << endl;
+
+    cout << endl << "Testing ConfigurationReader::ReadCrystalBallParameters :"
+         << endl;
+    try {
+        params = cfg.ReadCrystalBallParameters();
+    } catch (exception &ex) {
+        cerr << ex.what() << endl;
+        return 1;
+    }
+    cout << "Alpha function : " << params.GetAlphaFunction("tof") << endl;
+    cout << "Alpha Coefficients: ";
+    for(const auto coeff : params.GetAlphaCoefficients())
+        cout << coeff.GetValue() << " ";
+    cout << endl;
 }
