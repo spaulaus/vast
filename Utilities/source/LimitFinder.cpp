@@ -17,7 +17,7 @@
 #include <Variable.hpp>
 
 #include "LimitFinder.hpp"
-#include "ParamCalculator.hpp"
+#include "CrystalBallParameters.hpp"
 
 using namespace std;
 using namespace RooFit;

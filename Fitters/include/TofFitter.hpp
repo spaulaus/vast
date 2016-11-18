@@ -10,10 +10,10 @@
 #include <string>
 #include <vector>
 
+#include "CrystalBallParameters.hpp"
 #include "FileHandler.hpp"
 #include "FitHandler.hpp"
 #include "Neutron.hpp"
-#include "ParamCalculator.hpp"
 
 ///A class that handles fitting of the neutron time-of-flight spectra
 class TofFitter {
@@ -24,8 +24,9 @@ public:
     /*! Perform the fit to the TOF spectrum
      * \param [in] fit : The parameters for the fitting
      * \param [in] fls : the files that will be used for the fitting
-     * \param[in] params : The parameterization for the Crystal Ball */
-    TofFitter(const FitHandler &fit, const FileHandler &fls);
+     * \param[in] pars : The parameterization for the Crystal Ball */
+    TofFitter(const FitHandler &fit, const FileHandler &fls,
+              const CrystalBallParameters &pars);
 
     /*! Default destructor */
     ~TofFitter() {};
@@ -34,7 +35,7 @@ public:
     *   \return Vector of neutron peaks */
     std::vector<Neutron> GetFitResults(void) { return (neutrons_); };
 private:
-    ParamCalculator par_;
+    CrystalBallParameters cbPars_;
     FitHandler fit_;
     FileHandler fls_;
 

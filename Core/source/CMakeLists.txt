@@ -1,4 +1,4 @@
-set(CORE_SOURCES Decay.cpp Gamma.cpp Neutron.cpp)
+set(CORE_SOURCES Decay.cpp Gamma.cpp Neutron.cpp CrystalBallParameters.cpp)
 
 message(STATUS "Building Core Shared Object")
 add_library(Core SHARED ${CORE_SOURCES})

@@ -13,7 +13,7 @@
 #include "FileHandler.hpp"
 #include "FlagHandler.hpp"
 #include "FitHandler.hpp"
-#include "ParamCalculator.hpp"
+#include "CrystalBallParameters.hpp"
 #include "pugixml.hpp"
 
 //! A class that handles the parsing of the xml configuration file.
@@ -54,12 +54,12 @@ public:
 
     ///@brief A method that handles the reading of the Crystal Ball
     /// ParamCalculator
-    ParamCalculator ReadCrystalBallParameters(void);
+    CrystalBallParameters ReadCrystalBallParameters(void);
 
     ///@brief This setter provides the program with the configuration file.
     ///@param[in] file Path and file name that we are goign to be using as
     /// the input to the program.
-    void SetConfigurationFile(const std::string &file) { file_ = file; }
+    void SetConfigurationFile(const std::string &file);
 
 private:
     pugi::xml_document doc_;//!< internal name of the document that we opened

@@ -1,15 +1,15 @@
-///@file test_paramcalculator.cpp
+///@file test_crystalballparameters.cpp
 ///@author S. V. Paulauskas
 ///@date November 16, 2016
-///@brief A small code to test the behavior of the ParamCalculator
+///@brief A small code to test the behavior of the CrystalBallParameters
 #include <iostream>
 
-#include "ParamCalculator.hpp"
+#include "CrystalBallParameters.hpp"
 
 using namespace std;
 
 int main() {
-    ParamCalculator params;
+    CrystalBallParameters params;
     vector<Variable> alpha_init = {Variable(-0.73110,0.10206,""),
                                    Variable(-0.00101,0.00574,""),
                                    Variable(2.52616e-05,8.81266e-05,""),
@@ -53,18 +53,18 @@ int main() {
     cout << endl << "Testing the constructor accepting the vector of coeff"
          << endl;
     try{
-        ParamCalculator paramCalculator(alpha_init, n_init, sigma_init);
-        alpha_coefficients = paramCalculator.GetAlphaCoefficients();
+        CrystalBallParameters crystalBallParameters(alpha_init, n_init, sigma_init);
+        alpha_coefficients = crystalBallParameters.GetAlphaCoefficients();
         for(const auto i : alpha_coefficients)
             cout << i.Output();
         cout << endl;
 
-        n_coefficients = paramCalculator.GetNCoefficients();
+        n_coefficients = crystalBallParameters.GetNCoefficients();
         for(const auto i : n_coefficients)
             cout << i.Output();
         cout << endl;
 
-        sigma_coefficients = paramCalculator.GetSigmaCoefficients();
+        sigma_coefficients = crystalBallParameters.GetSigmaCoefficients();
         for(const auto i : sigma_coefficients)
             cout << i.Output();
         cout << endl;

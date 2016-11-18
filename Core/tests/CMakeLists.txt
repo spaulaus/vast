@@ -1,2 +1,4 @@
 add_executable(test_exception test_exception.cpp)
 add_executable(tests_stringmanipulation test_stringmanipulation.cpp)
+add_executable(test_crystalballparameters test_crystalballparameters.cpp
+        ../source/CrystalBallParameters.cpp)
