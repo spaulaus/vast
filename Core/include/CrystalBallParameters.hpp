@@ -25,8 +25,8 @@ public:
     ///@param[in] s : A vector of variables to assign to the private
     /// variable sigmaCoeff_
     CrystalBallParameters(const std::vector<Variable> &a,
-                    const std::vector<Variable> &n,
-                    const std::vector<Variable> &s) {
+                          const std::vector<Variable> &n,
+                          const std::vector<Variable> &s) {
         SetAlphaCoefficients(a);
         SetNCoefficients(n);
         SetSigmaCoefficients(s);
@@ -38,36 +38,42 @@ public:
     ///@brief Calculate the alpha parameter from the CB
     ///@param[in] tof the time of flight
     ///@return The break point for the Gaussian and Power parts of the CB
-    double CalcAlpha(const double &tof);
+    double CalcAlpha(const double &tof) const;
 
     ///@brief Calculate the n parameter for the CB
     ///@param[in] tof the time of flight
     ///@return The power parameter of the CB */
-    double CalcN(const double &tof);
+    double CalcN(const double &tof) const;
 
     ///@brief Calculate the sigma parameter for the CB
     ///@param[in] tof the time of flight
     ///@return The width of the Gaussian part of the CB
-    double CalcSigma(const double &tof);
+    double CalcSigma(const double &tof) const;
 
     ///@brief A method that gets the coeffieicnts for alpha
     ///@return A vector of Variables for the coefficients in ascending power
-    std::vector<Variable> GetAlphaCoefficients(void) { return alphaCoeff_; }
+    std::vector<Variable> GetAlphaCoefficients(void) const {
+        return
+                alphaCoeff_;
+    }
 
     ///@brief A method that gets the coeffieicnts for n
     ///@return A vector of Variables for the coefficients in ascending power
-    std::vector<Variable> GetNCoefficients(void) { return nCoeff_; }
+    std::vector<Variable> GetNCoefficients(void) const { return nCoeff_; }
 
     ///@brief A method that gets the coeffieicnts for sigma
     ///@return A vector of Variables for the coefficients in ascending power
-    std::vector<Variable> GetSigmaCoefficients(void) { return sigmaCoeff_; }
+    std::vector<Variable> GetSigmaCoefficients(void) const {
+        return
+                sigmaCoeff_;
+    }
 
     ///@brief A method to return the functional form of alpha(ToF) with the
     /// tof variable replaced by the input argument.
     ///@param[in] a : The argument to replace tof with
     ///@return The functional form of the parameter with the new tof variable
-    std::string GetAlphaFunction(const std::string &tof) {
-        if(alphaFunction_ == "")
+    std::string GetAlphaFunction(const std::string &tof) const {
+        if (alphaFunction_ == "")
             throw Exception("CrystalBallParameters::GetAlphaFunction - The "
                                     "functional string was empty!");
         return StringManipulation::ReplaceString(alphaFunction_, "tof", tof);
@@ -77,8 +83,8 @@ public:
     /// tof variable replaced by the input argument.
     ///@param[in] a : The argument to replace tof with
     ///@return The functional form of the parameter with the new tof variable
-    std::string GetNFunction(const std::string &tof) {
-        if(nFunction_ == "")
+    std::string GetNFunction(const std::string &tof) const {
+        if (nFunction_ == "")
             throw Exception("CrystalBallParameters::GetNFunction - The "
                                     "functional string was empty!");
         return StringManipulation::ReplaceString(nFunction_, "tof", tof);
@@ -88,8 +94,8 @@ public:
     /// tof variable replaced by the input argument.
     ///@param[in] a : The argument to replace tof with
     ///@return The functional form of the parameter with the new tof variable
-    std::string GetSigmaFunction(const std::string &tof) {
-        if(sigmaFunction_ == "")
+    std::string GetSigmaFunction(const std::string &tof) const {
+        if (sigmaFunction_ == "")
             throw Exception("CrystalBallParameters::GetSigmaFunction - The "
                                     "functional string was empty!");
         return StringManipulation::ReplaceString(sigmaFunction_, "tof", tof);
@@ -101,8 +107,9 @@ public:
     void
     SetAlphaCoefficients(const std::vector<Variable> &a) {
         if (a.size() != 4)
-            throw Exception("CrystalBallParameters::SetAlphaCoefficients - alpha"
-                                    "(ToF) needs to have 4 coefficients!");
+            throw Exception(
+                    "CrystalBallParameters::SetAlphaCoefficients - alpha"
+                            "(ToF) needs to have 4 coefficients!");
         alphaCoeff_ = a;
     }
 
@@ -122,8 +129,9 @@ public:
     void
     SetSigmaCoefficients(const std::vector<Variable> &a) {
         if (a.size() != 5)
-            throw Exception("CrystalBallParameters::SetSigmaCoefficients - sigma"
-                                    "(ToF) needs to have 5 coefficients!");
+            throw Exception(
+                    "CrystalBallParameters::SetSigmaCoefficients - sigma"
+                            "(ToF) needs to have 5 coefficients!");
         sigmaCoeff_ = a;
     }
 

@@ -6,6 +6,7 @@
 #ifndef __LIMITFINDER_HPP_
 #define __LIMITFINDER_HPP_
 
+#include "CrystalBallParameters.hpp"
 #include "Neutron.hpp"
 
 //!A class that calculates the sensitivity limit of the detectors
@@ -21,6 +22,7 @@ public:
     *  \param[in] yield : The the yield of the neutron peak
     *   \return The neutron information from the fit
     */
-    Neutron PerformFit(const double &edge, const double &yield);
+    Neutron PerformFit(const double &edge, const double &yield,
+                       const CrystalBallParameters &cbpars);
 };
 #endif //__LIMITFINDER_HPP_

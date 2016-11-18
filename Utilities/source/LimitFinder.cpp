@@ -10,105 +10,114 @@
 #include <RooConstVar.h>
 #include <RooDataSet.h>
 #include <RooFitResult.h>
-#include <RooFormulaVar.h>
 #include <RooRealVar.h>
 
 #include <PhysConstants.hpp>
-#include <Variable.hpp>
 
 #include "LimitFinder.hpp"
-#include "CrystalBallParameters.hpp"
 
 using namespace std;
 using namespace RooFit;
 
-Neutron LimitFinder::PerformFit(const double &edge, const double &yield){
+Neutron LimitFinder::PerformFit(const double &edge, const double &yield,
+                                const CrystalBallParameters &cbpars) {
     PhysConstants consts;
+
     double mass = consts.GetConstant("neutronMass").GetValue(); //MeV/c^2
-    double c = consts.GetConstant("c").GetValue()*(100/1e9); //cm/ns
-    double edg = (50.5/c)*sqrt(mass/(2*edge));
+    double c = consts.GetConstant("c").GetValue() * (100 / 1e9); //cm/ns
+    double edg = (50.5 / c) * sqrt(mass / (2 * edge));
 
-    RooRealVar tof("tof","tof", 0.0, 0.0, 200.);
-    
-    //Parameterization Parameters for Sigma 
-    RooConstVar sM("sM","", -0.000121210451962825);
-    RooConstVar sN("sN","", 0.0416568757021418);
-    RooConstVar sO("sO","", 0.550158923590531);
+    RooRealVar tof("tof", "tof", 0.0, 0.0, 200.);
 
-    //Parameterization Parameters for Alpha 
-    RooConstVar aI("aI","", 0.0130289072593045);
-    RooConstVar aH("aH","", -0.641803483244778);
+    ///Could we make this a little cleaner like we do below? Make a loop that
+    /// way we don't have to worry about setting all these by hand?
+    vector<Variable> alphaCoefficients = cbpars.GetAlphaCoefficients();
+    RooConstVar a3("a3", "", alphaCoefficients[3].GetValue());
+    RooConstVar a2("a2", "", alphaCoefficients[2].GetValue());
+    RooConstVar a1("a1", "", alphaCoefficients[1].GetValue());
+    RooConstVar a0("a0", "", alphaCoefficients[0].GetValue());
 
-    //Parameterization Parameters for N 
-    RooConstVar nJ("nJ","", 2.21591018795502e-06);
-    RooConstVar nK("nK","", 0.00189178692442985);
-    RooConstVar nL("nL","", 1.33190840921066);
+    vector<Variable> nCoefficients = cbpars.GetNCoefficients();
+    RooConstVar n2("n2", "", nCoefficients[2].GetValue());
+    RooConstVar n1("n1", "", nCoefficients[1].GetValue());
+    RooConstVar n0("n0", "", nCoefficients[0].GetValue());
+
+    vector<Variable> sigmaCoefficients = cbpars.GetSigmaCoefficients();
+    RooConstVar s4("s4", "", sigmaCoefficients[4].GetValue());
+    RooConstVar s3("s3", "", sigmaCoefficients[3].GetValue());
+    RooConstVar s2("s2", "", sigmaCoefficients[2].GetValue());
+    RooConstVar s1("s1", "", sigmaCoefficients[1].GetValue());
+    RooConstVar s0("s0", "", sigmaCoefficients[0].GetValue());
+
 
     //---------- The Variables for the cb to generate the peak
-    RooConstVar mu("mu","",edg);
-    string fSig = "sM*pow(mu,2)+sN*mu+sO";
-    RooFormulaVar sigma("sigma", "", fSig.c_str(), RooArgList(sM,sN,sO,mu));
-    string fAlph = "aI/pow(mu,2)+aH";
-    RooFormulaVar alpha("alpha","",fAlph.c_str(),RooArgList(aI,aH,mu));
-    string fN = "nJ*pow(mu,2)+nK*mu+nL";
-    RooFormulaVar n("n", fN.c_str(), RooArgList(nJ,nK,nL,mu));
+    RooConstVar mu("mu", "", edg);
+    string fAlph = cbpars.GetAlphaFunction("mu");
+    RooFormulaVar alpha("alpha", "", fAlph.c_str(),
+                        RooArgList(a3, a2, a1, a0, mu));
+    string fN = cbpars.GetNFunction("mu");
+    RooFormulaVar n("n", fN.c_str(), RooArgList(n2, n1, n0, mu));
+    string fSig = cbpars.GetSigmaFunction("mu");
+    RooFormulaVar sigma("sigma", "", fSig.c_str(),
+                        RooArgList(s4, s3, s2, s1, s0, mu));
     RooCBShape cb("cb", "", tof, mu, sigma, alpha, n);
 
     //---------- Generate the data set from the above peak
-    RooDataSet *mcData = cb.generate(tof,yield);
+    RooDataSet *mcData = cb.generate(tof, yield);
 
     //---------- The Variables for the cb to fit the peak
-    RooRealVar yld("yld","",yield,0.0,yield*2);
-    RooRealVar mu1("mu1","",edg, 0., 200.);
-    fSig = "sM*pow(mu1,2)+sN*mu1+sO";
-    RooFormulaVar sigma1("sigma1", "", fSig.c_str(), RooArgList(sM,sN,sO,mu1));
-    fAlph = "aI/pow(mu1,2)+aH";
-    RooFormulaVar alpha1("alpha1","",fAlph.c_str(),RooArgList(aI,aH,mu1));
-    fN = "nJ*pow(mu1,2)+nK*mu1+nL";
-    RooFormulaVar n1("n1", fN.c_str(), RooArgList(nJ,nK,nL,mu1));
-    RooCBShape cb1("cb1", "", tof, mu1, sigma1, alpha1, n1);
+    RooRealVar yld("yld", "", yield, 0.0, yield * 2);
+    RooRealVar mu1("mu1", "", edg, 0., 200.);
+    fAlph = cbpars.GetAlphaFunction("mu1");
+    RooFormulaVar alpha1("alpha1", "", fAlph.c_str(), RooArgList(a3,a2,a1,a0,
+                                                                 mu1));
+    fN = cbpars.GetNFunction("mu1");
+    RooFormulaVar nalt("nalt", fN.c_str(), RooArgList(n2,n1,n0,mu1));
+    fSig = cbpars.GetSigmaFunction("mu1");
+    RooFormulaVar sigma1("sigma1", "", fSig.c_str(),
+                         RooArgList(s4,s3,s2,s1,s0, mu1));
+    RooCBShape cb1("cb1", "", tof, mu1, sigma1, alpha1, nalt);
 
-    RooAddPdf model("model","",RooArgList(cb1),RooArgList(yld));
-    
+    RooAddPdf model("model", "", RooArgList(cb1), RooArgList(yld));
+
     //---------- Fit the new CB to the generated data set
-    RooFitResult* fitResult = model.fitTo(*mcData, NumCPU(3), Save(), 
-                                          Range(0.,200.));
-    
-    bool hasConvergence = fitResult->statusCodeHistory(0) == 0;
-    bool hasHesseCalc   = fitResult->statusCodeHistory(1) == 0;
+    RooFitResult *fitResult = model.fitTo(*mcData, NumCPU(3), Save(),
+                                          Range(0., 200.));
 
-    if(hasConvergence && hasHesseCalc) {
+    bool hasConvergence = fitResult->statusCodeHistory(0) == 0;
+    bool hasHesseCalc = fitResult->statusCodeHistory(1) == 0;
+
+    if (hasConvergence && hasHesseCalc) {
         cout << "The Fit converged, and HESSE had no issues" << endl;
-        
+
         Neutron pk;
         Variable mew, yield;
         RooArgList finals = fitResult->floatParsFinal();
 
-        for(int i = 0; i < finals.getSize(); i++) {
-            RooRealVar tmp = *((RooRealVar*)finals.at(i));
-            if(i == 0)
+        for (int i = 0; i < finals.getSize(); i++) {
+            RooRealVar tmp = *((RooRealVar *) finals.at(i));
+            if (i == 0)
                 mew = Variable(tmp.getValV(), tmp.getError(), "ns");
-            if(i == 1)
+            if (i == 1)
                 yield = Variable(tmp.getValV(), tmp.getError(), "counts");
         }
-        ParamCalculator par;
         pk.SetMu(mew);
         pk.SetYld(yield);
-        pk.SetSigma(Variable(par.CalcSigma(mew.GetValue()), 0.0, "ns"));
-        pk.SetAlpha(Variable(par.CalcAlpha(mew.GetValue()), 0.0, ""));
-        pk.SetN(Variable(par.CalcN(mew.GetValue()), 0.0, ""));
-        
-        delete(fitResult);
-        return(pk);
-    }else {
-        if(!hasConvergence) 
-            cerr << endl << endl << "Oh, Jesus, the fit did not converge." 
+        pk.SetSigma(Variable(cbpars.CalcSigma(mew.GetValue()), 0.0, "ns"));
+        pk.SetAlpha(Variable(cbpars.CalcAlpha(mew.GetValue()), 0.0, ""));
+        pk.SetN(Variable(cbpars.CalcN(mew.GetValue()), 0.0, ""));
+
+        delete (fitResult);
+        return (pk);
+    } else {
+        if (!hasConvergence)
+            cerr << endl << endl << "Oh, Jesus, the fit did not converge."
                  << endl;
-        if(!hasHesseCalc)
-            cerr << "Hesse FAILED to calculate things properly." 
+        if (!hasHesseCalc)
+            cerr << "Hesse FAILED to calculate things properly."
                  << endl << endl;
-        
-        delete(fitResult);
+
+        delete (fitResult);
         exit(1);
     }
 }

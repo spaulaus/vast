@@ -20,7 +20,14 @@
 using namespace std;
 
 int main(int argc, char* argv[]) {
-    ConfigurationReader cfg("Config.xml");
+    if(argc < 2) {
+        cerr << "VAST Main : You need to provide the name of the "
+                "configuration file. " << endl << endl << "Usage: "
+                     "./vast /path/to/configuration/file" << endl;
+        return 1;
+    }
+
+    ConfigurationReader cfg(argv[1]);
     FileHandler fls = cfg.ReadFiles();
     LimitFinder lim;
     Decay dky = cfg.ReadDecay();
@@ -32,7 +39,7 @@ int main(int argc, char* argv[]) {
     double qValue = dky.GetQValue().GetValue();
     double sn = dky.GetNeutronSepEnergy().GetValue();
     for(double i = 0.1; i < qValue - sn; i += 0.1) {
-        Neutron n = lim.PerformFit(i, 10.);
+        Neutron n = lim.PerformFit(i, 10.,cfg.ReadCrystalBallParameters());
         Integrator integrate(n,make_pair(0.,200.));
         BGTCalculator bgt(n,dky,exp);
 

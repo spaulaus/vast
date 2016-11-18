@@ -85,8 +85,7 @@ void TofFitter::PerformFit(void) {
 
     ///Could we make this a little cleaner like we do below? Make a loop that
     /// way we don't have to worry about setting all these by hand?
-    vector<Variable> alphaCoefficients = cbPars_
-            .GetAlphaCoefficients();
+    vector<Variable> alphaCoefficients = cbPars_.GetAlphaCoefficients();
     RooConstVar a3("a3", "", alphaCoefficients[3].GetValue());
     RooConstVar a2("a2", "", alphaCoefficients[2].GetValue());
     RooConstVar a1("a1", "", alphaCoefficients[1].GetValue());
