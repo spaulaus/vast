@@ -7,6 +7,9 @@
 #IDE related files
 .idea
 
+#Build directories
+*build*
+
 #Documentation directories and files
 html/
 latex/
@@ -14,12 +17,6 @@ cgmStage/
 doc/temp/
 results/
 pics
-
-#DAMM files
-*.drr
-*.his
-*.list
-*.log
 
 # Data directories
 HIS
