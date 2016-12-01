@@ -14,6 +14,8 @@
 
 using namespace std;
 
+
+///This constructor uses no errors
 Neutron::Neutron(const double &mu, const double &yld) {
     mu_        = Variable(mu, 0.0, "ns");
     yld_       = Variable(yld, 0.0, "counts");
@@ -23,6 +25,7 @@ Neutron::Neutron(const double &mu, const double &yld) {
     eff_       = eff.GetEff(en_, EffCalculator::EffTypes::svpBan4);
 }
 
+///This constructor uses error only on the mean
 Neutron::Neutron(const double &mu, const double &muErr,
            const double &yld) {
     mu_        = Variable(mu, muErr, "ns");
@@ -33,6 +36,7 @@ Neutron::Neutron(const double &mu, const double &muErr,
     eff_       = eff.GetEff(en_, EffCalculator::EffTypes::svpBan4);
 }
 
+///This constructor uses error on the mean and the yield
 Neutron::Neutron(const double &mu, const double &muErr,
            const double &yld, const double &yldErr) {
     mu_        = Variable(mu, muErr, "ns");
@@ -43,6 +47,7 @@ Neutron::Neutron(const double &mu, const double &muErr,
     eff_       = eff.GetEff(en_, EffCalculator::EffTypes::svpBan4);
 }
 
+///This method calculates the neutron energy from tof
 void Neutron::CalcEnergy(void) {
     PhysConstants consts;
     double c  = consts.GetConstant("c").GetValue()*(100/1e9);
@@ -56,14 +61,17 @@ void Neutron::CalcEnergy(void) {
     en_ = Variable(energy, err, "MeV");
 }
 
+///This method calculates the detection efficiency of the neutron at its energy
 void Neutron::CalcEnEff(void) {
     eff_  = eff.GetEff(en_, EffCalculator::EffTypes::svpBan4);
 }
 
+///This method adjusts the input variable to account for intrinsic neutron efficiency
 Variable Neutron::AdjEff(const Variable &var) {
     return(var/eff_);
 }
 
+///This method calculates the beta resolution for the neutron peak
 void Neutron::CalcBetaResolution(void) {
     double val = 0.;
     double fwhmToSigma = 2*sqrt(2*log(2));

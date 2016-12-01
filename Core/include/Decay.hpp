@@ -86,7 +86,7 @@ public:
 private:
     Variable dauZ_, numDecay_, parZ_, pn_,
         q_, qbn_, sn_, t_;
-
+    ///@brief Sets the Z value of the daughter
     void SetDaughterZ(void) {dauZ_ = Variable(parZ_.GetValue()+1,0.0,"");};
 };
 #endif //__DECAY_HPP__

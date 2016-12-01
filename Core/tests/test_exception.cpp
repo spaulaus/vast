@@ -6,6 +6,7 @@
 
 #include "Exception.hpp"
 
+///This method is the main, and is used to test error catching/exception throwing
 int main(int argc, char** argv) {
     try{
         throw Exception("exception_test.cpp : Throwing an exception.");

@@ -8,6 +8,7 @@
 
 using namespace std;
 
+///This method is the main, and is used to test what CB parameters do
 int main() {
     CrystalBallParameters params;
     vector<Variable> alpha_init = {Variable(-0.73110,0.10206,""),

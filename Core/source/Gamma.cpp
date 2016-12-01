@@ -9,6 +9,7 @@
 
 using namespace std;
 
+///This constructor sets the energy and calculates the efficiency
 Gamma::Gamma(const Variable &en) {
     en_ = en;
 }

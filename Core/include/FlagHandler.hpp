@@ -35,6 +35,7 @@ public:
     };
 private:
     std::map<std::string, bool> flags_;
+    ///@brief Method that handles flag handling errors
     void EndError(const std::string &name) {
         std::cerr << "We could not find the requested flag name: "
                   << name << std::endl;

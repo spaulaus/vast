@@ -17,6 +17,7 @@
 
 using namespace std;
 
+///This method is the main for the program VAST
 int main(int argc, char* argv[]) {
     if(argc < 2) {
         cerr << "VAST Main : You need to provide the name of the "

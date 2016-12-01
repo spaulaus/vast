@@ -6,6 +6,7 @@
 
 #include "CrystalBallParameters.hpp"
 
+///This method calculates the Crystal Ball Parameter Alpha
 double CrystalBallParameters::CalcAlpha(const double &tof) const {
     return alphaCoeff_[3].GetValue() * tof * tof * tof +
            alphaCoeff_[2].GetValue() * tof * tof +
@@ -13,12 +14,14 @@ double CrystalBallParameters::CalcAlpha(const double &tof) const {
            alphaCoeff_[0].GetValue();
 }
 
+///This method calculates the Crystal Ball Parameter N
 double CrystalBallParameters::CalcN(const double &tof) const {
     return nCoeff_[2].GetValue() * tof +
            nCoeff_[1].GetValue() +
            nCoeff_[0].GetValue() / tof;
 }
 
+///This method calculates the Crystal Ball Parameter Sigma
 double CrystalBallParameters::CalcSigma(const double &tof) const {
     return sigmaCoeff_[4].GetValue() * tof * tof * tof * tof +
            sigmaCoeff_[3].GetValue() * tof * tof * tof +

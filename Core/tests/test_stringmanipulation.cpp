@@ -7,6 +7,8 @@
 #include "StringManipulation.hpp"
 
 using namespace std;
+
+///This method is the main, and is used to test manipulating strings
 int main() {
     string original = "This is the string that we want to test, bro.";
     cout << "Here is the original string: " << original << endl;
