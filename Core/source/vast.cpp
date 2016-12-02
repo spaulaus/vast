@@ -1,5 +1,7 @@
 ///@file main.cpp
-///@brief The main workhorse for the code.
+///@brief The main workhorse for the code. This program will initialize all
+/// of the necessary classes and start the main work that needs to be
+/// accomplished.
 ///@author S. V. Paulauskas
 ///@date September 4, 2013
 #include <fstream>
@@ -17,7 +19,6 @@
 
 using namespace std;
 
-///This method is the main for the program VAST
 int main(int argc, char* argv[]) {
     if(argc < 2) {
         cerr << "VAST Main : You need to provide the name of the "
