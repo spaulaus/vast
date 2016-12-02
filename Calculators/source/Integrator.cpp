@@ -12,6 +12,7 @@
 
 using namespace std;
 
+///This constructor takes ar
 Integrator::Integrator(Neutron &neutron,
                        const std::pair<double,double> &range) {
     alpha_ = neutron.GetAlpha().GetValue();
@@ -30,6 +31,9 @@ Integrator::Integrator(Neutron &neutron,
     neutron.SetIntegratedYield(Variable(intYld, intYldErr, "counts"));
 }
 
+///Uses the AdaptiveSimpsons algorithm
+/// (https://en.wikipedia.org/wiki/Adaptive_Simpson's_method)
+/// to integrate a neutron peak in the range provided by a and b.
 double Integrator::AdaptiveSimpsons(const double &a, const double &b,
                                     const double &epsilon,
                                     const int &maxRecursionDepth){

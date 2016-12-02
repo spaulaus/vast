@@ -75,7 +75,7 @@ Variable BGTCalculator::CalcBranchingRatio(const Variable & en,
     return(Variable(br, err, "/100"));
 }
 
-///
+///This method calculates the Fermi integral
 double BGTCalculator::CalcF(const Variable &en) {
     //------------------------------------------------------------------
     //--------- This routine is adapted from the original basic --------
@@ -109,6 +109,8 @@ Variable BGTCalculator::CalcLevelEnergy(const Variable &en) {
     return(Variable(lvl,0.0,"MeV"));
 }
 
+///This method calculates the Log(ft) value
+///@TODO Update the name of val so that it reflects something actually useful.
 Variable BGTCalculator::CalcLogft(const Variable &en, const Variable &val,
                                   const bool &isIndv) {
     Variable br;
@@ -122,6 +124,7 @@ Variable BGTCalculator::CalcLogft(const Variable &en, const Variable &val,
     return(Variable(logft, err_.CalcLogftErr(br,decay_.GetHalfLife()), ""));
 }
 
+///This method fills neutron density map variables
 void BGTCalculator::HandleNeutronDensity(void) {
     for(auto it = density_.begin(); it != density_.end(); it++) {
         Variable en = Variable(it->first, 0.0,"MeV");
@@ -137,6 +140,7 @@ void BGTCalculator::HandleNeutronDensity(void) {
     }
 }
 
+///This method the fills the info about the neutron into the neutron class
 void BGTCalculator::HandleNeutronIndividual(Neutron &neutron) {
     Variable en = neutron.GetEnergy();
     Variable yld = neutron.GetIntegratedYield();

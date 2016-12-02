@@ -42,7 +42,12 @@ private:
     std::map<double,double> denMean_, denLow_, denHigh_;
     std::vector<Neutron> neutrons_;
 
+    ///@brief This method calculates the neutron density
+    ///@param[in] ge        :the gamma ray energy for gating
+    ///@param[in] geEff     :the gamma ray efficiency
     void CalcDensity(const Variable &ge, const Variable &geEff);
+    ///@brief This method calculates the Guassian for the fit
+    ///@param[in] x         :The position of the Guassian
     double Gaussian(const double &x);
 };
 
