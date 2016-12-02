@@ -17,7 +17,7 @@ namespace StringManipulation {
     static const std::string ReplaceString(const std::string &subject,
                                            const std::string &search,
                                            const std::string &replace) {
-        if(search.empty())
+        if (search.empty())
             throw Exception("StringManipulation::ReplaceString - The search "
                                     "string was empty!");
         std::string tmp = subject;

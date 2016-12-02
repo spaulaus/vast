@@ -11,18 +11,18 @@ using namespace std;
 ///This method is the main, and is used to test what CB parameters do
 int main() {
     CrystalBallParameters params;
-    vector<Variable> alpha_init = {Variable(-0.73110,0.10206,""),
-                                   Variable(-0.00101,0.00574,""),
-                                   Variable(2.52616e-05,8.81266e-05,""),
-                                   Variable(-1.07220e-07,3.89451e-07,"")};
-    vector<Variable> n_init = {Variable(-4.33787,1.60649,""),
-                               Variable(1.65099,0.09231,""),
-                               Variable(0.00179,0.00095,"")};
-    vector<Variable> sigma_init = {Variable(0.18205,0.120600,""),
-                                   Variable(0.070225,0.010693,""),
-                                   Variable(0.00075,0.00029,""),
-                                   Variable(4.90374e-06,3.14410e-06,""),
-                                   Variable(-1.19754e-08,1.09884e-08,"")};
+    vector<Variable> alpha_init = {Variable(-0.73110, 0.10206, ""),
+                                   Variable(-0.00101, 0.00574, ""),
+                                   Variable(2.52616e-05, 8.81266e-05, ""),
+                                   Variable(-1.07220e-07, 3.89451e-07, "")};
+    vector<Variable> n_init = {Variable(-4.33787, 1.60649, ""),
+                               Variable(1.65099, 0.09231, ""),
+                               Variable(0.00179, 0.00095, "")};
+    vector<Variable> sigma_init = {Variable(0.18205, 0.120600, ""),
+                                   Variable(0.070225, 0.010693, ""),
+                                   Variable(0.00075, 0.00029, ""),
+                                   Variable(4.90374e-06, 3.14410e-06, ""),
+                                   Variable(-1.19754e-08, 1.09884e-08, "")};
 
     //--------------------------------------------------------------------------
     cout << "Testing the set methods for SetXXXCoefficients" << endl;
@@ -36,37 +36,38 @@ int main() {
     }
 
     vector<Variable> alpha_coefficients = params.GetAlphaCoefficients();
-    for(const auto i : alpha_coefficients)
+    for (const auto i : alpha_coefficients)
         cout << i.Output();
     cout << endl;
 
     vector<Variable> n_coefficients = params.GetNCoefficients();
-    for(const auto i : n_coefficients)
+    for (const auto i : n_coefficients)
         cout << i.Output();
     cout << endl;
 
     vector<Variable> sigma_coefficients = params.GetSigmaCoefficients();
-    for(const auto i : sigma_coefficients)
+    for (const auto i : sigma_coefficients)
         cout << i.Output();
     cout << endl;
 
     //--------------------------------------------------------------------------
     cout << endl << "Testing the constructor accepting the vector of coeff"
          << endl;
-    try{
-        CrystalBallParameters crystalBallParameters(alpha_init, n_init, sigma_init);
+    try {
+        CrystalBallParameters crystalBallParameters(alpha_init, n_init,
+                                                    sigma_init);
         alpha_coefficients = crystalBallParameters.GetAlphaCoefficients();
-        for(const auto i : alpha_coefficients)
+        for (const auto i : alpha_coefficients)
             cout << i.Output();
         cout << endl;
 
         n_coefficients = crystalBallParameters.GetNCoefficients();
-        for(const auto i : n_coefficients)
+        for (const auto i : n_coefficients)
             cout << i.Output();
         cout << endl;
 
         sigma_coefficients = crystalBallParameters.GetSigmaCoefficients();
-        for(const auto i : sigma_coefficients)
+        for (const auto i : sigma_coefficients)
             cout << i.Output();
         cout << endl;
     } catch (exception &ex) {
