@@ -14,6 +14,7 @@
 
 using namespace std;
 
+///This method calculates the efficiency
 Variable EffCalculator::CalcEff(const Variable &energy, std::map<std::string,
                                 Variable> &coeffs) {
     double en = energy.GetValue();
@@ -32,6 +33,7 @@ Variable EffCalculator::CalcEff(const Variable &energy, std::map<std::string,
     return(Variable(eff,err.CalcEffErr(coeffs,energy),"/100"));
 }
 
+///This method calculates the simulated rolling efficiency
 Variable EffCalculator::CalcSimRollingEff(const Variable &en) {
     //From Sergey's eff_var_thresh; we currently assume 0 error.
     Variable a = Variable(29508.583014511, 2323, "");
@@ -46,6 +48,7 @@ Variable EffCalculator::CalcSimRollingEff(const Variable &en) {
     return(Variable(eff.GetValue()/100., 0.0, " / 100"));
 }
 
+///This method calculates the time of flight
 double EffCalculator::CalcTof(const double &en) {
     PhysConstants consts;
     double c  = consts.GetConstant("c").GetValue()*(100/1e9);
@@ -53,6 +56,7 @@ double EffCalculator::CalcTof(const double &en) {
     return(distance_ * sqrt(mn/2/en));
 }
 
+///This method calculates the efficiency using MMF's bannana
 Variable EffCalculator::CalcMmfAdjusted(const Variable &en) {
     double eff = 0.0;
     double tof = CalcTof(en.GetValue());
@@ -89,6 +93,7 @@ Variable EffCalculator::CalcMmfAdjusted(const Variable &en) {
     return(Variable(eff, 0.0, " / 100"));
 }
 
+///This method gets the beta efficiency
 Variable EffCalculator::GetBetaEff(const Variable &energy, const Decay &dky) {
     Variable qeff = dky.GetQBetaN() - energy;
     qeff = Variable(qeff.GetValue()*1000., qeff.GetError()*1000., "keV");
@@ -98,6 +103,7 @@ Variable EffCalculator::GetBetaEff(const Variable &energy, const Decay &dky) {
     return(beff);
 }
 
+///This method gets the efficiency
 Variable EffCalculator::GetEff(const Variable &energy, const EffTypes &curve) {
     map<string,Variable> coeffs;
     Variable en = energy;

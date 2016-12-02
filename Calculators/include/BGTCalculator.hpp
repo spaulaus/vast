@@ -62,8 +62,15 @@ private:
     std::string band_;
     std::map<double,double> density_, bgtMap_, logftMap_, sDensity_;
 
+    ///@brief This method calculates the B(GT)
+    ///@param[in] en         :Neutron energy
+    ///@param[in] isIndv     :bool for specify single peak
+    ///@param[in] val        :
     Variable CalcBgt(const Variable &en, const Variable &val,
                    const bool &isIndv = true);
+    ///@brief This method calculates the branching ratio
+    ///@param[in] en        :Neutron energy
+    ///@param[in] yld       :yield
     Variable CalcBranchingRatio(const Variable &en, const Variable &yld);
     double CalcF(const Variable &en);
     Variable CalcLevelEnergy(const Variable &en);

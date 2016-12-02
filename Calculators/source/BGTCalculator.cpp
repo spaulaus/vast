@@ -13,6 +13,7 @@ using namespace std;
 
 static const double bgtCoeff_ = 3812.413; //!< D/(ga/gv)**2 in units of s
 
+///This constructor is used for calculating neutron densities
 BGTCalculator::BGTCalculator(const std::map<double, double> &density,
                              const Decay &decay, const Experiment &exp,
                              const std::string &band, const Variable &eg) {
@@ -24,6 +25,7 @@ BGTCalculator::BGTCalculator(const std::map<double, double> &density,
     HandleNeutronDensity();
 }
 
+///This constructor is used for calculations using a single neutron peak
 BGTCalculator::BGTCalculator(Neutron &neutron, const Decay &decay,
                              const Experiment &exp, const Variable &eg) {
     eG_ = eg;
@@ -37,6 +39,7 @@ BGTCalculator::BGTCalculator(Neutron &neutron, const Decay &decay,
     HandleNeutronIndividual(neutron);
 }
 
+///This method calculates the B(GT)
 Variable BGTCalculator::CalcBgt(const Variable &en, const Variable &val,
                                 const bool &isIndv) {
     Variable br, hl = decay_.GetHalfLife();
@@ -60,6 +63,7 @@ Variable BGTCalculator::CalcBgt(const Variable &en, const Variable &val,
     return(Variable(bgt,err_.CalcBgtErr(bgt,br,hl),""));
 }
 
+///This method calculates the branching ratio
 Variable BGTCalculator::CalcBranchingRatio(const Variable & en,
                                            const Variable &yld) {
     Variable betaEff = eff_.GetBetaEff(en, decay_);
@@ -71,6 +75,7 @@ Variable BGTCalculator::CalcBranchingRatio(const Variable & en,
     return(Variable(br, err, "/100"));
 }
 
+///
 double BGTCalculator::CalcF(const Variable &en) {
     //------------------------------------------------------------------
     //--------- This routine is adapted from the original basic --------
