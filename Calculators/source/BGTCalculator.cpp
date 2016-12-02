@@ -101,6 +101,8 @@ double BGTCalculator::CalcF(const Variable &en) {
     return(pow(10,logf));
 }
 
+
+///This method calculates the level energy
 Variable BGTCalculator::CalcLevelEnergy(const Variable &en) {
     double lvl = en.GetValue() + decay_.GetNeutronSepEnergy().GetValue()
         + eG_.GetValue();

@@ -81,3 +81,4 @@ private:
     void HandleNeutronIndividual(Neutron &neutron);
 };
 #endif //__BGTCALCULATOR_HPP__
+
