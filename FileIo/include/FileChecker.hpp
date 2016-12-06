@@ -21,7 +21,11 @@ public:
     /*! Default destructor */
     ~FileChecker(){};
 private:
+    ///@brief This method checks if a directory exists
+    ///@param[in] name  : name of directory
     void CheckDirExistance(const std::string &name);
+    ///@brief This method checks if a file exists
+    ///@param[in] name  : name of file
     void CheckFileExistance(const std::string &name);
 };
 #endif //__FILECHECKER_HPP__
