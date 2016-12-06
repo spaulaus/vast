@@ -62,7 +62,7 @@ void NeutronDensity::CalcDensity(const Variable &ge, const Variable &geEff) {
     }
 }
 
-///This method calculates the Guassian for the fit
+///This method produces the Gaussian
 double NeutronDensity::Gaussian(const double &x) {
     double coeff = amplitude_/(sigma_*sqrt(2*M_PI));
     double exponent = -pow((x-mu_)/sigma_,2)*0.5;

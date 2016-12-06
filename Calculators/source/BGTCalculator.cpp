@@ -13,7 +13,7 @@ using namespace std;
 
 static const double bgtCoeff_ = 3812.413; //!< D/(ga/gv)**2 in units of s
 
-///This constructor is used for calculating neutron densities
+///This constructor is used for calculating B(GT)
 BGTCalculator::BGTCalculator(const std::map<double, double> &density,
                              const Decay &decay, const Experiment &exp,
                              const std::string &band, const Variable &eg) {
@@ -25,7 +25,7 @@ BGTCalculator::BGTCalculator(const std::map<double, double> &density,
     HandleNeutronDensity();
 }
 
-///This constructor is used for calculations using a single neutron peak
+///This constructor is used for calculations for a single neutron peak
 BGTCalculator::BGTCalculator(Neutron &neutron, const Decay &decay,
                              const Experiment &exp, const Variable &eg) {
     eG_ = eg;
@@ -40,6 +40,7 @@ BGTCalculator::BGTCalculator(Neutron &neutron, const Decay &decay,
 }
 
 ///This method calculates the B(GT)
+///@TODO Change val to something more meaningful
 Variable BGTCalculator::CalcBgt(const Variable &en, const Variable &val,
                                 const bool &isIndv) {
     Variable br, hl = decay_.GetHalfLife();

@@ -104,6 +104,7 @@ Variable EffCalculator::GetBetaEff(const Variable &energy, const Decay &dky) {
 }
 
 ///This method gets the efficiency
+///@TODO Better description of a, b, c, d, e, f, g, e1 and e2 parameters
 Variable EffCalculator::GetEff(const Variable &energy, const EffTypes &curve) {
     map<string,Variable> coeffs;
     Variable en = energy;

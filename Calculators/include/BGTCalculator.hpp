@@ -22,7 +22,7 @@ class BGTCalculator {
 public:
     /*! The default constructor */
     BGTCalculator(){};
-    /*! The constructor used for calculating the neutron densities
+    /*! The constructor used for calculating the B(GT)
     *   \param[in] density A map containing the neutron density
     *   \param[in] decay An object of the Decay class
     *   \param[in] exp An object of the Experiment class
