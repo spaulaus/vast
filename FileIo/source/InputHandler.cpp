@@ -16,6 +16,7 @@
 
 using namespace std;
 
+///This function reads the data from the fit output
 void InputHandler::ReadFitOutput(vector<Neutron> &nvec, const string &file) {
     Tokenizer tokenizer;
     tokenizer.SetDelimiter(" ");

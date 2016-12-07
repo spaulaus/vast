@@ -22,7 +22,9 @@ public:
     /** Default Destructor */
     ~InputHandler(){};
 
-    ///A function to read the data from an input file
+    ///@brief A function to read the data from the fit output
+    ///@param[in] file  : input file name
+    ///@param[in] nvec  : vector holding neutron information
     void ReadFitOutput(std::vector<Neutron> &nvec, const std::string &file);
 private:
 };

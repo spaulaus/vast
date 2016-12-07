@@ -15,16 +15,19 @@
 
 using namespace std;
 
+///This method checks if val is nan or infinity
 bool OutputHandler::NotInfOrNan(const double &val) {
     return (!std::isnan(val) && !std::isinf(val));
 }
 
+///This method fills the 1D ROOT histogram
 void OutputHandler::FillHistogram(TH1D &hist,
                                   const std::map<double, double> &data) {
     for (const auto &it : data)
         hist.Fill(it.first, it.second);
 }
 
+///This method ouputs basic information
 void OutputHandler::OutputBasics(vector<Neutron> &nvec, Decay &dky,
                                  Experiment &exp, const string &file) {
     ofstream out(file.c_str());
@@ -48,6 +51,8 @@ void OutputHandler::OutputBasics(vector<Neutron> &nvec, Decay &dky,
                 omega.GetValue();
         rawN += it->GetRawYield().GetValue();
 
+        ///@TODO Check this works.  Clion says "binary type operator << can't
+        /// be applied to expressions of types wostream and string"
         out << setprecision(5) << it->GetMu().OutputData() << " "
             << it->GetEnergy().OutputData() << " "
             << it->GetIntegratedYield().OutputData() << " "
@@ -65,6 +70,7 @@ void OutputHandler::OutputBasics(vector<Neutron> &nvec, Decay &dky,
     out.close();
 }
 
+///This method outputs information about the neutron density
 void OutputHandler::OutputDensity(const NeutronDensity &nden, const Decay &dky,
                                   const Experiment &exp, const string &file) {
     BGTCalculator ndenBgt(*nden.GetDensity(), dky, exp);
@@ -103,7 +109,8 @@ void OutputHandler::OutputDensity(const NeutronDensity &nden, const Decay &dky,
     f.Write();
     f.Close();
 }
-
+///This method outputs in the format needed for the CGM calculations
+///@TODO Describe what this CGM calculation is.
 void OutputHandler::OutputTheory(vector<Neutron> &nvec, const string &file) {
     ofstream outTheory(file.c_str());
     for (auto it = nvec.begin(); it != nvec.end(); it++) {
@@ -118,6 +125,7 @@ void OutputHandler::OutputTheory(vector<Neutron> &nvec, const string &file) {
     outTheory.close();
 }
 
+///This method sets various options for the ROOT histogram
 void OutputHandler::SetHistOptions(TH1D &hist, const std::string &type) {
     stringstream label;
     if (type == "bgt")
