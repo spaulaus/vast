@@ -19,6 +19,8 @@
 using namespace std;
 using namespace RooFit;
 
+///This method performs the fit needed to calculates the sensitivity limit of
+/// the detectors
 Neutron LimitFinder::PerformFit(const double &edge, const double &yield,
                                 const CrystalBallParameters &cbpars) {
     PhysConstants consts;
@@ -29,7 +31,8 @@ Neutron LimitFinder::PerformFit(const double &edge, const double &yield,
 
     RooRealVar tof("tof", "tof", 0.0, 0.0, 200.);
 
-    ///Could we make this a little cleaner like we do below? Make a loop that
+    ///@TODO Could we make this a little cleaner like we do below? Make a loop
+    /// that
     /// way we don't have to worry about setting all these by hand?
     vector<Variable> alphaCoefficients = cbpars.GetAlphaCoefficients();
     RooConstVar a3("a3", "", alphaCoefficients[3].GetValue());

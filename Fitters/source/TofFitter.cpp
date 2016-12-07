@@ -25,6 +25,7 @@
 using namespace std;
 using namespace RooFit;
 
+///This constructor perfroms the fit of the ToF
 TofFitter::TofFitter(const FitHandler &fit, const FileHandler &fls, const
 CrystalBallParameters &pars) {
     cbPars_ = pars;
@@ -43,6 +44,7 @@ CrystalBallParameters &pars) {
     StartRollin();
 }
 
+///This method throws an error message if the file needed doesn't exist
 void TofFitter::CheckFileExistance(void) {
     ifstream test(dataFile_.c_str());
     if (test.fail())
@@ -51,6 +53,8 @@ void TofFitter::CheckFileExistance(void) {
     test.close();
 }
 
+///This method generates the names of each of the fit parameters and
+/// associated numbers corresponding to the fit peak number.
 void TofFitter::GenerateNames(void) {
     for (unsigned int i = 0; i < peaks_.size(); i++) {
         stringstream nameMu, nameYld, nameSig,
@@ -79,6 +83,7 @@ void TofFitter::GenerateNames(void) {
     }
 }
 
+///This method performs a fit of the time of flight using built it ROOT fitting.
 void TofFitter::PerformFit(void) {
     RooRealVar tof("tof", "tof", 0.0, rng_.first, rng_.second);
     RooArgList cbs, ylds;
@@ -192,6 +197,8 @@ void TofFitter::PerformFit(void) {
     delete (canvas);
 }
 
+///This method performs a Monte Carlo style study of the ToF fit.
+///@TODO Add more details of how this is done.
 void TofFitter::PerformMcStudy(void) {
     RooRealVar tof("tof", "tof", 0.0, rng_.first, rng_.second);
 
@@ -279,6 +286,7 @@ void TofFitter::PerformMcStudy(void) {
     }
 }
 
+///This method calls the others to make the fitter run
 void TofFitter::StartRollin(void) {
     CheckFileExistance();
     GenerateNames();

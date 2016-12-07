@@ -8,6 +8,7 @@
 
 using namespace std;
 
+///This is used to test that the ToFFitter class is working as expected
 int main(int argc, char **argv) {
     if (argc < 2) {
         cerr << "test_toffitter : You need to provide the name of the "
