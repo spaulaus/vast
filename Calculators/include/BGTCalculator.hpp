@@ -22,7 +22,7 @@ class BGTCalculator {
 public:
     /*! The default constructor */
     BGTCalculator(){};
-    /*! The constructor used for calculating the neutron densities
+    /*! The constructor used for calculating the B(GT)
     *   \param[in] density A map containing the neutron density
     *   \param[in] decay An object of the Decay class
     *   \param[in] exp An object of the Experiment class
@@ -62,15 +62,32 @@ private:
     std::string band_;
     std::map<double,double> density_, bgtMap_, logftMap_, sDensity_;
 
+    ///@brief This method calculates the B(GT)
+    ///@param[in] en         :Neutron energy
+    ///@param[in] isIndv     :bool for specifying single peak
+    ///@param[in] val        :variable to hold B(GT) value to be combined with error
     Variable CalcBgt(const Variable &en, const Variable &val,
                    const bool &isIndv = true);
+    ///@brief This method calculates the branching ratio
+    ///@param[in] en        :Neutron energy
+    ///@param[in] yld       :yield
     Variable CalcBranchingRatio(const Variable &en, const Variable &yld);
+    ///@brief This method calculates the Fermi integral
+    ///@param[in] en        :Neutron Energy
     double CalcF(const Variable &en);
+    ///@brief This method calculates the level energy
+    ///@param[in] en        :Neutron Energy
     Variable CalcLevelEnergy(const Variable &en);
+    ///@brief This method calculates the Log(ft)
+    ///@param[in] en : Neutron energy
+    ///@param[in] val : Variable to hold Log(ft) value to be combined with error
+    ///@param[in] isIndv : Bool for specifying single peak
     Variable CalcLogft(const Variable &en, const Variable &val,
                      const bool &isIndv = true);
-
+    ///@brief This method fills neutron density map variables
     void HandleNeutronDensity(void);
+    ///@brief This method fills in info about the neutron into the neutron class
+    ///@param[in] neutron   :An object of the neutron class
     void HandleNeutronIndividual(Neutron &neutron);
 };
 #endif //__BGTCALCULATOR_HPP__

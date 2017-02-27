@@ -51,14 +51,16 @@ private:
     std::vector<std::string> components_, yields_, mus_,
             alphas_, sigmas_, ns_;
 
+    ///@brief This method checks that the file needed exists
     void CheckFileExistance(void);
-
+    ///@brief This method generates names of each fit parameter associated
+    /// with each peak fit.
     void GenerateNames(void);
-
+    ///@brief This method performs the fit of the ToF
     void PerformFit(void);
-
+    ///@brief This method does a Monte Carlo style study of the fit
     void PerformMcStudy(void);
-
+    ///@brief This method calls the others to mke the fitter run
     void StartRollin(void);
 }; //class TofFitter
 #endif //ifndef __TOFFITTER_HPP__

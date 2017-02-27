@@ -10,6 +10,9 @@
 #Build directories
 *build*
 
+#Install directories
+*install*
+
 #Documentation directories and files
 html/
 latex/

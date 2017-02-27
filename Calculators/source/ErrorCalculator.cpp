@@ -15,6 +15,7 @@ using namespace std;
 
 static const int numSamples=1e5;  //!< The number of MC tries for Eff calc
 
+///This method calculates the B(GT) error
 double ErrorCalculator::CalcBgtErr(const double &bgt, const Variable &br,
                                    const Variable &halfLife) {
     double brPart = br.GetError() / br.GetValue();
@@ -23,6 +24,7 @@ double ErrorCalculator::CalcBgtErr(const double &bgt, const Variable &br,
     return(bgt*sqrtPart);
 }
 
+///This method calculates the neutron branching ratio error
 double ErrorCalculator::CalcBrErr(const double &br, const Variable &yld,
                                   const Variable &ndky, const Variable &gammaEff,
                                   const Variable &betaEff) {
@@ -35,6 +37,7 @@ double ErrorCalculator::CalcBrErr(const double &br, const Variable &yld,
     return(br*sqrtPart);
 }
 
+///This method calculates the error on the gamma efficiency using MC method
 double ErrorCalculator::CalcEffErr(const map<string,Variable> &vars,
                                    const Variable &energy) {
     unsigned seed1 = chrono::system_clock::now().time_since_epoch().count();
@@ -80,6 +83,7 @@ double ErrorCalculator::CalcEffErr(const map<string,Variable> &vars,
     return(sqrt(var));
 }
 
+///This method calculates the error of the energy of the neutron peak
 double ErrorCalculator::CalcEnergyErr(Neutron &neutron) {
     double tofPart = pow(2 * neutron.GetBetaResolution().GetValue() /
                         neutron.GetMu().GetValue(), 2);
@@ -89,6 +93,7 @@ double ErrorCalculator::CalcEnergyErr(Neutron &neutron) {
     return(err);
 }
 
+///This method calculates the integrated yield error
 double ErrorCalculator::CalcIntegratedYldErr(const double &fitYldErr,
                                              const double &fitSimp,
                                              const double &infSimp){
@@ -97,6 +102,7 @@ double ErrorCalculator::CalcIntegratedYldErr(const double &fitYldErr,
     return(err);
 }
 
+///This method calculates the log(ft) error
 double ErrorCalculator::CalcLogftErr(const Variable &br,
                                      const Variable &halfLife) {
     double brPart = br.GetError() / br.GetValue() / log(10);
@@ -104,6 +110,7 @@ double ErrorCalculator::CalcLogftErr(const Variable &br,
     return(sqrt(pow(brPart,2)+pow(hlPart,2)));
 }
 
+///This method calculates the error on the number of decays
 double ErrorCalculator::CalcNumDkyErr(const double &numDky,
                                         const Variable &rawGammaCounts,
                                         const Variable &gammaEff,
@@ -114,6 +121,7 @@ double ErrorCalculator::CalcNumDkyErr(const double &numDky,
     return(numDky*sqrt(pow(areaPart,2)+pow(effPart,2)+pow(brPart,2)));
 }
 
+///This method calculates the error of the neutron branching ratio
 double ErrorCalculator::CalcPnErr(const double &pn,
                                   vector<Neutron> &neutrons,
                                   const Decay &dky) {
@@ -126,6 +134,7 @@ double ErrorCalculator::CalcPnErr(const double &pn,
     return(pn*sqrt(yldPart+ndkyPart));
 }
 
+///This method calculates the mean
 double ErrorCalculator::CalcMean(const vector<double> &mcVals) {
     double sum = 0;
     for(const auto &i : mcVals)
@@ -133,6 +142,7 @@ double ErrorCalculator::CalcMean(const vector<double> &mcVals) {
     return(sum / mcVals.size());
 }
 
+///This method calculates the variance
 double ErrorCalculator::CalcVariance(const vector<double> &mcVals,
                                      const double &mean) {
     double var = 0;

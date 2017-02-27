@@ -22,6 +22,7 @@ ConfigurationReader::ConfigurationReader(const std::string &file) {
     }
 }
 
+///This method sets the configuration file to be used by the program
 void ConfigurationReader::SetConfigurationFile(const std::string &file) {
     try {
         OpenConfigurationFile(file);
@@ -30,6 +31,8 @@ void ConfigurationReader::SetConfigurationFile(const std::string &file) {
     }
 }
 
+///This method opens the configuration file to be used by the program.  It
+/// also prvides error messages if it couldn't open the configuration.
 void ConfigurationReader::OpenConfigurationFile(const std::string &file) {
     if (doc_.load_file(file.c_str())) {
         cout << "Using configuration file : " << file << endl;
@@ -40,6 +43,8 @@ void ConfigurationReader::OpenConfigurationFile(const std::string &file) {
                                 "check the path and try again. ");
 }
 
+///This method parses the configuration file using pugiXML to fill
+/// experimental information.
 Experiment ConfigurationReader::ReadExperiment(void) {
     Experiment exp;
     pugi::xml_node expInfo = cfg_.child("Experiment");
@@ -67,6 +72,8 @@ Experiment ConfigurationReader::ReadExperiment(void) {
     return (exp);
 }
 
+///This method parses the configuration file using pugiXML for the input and
+/// output files.
 FileHandler ConfigurationReader::ReadFiles(void) {
     FileHandler fhandle;
     if (cfg_.child("Files").empty())
@@ -82,6 +89,8 @@ FileHandler ConfigurationReader::ReadFiles(void) {
     return (fhandle);
 }
 
+///This method parses the configuration file using pugiXML getting the
+/// fitting information.
 FitHandler ConfigurationReader::ReadFit(void) {
     FitHandler fit;
     pugi::xml_node ft = cfg_.child("Fitting");
@@ -130,6 +139,8 @@ FitHandler ConfigurationReader::ReadFit(void) {
     return (fit);
 }
 
+///This method parses the configuration file using pugiXML getting the
+/// crystal ball parameters.
 CrystalBallParameters ConfigurationReader::ReadCrystalBallParameters() {
     CrystalBallParameters cbpar;
     string var_name = "", function = "";
@@ -180,6 +191,7 @@ CrystalBallParameters ConfigurationReader::ReadCrystalBallParameters() {
     return cbpar;
 }
 
+///This method parses the configuration file for logic flags.
 FlagHandler ConfigurationReader::ReadFlags(void) {
     FlagHandler flags;
     if (cfg_.child("Flags").empty())
@@ -189,6 +201,7 @@ FlagHandler ConfigurationReader::ReadFlags(void) {
     return (flags);
 }
 
+///This method parses the configuration file for the decay information.
 Decay ConfigurationReader::ReadDecay(void) {
     Decay decay;
     pugi::xml_node dky = cfg_.child("Decay");
@@ -225,6 +238,8 @@ Decay ConfigurationReader::ReadDecay(void) {
     return (decay);
 }
 
+///This method converts string reads from the configuration file into
+/// efficiency types.
 EffCalculator::EffTypes
 ConfigurationReader::StringToEffType(const std::string &a) {
     if (a == "mmfCalc")
@@ -242,6 +257,8 @@ ConfigurationReader::StringToEffType(const std::string &a) {
     return (EffCalculator::EffTypes::svpBan4);
 }
 
+///This method conversts numbers read from configuration nodes into the
+/// c++ data types needed.
 Variable ConfigurationReader::NodeToVar(const pugi::xml_node &node) {
     Variable var = Variable(node.attribute("value").as_double(),
                             node.attribute("error").as_double(),
@@ -249,6 +266,7 @@ Variable ConfigurationReader::NodeToVar(const pugi::xml_node &node) {
     return (var);
 }
 
+///This method produces an error message for an empty node.
 string ConfigurationReader::EmptyNodeExceptionMessage(const std::string &method,
                                                       const std::string &node) {
     stringstream ss;
@@ -257,6 +275,7 @@ string ConfigurationReader::EmptyNodeExceptionMessage(const std::string &method,
     return ss.str();
 }
 
+///This method produces an error message for an unrecognized entry in a node
 string ConfigurationReader::UnknownEntryExceptionMessage(
         const std::string &method, const std::string &node,
         const std::string &name) {

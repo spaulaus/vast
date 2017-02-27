@@ -34,16 +34,41 @@ public:
 private:
     double alpha_, mu_, n_, sigma_;
 
+    ///@brief  This method calculates the error associated with the Simpson's
+    /// Method integration.
+    ///@param[in] fSimp : ?
+    ///@param[in] uSimp : ?
+    ///@TODO Implement this(needed?).
     double CalcError(const double &fSimp, const double &uSimp);
 
-    double AdaptiveSimpsons(const double &a, const double &b,  // interval [a,b]
-                            const double &epsilon,  // error tolerance
-                            const int &maxRecursionDepth);   // recursion cap
+    ///@brief This method implements Simpson's rule to integrate the neutron
+    /// peak.
+    ///@param[in] a : Start of interval
+    ///@param[in] b : End of interval
+    ///@param[in] epsilon   : Error tolerance
+    ///@param[in] maxRecursionDepth : recursion cap(Max number of iterations)
+    double AdaptiveSimpsons(const double &a, const double &b,
+                            const double &epsilon,
+                            const int &maxRecursionDepth);
+    ///@brief This method is the adaptive Simpson's method used for
+    /// integrating the neutron peak.
+    ///@param[in] a : Start of interval
+    ///@param[in] b : End of interval
+    ///@param[in] epsilon   : Error tolerance
+    ///@param[in] S : ?
+    ///@param[in] fa    : function evaluated at a
+    ///@param[in] fb    : function evaluated at b
+    ///@param[in] fc    : function evaluated at midpoint c
+    ///@param[in] bottom    : ?
+    ///@TODO Better explain what S and bottom are.
     double AdaptiveSimpsonsAux(const double &a,
                                const double &b, const double &epsilon,
                                const double &S, const double &fa,
                                const double &fb, const double &fc,
                                const int &bottom);
+    ///@brief This method performs a crystal ball fit of the neutron peak
+    ///@param[in] var   : neutron energy value???
+    ///@TODO Rename var into something more descriptive.
     double CrystalBall(const double &var);
 };
 #endif //__INTEGRATOR_HPP__

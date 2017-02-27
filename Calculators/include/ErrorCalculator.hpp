@@ -86,7 +86,12 @@ public:
     double CalcPnErr(const double &pn, std::vector<Neutron> &neutrons,
                      const Decay &dky);
 private:
+    ///@brief This method calculates the mean
+    ///@param[in] mcVals    : Vector of values to find mean of
     double CalcMean(const std::vector<double> &mcVals);
+    ///@brief This method calculates the variance
+    ///@param[in] mcVals    : Vector of values used for the mean
+    ///@param[in] mean      :The mean value
     double CalcVariance(const std::vector<double> &mcVals,
                               const double &mean);
 };

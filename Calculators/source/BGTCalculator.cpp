@@ -13,6 +13,7 @@ using namespace std;
 
 static const double bgtCoeff_ = 3812.413; //!< D/(ga/gv)**2 in units of s
 
+///This constructor is used for calculating B(GT)
 BGTCalculator::BGTCalculator(const std::map<double, double> &density,
                              const Decay &decay, const Experiment &exp,
                              const std::string &band, const Variable &eg) {
@@ -24,6 +25,7 @@ BGTCalculator::BGTCalculator(const std::map<double, double> &density,
     HandleNeutronDensity();
 }
 
+///This constructor is used for calculations for a single neutron peak
 BGTCalculator::BGTCalculator(Neutron &neutron, const Decay &decay,
                              const Experiment &exp, const Variable &eg) {
     eG_ = eg;
@@ -37,6 +39,8 @@ BGTCalculator::BGTCalculator(Neutron &neutron, const Decay &decay,
     HandleNeutronIndividual(neutron);
 }
 
+///This method calculates the B(GT)
+///@TODO Change val to something more meaningful
 Variable BGTCalculator::CalcBgt(const Variable &en, const Variable &val,
                                 const bool &isIndv) {
     Variable br, hl = decay_.GetHalfLife();
@@ -60,6 +64,7 @@ Variable BGTCalculator::CalcBgt(const Variable &en, const Variable &val,
     return(Variable(bgt,err_.CalcBgtErr(bgt,br,hl),""));
 }
 
+///This method calculates the branching ratio
 Variable BGTCalculator::CalcBranchingRatio(const Variable & en,
                                            const Variable &yld) {
     Variable betaEff = eff_.GetBetaEff(en, decay_);
@@ -71,6 +76,7 @@ Variable BGTCalculator::CalcBranchingRatio(const Variable & en,
     return(Variable(br, err, "/100"));
 }
 
+///This method calculates the Fermi integral
 double BGTCalculator::CalcF(const Variable &en) {
     //------------------------------------------------------------------
     //--------- This routine is adapted from the original basic --------
@@ -96,12 +102,16 @@ double BGTCalculator::CalcF(const Variable &en) {
     return(pow(10,logf));
 }
 
+
+///This method calculates the level energy
 Variable BGTCalculator::CalcLevelEnergy(const Variable &en) {
     double lvl = en.GetValue() + decay_.GetNeutronSepEnergy().GetValue()
         + eG_.GetValue();
     return(Variable(lvl,0.0,"MeV"));
 }
 
+///This method calculates the Log(ft) value
+///@TODO Update the name of val so that it reflects something actually useful.
 Variable BGTCalculator::CalcLogft(const Variable &en, const Variable &val,
                                   const bool &isIndv) {
     Variable br;
@@ -115,6 +125,7 @@ Variable BGTCalculator::CalcLogft(const Variable &en, const Variable &val,
     return(Variable(logft, err_.CalcLogftErr(br,decay_.GetHalfLife()), ""));
 }
 
+///This method fills neutron density map variables
 void BGTCalculator::HandleNeutronDensity(void) {
     for(auto it = density_.begin(); it != density_.end(); it++) {
         Variable en = Variable(it->first, 0.0,"MeV");
@@ -130,6 +141,7 @@ void BGTCalculator::HandleNeutronDensity(void) {
     }
 }
 
+///This method the fills the info about the neutron into the neutron class
 void BGTCalculator::HandleNeutronIndividual(Neutron &neutron) {
     Variable en = neutron.GetEnergy();
     Variable yld = neutron.GetIntegratedYield();

@@ -12,6 +12,7 @@
 
 using namespace std;
 
+///This constructor takes arguments to perform the integration on
 Integrator::Integrator(Neutron &neutron,
                        const std::pair<double,double> &range) {
     alpha_ = neutron.GetAlpha().GetValue();
@@ -30,6 +31,7 @@ Integrator::Integrator(Neutron &neutron,
     neutron.SetIntegratedYield(Variable(intYld, intYldErr, "counts"));
 }
 
+///This method implements Simpson's rule for integrating the neutron peak
 double Integrator::AdaptiveSimpsons(const double &a, const double &b,
                                     const double &epsilon,
                                     const int &maxRecursionDepth){
@@ -38,7 +40,9 @@ double Integrator::AdaptiveSimpsons(const double &a, const double &b,
     double S = (h/6)*(fa + 4*fc + fb);
     return AdaptiveSimpsonsAux(a, b, epsilon, S, fa, fb, fc, maxRecursionDepth);
 }
-
+///This method uses the Adaptive Simpsons algorithm
+/// (https://en.wikipedia.org/wiki/Adaptive_Simpson's_method)
+/// to integrate a neutron peak in the range provided by a and b.
 double Integrator::AdaptiveSimpsonsAux(const double &a,
                                        const double &b, const double &epsilon,
                                        const double &S, const double &fa,
@@ -50,12 +54,16 @@ double Integrator::AdaptiveSimpsonsAux(const double &a,
     double Sleft = (h/12)*(fa + 4*fd + fc);
     double Sright = (h/12)*(fc + 4*fe + fb);
     double S2 = Sleft + Sright;
-    if (bottom <= 0 || fabs(S2 - S) <= 15*epsilon)
+    if (bottom <= 0 || fabs(S2 - S) <= 15*epsilon) //magic 15 comes from
+        // error analysis, see web page above.
         return( S2 + (S2 - S)/15 );
     return( AdaptiveSimpsonsAux(a, c, epsilon/2, Sleft,  fa, fc, fd, bottom-1) +
             AdaptiveSimpsonsAux(c, b, epsilon/2, Sright, fc, fb, fe, bottom-1) );
 }
 
+///This method performs a crystal ball fit of the neutron peak.  See:
+///https://en.wikipedia.org/wiki/Crystal_Ball_function
+///@TODO Missing parts of the crystal ball function from webpage?
 double Integrator::CrystalBall(const double &var){
     double t = (var-mu_)/sigma_;
 

@@ -57,7 +57,7 @@ public:
     CrystalBallParameters ReadCrystalBallParameters(void);
 
     ///@brief This setter provides the program with the configuration file.
-    ///@param[in] file Path and file name that we are goign to be using as
+    ///@param[in] file : Path and file name that we are going to be using as
     /// the input to the program.
     void SetConfigurationFile(const std::string &file);
 

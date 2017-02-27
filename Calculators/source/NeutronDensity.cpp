@@ -14,6 +14,7 @@ using namespace std;
 
 static const double stepSize_ = 0.001; //! The step size for sampling the Gaussian
 
+///This constructor uses the neutron vector to perform density related operations
 NeutronDensity::NeutronDensity(std::vector<Neutron> &neutrons,
                                const double &qbetan, const Variable &ge) {
     qbetan_  = qbetan;
@@ -27,6 +28,7 @@ NeutronDensity::NeutronDensity(std::vector<Neutron> &neutrons,
     }
 }
 
+///This method calculates the neutron density
 void NeutronDensity::CalcDensity(const Variable &ge, const Variable &geEff) {
     for(vector<Neutron>::iterator it = neutrons_.begin();
         it != neutrons_.end(); it++) {
@@ -60,6 +62,7 @@ void NeutronDensity::CalcDensity(const Variable &ge, const Variable &geEff) {
     }
 }
 
+///This method produces the Gaussian
 double NeutronDensity::Gaussian(const double &x) {
     double coeff = amplitude_/(sigma_*sqrt(2*M_PI));
     double exponent = -pow((x-mu_)/sigma_,2)*0.5;

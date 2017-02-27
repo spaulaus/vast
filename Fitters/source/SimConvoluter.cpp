@@ -65,13 +65,17 @@ SimConvoluter::SimConvoluter(const std::string &cfg) {
     }
 }
 
+///This method calculates the beta resolution as a function of ToF
 double SimConvoluter::CalcBetaRes(const double &tof) {
+    ///@TODO What is this 42.5?
     if(tof <= 42.5)
         return((0.071824559*tof+1.5544112228)/(2*sqrt(2*log(2))));
     else
         return((0.0168145157*tof+3.7803929763)/(2*sqrt(2*log(2))));
 }
 
+///This method calculates the convoluted Crystal ball parameters of the Monte
+/// Carlo fit
 void SimConvoluter::FitMc(const double &en, const double &mu,
                           const double &sigma, const double &alpha,
                           const double &n, ofstream &convOut) {
@@ -123,6 +127,8 @@ void SimConvoluter::FitMc(const double &en, const double &mu,
     }
 }
 
+///This method claculates the fit of the simulated data.  This fit is used
+/// to know how large the neutron tails are in the real data.
 void SimConvoluter::FitSim(void) {
     PhysConstants consts;
     double c = consts.GetConstant("c").GetValue()*(100/1e9); //cm/ns
