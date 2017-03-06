@@ -27,7 +27,7 @@ void FileChecker::CheckDirExistance(const string &name) {
     string temp = name+"out.temp";
     ofstream test(temp.c_str());
     if(test.fail()) {
-        cout << "Holy fuck!!! We couldn't open the following directory for "
+        cout << "We couldn't open the following directory for "
              << "i/o operations : " << endl << "\"" << name << "\"." << endl
              << "This is an issue with me." << endl << endl;
         exit(1);

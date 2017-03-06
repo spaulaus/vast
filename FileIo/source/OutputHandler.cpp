@@ -51,8 +51,6 @@ void OutputHandler::OutputBasics(vector<Neutron> &nvec, Decay &dky,
                 omega.GetValue();
         rawN += it->GetRawYield().GetValue();
 
-        ///@TODO Check this works.  Clion says "binary type operator << can't
-        /// be applied to expressions of types wostream and string"
         out << setprecision(5) << it->GetMu().OutputData() << " "
             << it->GetEnergy().OutputData() << " "
             << it->GetIntegratedYield().OutputData() << " "
@@ -109,6 +107,7 @@ void OutputHandler::OutputDensity(const NeutronDensity &nden, const Decay &dky,
     f.Write();
     f.Close();
 }
+
 ///This method outputs in the format needed for the CGM calculations
 ///@TODO Describe what this CGM calculation is.
 void OutputHandler::OutputTheory(vector<Neutron> &nvec, const string &file) {
