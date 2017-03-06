@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8.8)
 
-project(VAST)
+project(VandleAnalysisSoftwareToolkit)
 
 #Compile with c++11 or c++0x depending on the compiler version
 if (CMAKE_COMPILER_IS_GNUCXX)
@@ -62,7 +62,7 @@ add_definitions(-D INSTALL_PREFIX="\\"${CMAKE_INSTALL_PREFIX}\\"")
 
 #Find packages
 #Load additional find_package scripts.
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules/")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/CMake/modules/")
 
 #Find ROOT since we need it
 find_package (ROOT REQUIRED)

@@ -3,6 +3,7 @@
 *.save
 *~
 *.layout
+*.bak
 
 #IDE related files
 .idea
