@@ -8,25 +8,19 @@
 .idea
 
 #Build directories
-*build*
+*build*/
 
 #Install directories
-*install*
+*install*/
 
 #Documentation directories and files
 html/
 latex/
-cgmStage/
-doc/temp/
 results/
-pics
+pics/
 
-# Data directories
-HIS
-LDF
-HIS/*
-LDF/*
-data
+#The data directory
+data/
 
 #Latex related files
 *.aux
