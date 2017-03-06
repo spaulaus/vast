@@ -28,17 +28,17 @@
         </Input>
 
         <Output>
-            <resultsDir>/home/vincent/proj/c++/vast/results/working</resultsDir>
-            <picDir>/home/vincent/proj/c++/vast/pics/tof/working</picDir>
-            <picGs>/home/vincent/proj/c++/vast/pics/tof/working/working.eps</picGs>
-            <gsFit>/home/vincent/proj/c++/vast/results/tof/working/working.fit</gsFit>
-            <g1Fit>/home/vincent/proj/c++/vast/results/tof/working/working-g1.fit</g1Fit>
-            <g2Fit>/home/vincent/proj/c++/vast/results/tof/working/working-g2.fit</g2Fit>
+            <resultsDir>/home/vincent/proj/c++/vast/results/test/</resultsDir>
+            <picDir>/home/vincent/proj/c++/vast/results/test</picDir>
+            <picGs>/home/vincent/proj/c++/vast/results/test</picGs>
+            <gsFit>/home/vincent/proj/c++/vast/results/test/test.fit</gsFit>
+            <g1Fit>/home/vincent/proj/c++/vast/results/test/test-g1.fit</g1Fit>
+            <g2Fit>/home/vincent/proj/c++/vast/results/test/test-g2.fit</g2Fit>
 
-            <neutrons>/home/vincent/proj/c++/vast/results/vast/working/working.dat</neutrons>
-            <cgm>/home/vincent/proj/c++/vast/results/vast/working/working.mgb</cgm>
-            <density>/home/vincent/proj/c++/vast/results/vast/working/bgt.root</density>
-            <sensitivity>/home/vincent/proj/c++/vast/results/vast/working/working.sens</sensitivity>
+            <neutrons>/home/vincent/proj/c++/vast/results/test/test.dat</neutrons>
+            <cgm>/home/vincent/proj/c++/vast/results/test/test.mgb</cgm>
+            <density>/home/vincent/proj/c++/vast/results/test/bgt.root</density>
+            <sensitivity>/home/vincent/proj/c++/vast/results/test/test.sens</sensitivity>
         </Output>
     </Files>
 

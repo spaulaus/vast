@@ -1,24 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- This is an example configuration file based on a real experiment.
-     Copy this file and modify its content to setup your experiment. -KM
-
-     I totally stole the tmplate of this from Krzysztof Miernik.
-     Thanks,buddy! -SVP (see readme for more info)
-
-     NOTE: The program only recognizes the information that is currently
-     listed in the nodes (Author, Experiment, Decay, etc.), except where
-     otherwise noted.
--->
 <Configuration>
-    <!-- your name, email and date -->
     <Author>
         <Name>S. V. Paulauskas</Name>
-        <Email>stanpaulauskas@gmail.com</Email>
+        <Email>spaulaus AT utk DOT edu</Email>
         <Date>November 2013</Date>
-        <Updated>June 08 2014</Updated>
+        <Updated>Monday March 6, 2017</Updated>
     </Author>
 
-    <!-- Short description of the experiment here. -->
     <Description>
         LeRIBSS 2012 VANDLE experiment, 2 Clovers, 2 Beta scitilators,
         MTC, 48 small VANDLE modules
@@ -26,7 +14,6 @@
         This is setup for the 84Ga analysis.
     </Description>
 
-    <!-- This has all the information about the decay of interest. -->
     <Decay>
         <!-- z of the parent -->
         <z value='31' error='0.0' unit=""/>
@@ -49,61 +36,41 @@
             <en value="0.2473" error="0.0005" unit="MeV"/>
             <abr value="0.086" error="0.008" unit="/100"/>
         </gn>
-
-        <g1> <!-- Gating gamma number 1 (not implemented yet)-->
-        </g1>
-
-        <g2> <!-- Gating gamma number 2 (not implemented yet)-->
-        </g2>
     </Gamma>
 
     <!-- This is the place to put some of the general information
          about the experiment.
     -->
     <Experiment>
-        <numBars value="9" error="0.0" unit=""/>
+        <NumberOfBars value="9" error="0.0" unit=""/>
         <!-- This one is from Sergey's simulation -->
-        <omegaPerBar value="0.0061" error="0.0" unit=""/>
+        <OmegaPerBar value="0.0061" error="0.0" unit=""/>
         <!-- This one is from just a straight calculation -->
-        <!-- <omegaPerBar value="4.727e-3" error="0.0" unit=""/> -->
-        <denRes value="0.500" error="0.0" unit="MeV"/>
-        <flightPath value="50.5" error="0.0" unit="cm"/>
+        <!-- <OmegaPerBar value="4.727e-3" error="0.0" unit=""/> -->
+        <DensityResolution value="0.500" error="0.0" unit="MeV"/>
+        <FlightPath value="50.5" error="0.0" unit="cm"/>
+        <EfficiencyCurve>mmf</EfficiencyCurve>
     </Experiment>
 
-    <!-- These are the input/output files. The program only
-         recognizes the Input/Output nodes for reading. However,
-         anything added under them will be read into the program.
-
-         NOTE: Blank spaces are hazardous to your health..err analysis.
-    -->
     <Files>
-        <!-- These are the input files -->
         <Input>
-            <!-- These are the experimental Data -->
-            <gsTof>data/084ga/tof/084ga-ban4-lower/084ga-ban4-lower.dat</gsTof>
-            <g1Tof>data/084ga/tof/084ga-mmfBan/084ga-mmfBan-247keV.dat</g1Tof>
-            <g2Tof></g2Tof>
+            <gsTof>/home/vincent/proj/c++/vast/data/084ga/mmf/ga84_singles_tof.dat</gsTof>
         </Input>
-
-        <!-- The output file names (sometimes just the path) -->
         <Output>
-            <!-- Files for the fitting -->
-            <picDir>pics/tof/working/</picDir>
-            <picGs>pics/tof/working/working.eps</picGs>
-            <gsFit>results/tof/working/working.fit</gsFit>
-            <g1Fit>results/tof/working/working-g1.fit</g1Fit>
-            <g2Fit>results/tof/working/working-g2.fit</g2Fit>
-            <!-- Files for the B(GT) -->
-            <neutrons>results/vast/working/working.dat</neutrons>
-            <cgm>results/vast/working/working.mgb</cgm>
-            <density>results/vast/working/working.bgt</density>
-            <sensitivity>results/vast/working/working.sens</sensitivity>
+            <resultsDir>/home/vincent/proj/c++/vast/results/test/</resultsDir>
+            <picDir>/home/vincent/proj/c++/vast/results/test</picDir>
+            <picGs>/home/vincent/proj/c++/vast/results//test/test.eps</picGs>
+            <gsFit>/home/vincent/proj/c++/vast/results/test/test.fit</gsFit>
+            <g1Fit>/home/vincent/proj/c++/vast/results/test/test-g1.fit</g1Fit>
+            <g2Fit>/home/vincent/proj/c++/vast/results/test/test-g2.fit</g2Fit>
+
+            <neutrons>/home/vincent/proj/c++/vast/results/test/test.dat</neutrons>
+            <cgm>/home/vincent/proj/c++/vast/results/test/test.mgb</cgm>
+            <density>/home/vincent/proj/c++/vast/results/test/bgt.root</density>
+            <sensitivity>/home/vincent/proj/c++/vast/results/test/test.sens</sensitivity>
         </Output>
     </Files>
 
-    <!-- This is the section where we hold all of the information about
-         the simulation.
-    -->
     <Simulation>
         <!-- These are the simulation data -->
         <inputBase>data/ilyushkin/8keVee-06-06-2014/</inputBase>
@@ -141,21 +108,16 @@
         </range>
     </Simulation>
 
-    <!-- Some flags to control program flow. The program will
-         recgonize any flags that are added here.
-    -->
     <Flags>
         <doFit value="true"/>
         <basic value="true"/>
         <theory value="false"/>
-        <density value="false"/>
+        <density value="true"/>
     </Flags>
 
     <!-- How about some fitting information? -->
     <Fitting>
-        <!-- the peaks to use in the fitting of the tof -->
         <peaks>
-            <!-- peaks for the singles fitting -->
             <sngl>
                 <pk0 value="20."/>
                 <pk1 value="30.0"/>
@@ -166,48 +128,50 @@
                 <pk6 value="55.00"/>
                 <pk7 value="70.151"/>
             </sngl>
-
-            <!-- The peaks for gamma 1 gated spectrum -->
-            <g1>
-                <pk0 value="15.0"/>
-                <pk1 value="25.0"/>
-                <pk2 value="50.0"/>
-            </g1>
         </peaks>
 
-        <!-- The Peak List to Use in the fit
-             recognizes : sngl,g1,g2
-        -->
         <pkList value="sngl"/>
 
-        <!-- The fitting range -->
         <range>
             <low value="0.0"/>
             <high value="200.0"/>
         </range>
 
-        <!-- The Binning for the picture -->
-        <binning value="0.5"/>
-
-        <!-- How much can the peaks move -->
         <wiggle value="200."/>
+        <binning value="0.5"/>
+    </Fitting>
 
-        <!-- Parameterization for the fitted parameters (not quite implemented)-->
+    <CrystalBallParameters>
         <alpha>
-            <aI value="0.0130289072593045"/>
-            <aH value="-0.641803483244778"/>
+            <function
+                    value="a3*pow(tof,3)+a2*pow(tof,2)+a1*tof+a0"/>
+            <coefficients>
+                <a0 value="-0.73110" error="0.10206" units=""/>
+                <a1 value="-0.00101" error="0.00574" units=""/>
+                <a2 value="2.52616e-05" error="8.81266e-05" units=""/>
+                <a3 value="-1.07220e-07" error="3.89451e-07" units=""/>
+            </coefficients>
         </alpha>
 
-        <sigma>
-            <sM value="-0.000121210451962825"/>
-            <sN value="0.0416568757021418"/>
-            <sO value="0.550158923590531"/>
-        </sigma>
-
         <n>
-            <nJ value="2.21591018795502e-06"/>
-            <nK value="0.00189178692442985"/>
-            <nL value="1.33190840921066"/>
+            <function value="n2*tof+n1+n0/tof"/>
+            <coefficients>
+                <n0 value="-4.33787" error="1.60649" units=""/>
+                <n1 value="1.65099" error="0.09231" units=""/>
+                <n2 value="0.00179" error="0.00095" units=""/>
+            </coefficients>
         </n>
-    </Fitting>
+
+        <sigma>
+            <function
+                    value="s4*pow(tof,4)+s3*pow(tof,3)+s2*pow(tof,2)+s1*tof+s0"/>
+            <coefficients>
+                <s0 value="0.18205" error="0.120600" units=""/>
+                <s1 value="0.070225" error="0.010693" units=""/>
+                <s2 value="-0.00075" error="0.00029" units=""/>
+                <s3 value="4.90374e-06" error="3.14410e-06" units=""/>
+                <s4 value="-1.19754e-08" error="1.09884e-08" units=""/>
+            </coefficients>
+        </sigma>
+    </CrystalBallParameters>
 </Configuration>
