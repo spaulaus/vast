@@ -9,4 +9,5 @@ if(BUILD_VAST)
     target_link_libraries(vast Calculators Core Fitters FileInput
             FileOutput ThirdParty PhysConstants RooFit RooFitCore
             ${ROOT_LIBRARIES})
+    install(TARGETS vast DESTINATION bin)
 endif(BUILD_VAST)
