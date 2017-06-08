@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8.8)
+cmake_minimum_required(VERSION 3.1)
 
 project(VandleAnalysisSoftwareToolkit)
 
@@ -33,8 +33,7 @@ message(STATUS "Installing to ${CMAKE_INSTALL_PREFIX}")
 
 #Define the default build type to be Release
 if (NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE Release CACHE STRING
-            "Build type, options are: None Debug Release RelWithDebInfo MinSizeRel."
+    set(CMAKE_BUILD_TYPE Release CACHE STRING "Build type, options are: None Debug Release RelWithDebInfo MinSizeRel."
             FORCE)
     message(STATUS "Build type not defined, using default: ${CMAKE_BUILD_TYPE}")
 endif (NOT CMAKE_BUILD_TYPE)
@@ -66,24 +65,20 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/CMake/modules/")
 
 #Find ROOT since we need it
 find_package (ROOT REQUIRED)
-mark_as_advanced(FORCE GENREFLEX_EXECUTABLE ROOTCINT_EXECUTABLE
-        ROOT_CONFIG_EXECUTABLE)
+mark_as_advanced(FORCE GENREFLEX_EXECUTABLE ROOTCINT_EXECUTABLE ROOT_CONFIG_EXECUTABLE)
 include_directories(${ROOT_INCLUDE_DIR})
 link_directories(${ROOT_LIBRARY_DIR})
 
 #We are going to find the third party libraries at this time most of the
 #submodules are going to need at least one of these
 link_directories(${CMAKE_SOURCE_DIR}/ThirdParty/libs/)
-find_library(PhysConstants PhysConstants PATH
-        ${CMAKE_SOURCE_DIR}/ThirdParty/libs/)
-find_library(SignalGenerator SignalGenerator PATH
-        ${CMAKE_SOURCE_DIR}/ThirdParty/libs/)
+find_library(PhysConstants PhysConstants PATH ${CMAKE_SOURCE_DIR}/ThirdParty/libs/)
+find_library(SignalGenerator SignalGenerator PATH ${CMAKE_SOURCE_DIR}/ThirdParty/libs/)
 
 #------------------------------------------------------------------------------
 
 #We add a number of include directory since everybody will need parts of them.
-include_directories(Calculators/include Core/include FileIo/include
-        Fitters/include ThirdParty/include)
+include_directories(Calculators/include Core/include FileIo/include Fitters/include ThirdParty/include)
 
 add_subdirectory(Calculators)
 add_subdirectory(Core)

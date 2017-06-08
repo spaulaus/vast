@@ -1,12 +1,11 @@
-Vandle Analysis Software Toolkit (VAST)
-=======================================
+# Vandle Analysis Software Toolkit (VAST)
+I (S. V. Paulauskas) wrote VAST to analyze data for my thesis. This software was written and designed to analyze data
+ from small VANDLE bars. I do not currently have support for the medium bars without changing a bunch of magic 
+ numbers. I will (hopefully) soon be updating this to handle a lot of things better than they are now.  
 
-Some prerequisites:
--------------------
-pugixml >= 1.2
-ROOT >= 5.99/03
-RooFit >= 3.55
-
+## Some prerequisites:
+* ROOT >= 5.99/03
+* RooFit >= 3.55
 
 1. SETTING UP 
    A) Directory structure:
