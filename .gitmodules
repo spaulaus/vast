@@ -7,3 +7,6 @@
 [submodule "Submodules/Signal-Generator"]
 	path = Submodules/Signal-Generator
 	url = https://github.com/spaulaus/Signal-Generator
+[submodule "Submodules/Variable"]
+	path = Submodules/Variable
+	url = https://github.com/spaulaus/Variable
