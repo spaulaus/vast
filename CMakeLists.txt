@@ -64,27 +64,26 @@ add_definitions(-D INSTALL_PREFIX="\\"${CMAKE_INSTALL_PREFIX}\\"")
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/CMake/modules/")
 
 #Find ROOT since we need it
-find_package (ROOT REQUIRED)
+find_package (ROOT REQUIRED COMPONENTS roofit)
 mark_as_advanced(FORCE GENREFLEX_EXECUTABLE ROOTCINT_EXECUTABLE ROOT_CONFIG_EXECUTABLE)
 include_directories(${ROOT_INCLUDE_DIR})
 link_directories(${ROOT_LIBRARY_DIR})
 
-#We are going to find the third party libraries at this time most of the
-#submodules are going to need at least one of these
-link_directories(${CMAKE_SOURCE_DIR}/ThirdParty/libs/)
-find_library(PhysConstants PhysConstants PATH ${CMAKE_SOURCE_DIR}/ThirdParty/libs/)
-find_library(SignalGenerator SignalGenerator PATH ${CMAKE_SOURCE_DIR}/ThirdParty/libs/)
-
 #------------------------------------------------------------------------------
 
 #We add a number of include directory since everybody will need parts of them.
-include_directories(Calculators/include Core/include FileIo/include Fitters/include ThirdParty/include)
+include_directories(Calculators/include Core/include FileIo/include Fitters/include Submodules/pugixml/include
+        Submodules/EZProgressbar/ Submodules/PhysConstants/include Submodules/Signal-Generator/include
+        Submodules/Tokenizer/inc Submodules/Variable/inc)
 
+#I want to do the submodules first so that we ensure the dependencies compile properly before we get too far.
+add_subdirectory(Submodules)
+
+#Now we'll decend and build all the VAST specific stuff.
 add_subdirectory(Calculators)
 add_subdirectory(Core)
 add_subdirectory(FileIo)
 add_subdirectory(Fitters)
-add_subdirectory(ThirdParty)
 
 if(BUILD_UTILITIES)
     add_subdirectory(Utilities)

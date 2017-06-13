@@ -1,5 +1,4 @@
-set(FILE_INPUT_SOURCES ConfigurationReader.cpp FileChecker.cpp FileHandler.cpp
-        InputHandler.cpp)
+set(FILE_INPUT_SOURCES ConfigurationReader.cpp FileChecker.cpp FileHandler.cpp InputHandler.cpp)
 message(STATUS "Building FileInput Shared Object")
 add_library(FileInput SHARED ${FILE_INPUT_SOURCES})
 install(TARGETS FileInput DESTINATION lib)
