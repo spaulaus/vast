@@ -1,3 +1,9 @@
 [submodule "Submodules/EZProgressbar"]
 	path = Submodules/EZProgressbar
 	url = https://git.code.sf.net/p/ezprogressbar/code
+[submodule "Submodules/PhysConstants"]
+	path = Submodules/PhysConstants
+	url = https://github.com/spaulaus/PhysConstants
+[submodule "Submodules/Signal-Generator"]
+	path = Submodules/Signal-Generator
+	url = https://github.com/spaulaus/Signal-Generator
