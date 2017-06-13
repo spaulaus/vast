@@ -10,3 +10,6 @@
 [submodule "Submodules/Variable"]
 	path = Submodules/Variable
 	url = https://github.com/spaulaus/Variable
+[submodule "Submodules/Tokenizer"]
+	path = Submodules/Tokenizer
+	url = https://github.com/spaulaus/Tokenizer
