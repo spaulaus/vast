@@ -1,4 +1,3 @@
-add_executable(test_configuration test_configuration.cpp
-        ../source/ConfigurationReader.cpp)
-target_link_libraries(test_configuration ThirdParty Core Calculators
-        PhysConstants FileInput)
+add_executable(test_configuration test_configuration.cpp ../source/ConfigurationReader.cpp)
+target_link_libraries(test_configuration Core Calculators FileInput SubmoduleStaticLibrary)
+install(TARGETS test_configuration DESTINATION bin/tests)
