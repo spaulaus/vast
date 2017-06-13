@@ -18,19 +18,11 @@ public:
     CrystalBallParameters() {}
 
     ///@brief A constructor directly setting the values of the coefficients
-    ///@param[in] a : A vector of variables to assign to the private
-    /// variable alphaCoeff_
-    ///@param[in] n : A vector of variables to assign to the private
-    /// variable nCoeff_
-    ///@param[in] s : A vector of variables to assign to the private
-    /// variable sigmaCoeff_
-    CrystalBallParameters(const std::vector<Variable> &a,
-                          const std::vector<Variable> &n,
-                          const std::vector<Variable> &s) {
-        SetAlphaCoefficients(a);
-        SetNCoefficients(n);
-        SetSigmaCoefficients(s);
-    }
+    ///@param[in] a : A vector of variables to assign to the private variable alphaCoeff_
+    ///@param[in] n : A vector of variables to assign to the private variable nCoeff_
+    ///@param[in] s : A vector of variables to assign to the private variable sigmaCoeff_
+    CrystalBallParameters(const std::vector<Variable> &a, const std::vector<Variable> &n,
+                          const std::vector<Variable> &s) : alphaCoeff_(a), nCoeff_(n), sigmaCoeff_(s)  { }
 
     ///@brief Default destructor
     ~CrystalBallParameters() {}
@@ -52,94 +44,72 @@ public:
 
     ///@brief A method that gets the coeffieicnts for alpha
     ///@return A vector of Variables for the coefficients in ascending power
-    std::vector<Variable> GetAlphaCoefficients(void) const {
-        return
-                alphaCoeff_;
+    std::vector<Variable> GetAlphaCoefficients(void) const { return alphaCoeff_; }
+
+    ///@brief A method to return the functional form of alpha(ToF) with the tof variable replaced by the input argument.
+    ///@param[in] a : The argument to replace tof with
+    ///@return The functional form of the parameter with the new tof variable
+    std::string GetAlphaFunction(const std::string &tof) const {
+        if (alphaFunction_ == "")
+            throw Exception("CrystalBallParameters::GetAlphaFunction - The functional string was empty!");
+        return StringManipulation::ReplaceString(alphaFunction_, "tof", tof);
     }
 
     ///@brief A method that gets the coeffieicnts for n
     ///@return A vector of Variables for the coefficients in ascending power
     std::vector<Variable> GetNCoefficients(void) const { return nCoeff_; }
 
-    ///@brief A method that gets the coeffieicnts for sigma
-    ///@return A vector of Variables for the coefficients in ascending power
-    std::vector<Variable> GetSigmaCoefficients(void) const {
-        return
-                sigmaCoeff_;
-    }
-
-    ///@brief A method to return the functional form of alpha(ToF) with the
-    /// tof variable replaced by the input argument.
-    ///@param[in] a : The argument to replace tof with
-    ///@return The functional form of the parameter with the new tof variable
-    std::string GetAlphaFunction(const std::string &tof) const {
-        if (alphaFunction_ == "")
-            throw Exception("CrystalBallParameters::GetAlphaFunction - The "
-                                    "functional string was empty!");
-        return StringManipulation::ReplaceString(alphaFunction_, "tof", tof);
-    }
-
-    ///@brief A method to return the functional form of n(ToF) with the
-    /// tof variable replaced by the input argument.
+    ///@brief A method to return the functional form of n(ToF) with the tof variable replaced by the input argument.
     ///@param[in] a : The argument to replace tof with
     ///@return The functional form of the parameter with the new tof variable
     std::string GetNFunction(const std::string &tof) const {
         if (nFunction_ == "")
-            throw Exception("CrystalBallParameters::GetNFunction - The "
-                                    "functional string was empty!");
+            throw Exception("CrystalBallParameters::GetNFunction - The functional string was empty!");
         return StringManipulation::ReplaceString(nFunction_, "tof", tof);
     }
 
-    ///@brief A method to return the functional form of sigma(ToF) with the
-    /// tof variable replaced by the input argument.
+    ///@brief A method that gets the coeffieicnts for sigma
+    ///@return A vector of Variables for the coefficients in ascending power
+    std::vector<Variable> GetSigmaCoefficients(void) const { return sigmaCoeff_; }
+
+    ///@brief A method to return the functional form of sigma(ToF) with the tof variable replaced by the input argument.
     ///@param[in] a : The argument to replace tof with
     ///@return The functional form of the parameter with the new tof variable
     std::string GetSigmaFunction(const std::string &tof) const {
         if (sigmaFunction_ == "")
-            throw Exception("CrystalBallParameters::GetSigmaFunction - The "
-                                    "functional string was empty!");
+            throw Exception("CrystalBallParameters::GetSigmaFunction - The functional string was empty!");
         return StringManipulation::ReplaceString(sigmaFunction_, "tof", tof);
     }
 
-    ///@brief A method that gets the coeffieicnts for alpha
-    ///@param[in] a : A vector of Variables for the coefficients in ascending
-    /// power order.
-    void
-    SetAlphaCoefficients(const std::vector<Variable> &a) {
+    ///@brief A method that sets the coeffieicnts for alpha
+    ///@param[in] a : A vector of Variables for the coefficients in ascending power order.
+    void SetAlphaCoefficients(const std::vector<Variable> &a) {
         if (a.size() != 4)
-            throw Exception(
-                    "CrystalBallParameters::SetAlphaCoefficients - alpha"
-                            "(ToF) needs to have 4 coefficients!");
+            throw Exception("CrystalBallParameters::SetAlphaCoefficients - alpha(ToF) needs to have 4 coefficients!");
         alphaCoeff_ = a;
-    }
-
-    ///@brief A method that gets the coeffieicnts for n
-    ///@param[in] a : A vector of Variables for the coefficients in ascending
-    /// power order.
-    void SetNCoefficients(const std::vector<Variable> &a) {
-        if (a.size() != 3)
-            throw Exception("CrystalBallParameters::SetNCoefficients - n"
-                                    "(ToF) needs to have 3 coefficients!");
-        nCoeff_ = a;
-    }
-
-    ///@brief A method that gets the coeffieicnts for sigma
-    ///@param[in] a : A vector of Variables for the coefficients in ascending
-    /// power order.
-    void
-    SetSigmaCoefficients(const std::vector<Variable> &a) {
-        if (a.size() != 5)
-            throw Exception(
-                    "CrystalBallParameters::SetSigmaCoefficients - sigma"
-                            "(ToF) needs to have 5 coefficients!");
-        sigmaCoeff_ = a;
     }
 
     ///@brief A method to set the functional form of alpha(ToF)
     void SetAlphaFunction(const std::string &a) { alphaFunction_ = a; }
 
+    ///@brief A method that sets the coeffieicnts for n
+    ///@param[in] a : A vector of Variables for the coefficients in ascending power order.
+    void SetNCoefficients(const std::vector<Variable> &a) {
+        if (a.size() != 3)
+            throw Exception("CrystalBallParameters::SetNCoefficients - n(ToF) needs to have 3 coefficients!");
+        nCoeff_ = a;
+    }
+
     ///@brief A method to set the functional form of alpha(ToF)
     void SetNFunction(const std::string &a) { nFunction_ = a; }
+
+    ///@brief A method that sets the coeffieicnts for sigma
+    ///@param[in] a : A vector of Variables for the coefficients in ascending power order.
+    void SetSigmaCoefficients(const std::vector<Variable> &a) {
+        if (a.size() != 5)
+            throw Exception("CrystalBallParameters::SetSigmaCoefficients - sigma(ToF) needs to have 5 coefficients!");
+        sigmaCoeff_ = a;
+    }
 
     ///@brief A method to set the functional form of alpha(ToF)
     void SetSigmaFunction(const std::string &a) { sigmaFunction_ = a; }

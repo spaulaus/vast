@@ -4,13 +4,14 @@
 ///@brief A small code to test the behavior of the CrystalBallParameters
 #include <iostream>
 
+#include <UnitTest++.h>
+
 #include "CrystalBallParameters.hpp"
 
 using namespace std;
 
-///This method is the main, and is used to test what the crystal ball
-///parameters do
-int main() {
+///This method is the main, and is used to test what the crystal ball parameters do
+TEST(Test_Everything) {
     CrystalBallParameters params;
     vector<Variable> alpha_init = {Variable(-0.73110, 0.10206, ""),
                                    Variable(-0.00101, 0.00574, ""),
@@ -33,7 +34,6 @@ int main() {
         params.SetSigmaCoefficients(sigma_init);
     } catch (exception &ex) {
         cout << ex.what() << endl;
-        return 1;
     }
 
     vector<Variable> alpha_coefficients = params.GetAlphaCoefficients();
@@ -73,7 +73,6 @@ int main() {
         cout << endl;
     } catch (exception &ex) {
         cout << ex.what() << endl;
-        return 1;
     }
 
     //--------------------------------------------------------------------------
@@ -99,4 +98,8 @@ int main() {
     params.SetSigmaFunction(sigmaFunction);
     cout << "Original Function: " << sigmaFunction << endl
          << "New Function : " << params.GetSigmaFunction("mu0") << endl << endl;
+}
+
+int main(int argv, char *argc[]) {
+    return (UnitTest::RunAllTests());
 }

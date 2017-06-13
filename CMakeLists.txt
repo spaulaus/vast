@@ -64,10 +64,19 @@ add_definitions(-D INSTALL_PREFIX="\\"${CMAKE_INSTALL_PREFIX}\\"")
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/CMake/modules/")
 
 #Find ROOT since we need it
-find_package (ROOT REQUIRED COMPONENTS roofit)
+find_package(ROOT REQUIRED COMPONENTS roofit)
 mark_as_advanced(FORCE GENREFLEX_EXECUTABLE ROOTCINT_EXECUTABLE ROOT_CONFIG_EXECUTABLE)
 include_directories(${ROOT_INCLUDE_DIR})
 link_directories(${ROOT_LIBRARY_DIR})
+
+#Find UnitTest++ since we're going to be needing it
+#Find the UnitTest++ Package. This package can be obtained from
+#https://github.com/unittest-cpp/unittest-cpp.git
+if (BUILD_TESTS)
+    find_package(UnitTest++ REQUIRED)
+    link_directories(${UNITTEST++_LIBRARY_DIR})
+    include_directories(${UNITTEST++_INCLUDE_DIR})
+endif (BUILD_TESTS)
 
 #------------------------------------------------------------------------------
 

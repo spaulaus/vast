@@ -6,7 +6,6 @@
 
 #include "CrystalBallParameters.hpp"
 
-
 ///For more info on crystal ball function:
 ///https://en.wikipedia.org/wiki/Crystal_Ball_function.
 
