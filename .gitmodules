@@ -1,0 +1,3 @@
+[submodule "Submodules/EZProgressbar"]
+	path = Submodules/EZProgressbar
+	url = https://git.code.sf.net/p/ezprogressbar/code
