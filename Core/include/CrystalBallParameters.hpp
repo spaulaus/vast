@@ -50,8 +50,6 @@ public:
     ///@param[in] a : The argument to replace tof with
     ///@return The functional form of the parameter with the new tof variable
     std::string GetAlphaFunction(const std::string &tof) const {
-        if (alphaFunction_ == "")
-            throw Exception("CrystalBallParameters::GetAlphaFunction - The functional string was empty!");
         return StringManipulation::ReplaceString(alphaFunction_, "tof", tof);
     }
 
@@ -63,8 +61,6 @@ public:
     ///@param[in] a : The argument to replace tof with
     ///@return The functional form of the parameter with the new tof variable
     std::string GetNFunction(const std::string &tof) const {
-        if (nFunction_ == "")
-            throw Exception("CrystalBallParameters::GetNFunction - The functional string was empty!");
         return StringManipulation::ReplaceString(nFunction_, "tof", tof);
     }
 
@@ -76,43 +72,63 @@ public:
     ///@param[in] a : The argument to replace tof with
     ///@return The functional form of the parameter with the new tof variable
     std::string GetSigmaFunction(const std::string &tof) const {
-        if (sigmaFunction_ == "")
-            throw Exception("CrystalBallParameters::GetSigmaFunction - The functional string was empty!");
         return StringManipulation::ReplaceString(sigmaFunction_, "tof", tof);
     }
 
     ///@brief A method that sets the coeffieicnts for alpha
     ///@param[in] a : A vector of Variables for the coefficients in ascending power order.
+    ///@throws invalid_argument if the vector size isn't 4
     void SetAlphaCoefficients(const std::vector<Variable> &a) {
         if (a.size() != 4)
-            throw Exception("CrystalBallParameters::SetAlphaCoefficients - alpha(ToF) needs to have 4 coefficients!");
+            throw std::invalid_argument("CrystalBallParameters::SetAlphaCoefficients - alpha(ToF) needs to have 4 "
+                                       "coefficients!");
         alphaCoeff_ = a;
     }
 
-    ///@brief A method to set the functional form of alpha(ToF)
-    void SetAlphaFunction(const std::string &a) { alphaFunction_ = a; }
+    ///@brief A method to set the functional form of alpha(tof)
+    ///@param[in] a : The functional form that we want to set, function of the form alpha(tof)
+    ///@throws invalid_argument if the function string is empty
+    void SetAlphaFunction(const std::string &a) {
+        if (a == "")
+            throw std::invalid_argument("CrystalBallParameters::SetAlphaFunction - The functional string was empty!");
+        alphaFunction_ = a;
+    }
 
     ///@brief A method that sets the coeffieicnts for n
     ///@param[in] a : A vector of Variables for the coefficients in ascending power order.
+    ///@throws invalid_argument if the vector size isn't 3
     void SetNCoefficients(const std::vector<Variable> &a) {
         if (a.size() != 3)
-            throw Exception("CrystalBallParameters::SetNCoefficients - n(ToF) needs to have 3 coefficients!");
+            throw std::invalid_argument("CrystalBallParameters::SetNCoefficients - n(ToF) needs to have 3 coefficients!");
         nCoeff_ = a;
     }
 
-    ///@brief A method to set the functional form of alpha(ToF)
-    void SetNFunction(const std::string &a) { nFunction_ = a; }
+    ///@brief A method to set the functional form of n(tof)
+    ///@param[in] a : The functional form that we want to set, function of the form n(tof)
+    ///@throws invalid_argument if we try to set an empty argument
+    void SetNFunction(const std::string &a) {
+        if (a == "")
+            throw std::invalid_argument("CrystalBallParameters::SetNFunction - The functional string was empty!");
+        nFunction_ = a;
+    }
 
-    ///@brief A method that sets the coeffieicnts for sigma
+    ///@brief A method that sets the coefficients for sigma
     ///@param[in] a : A vector of Variables for the coefficients in ascending power order.
+    ///@throws invalid_argument if the size of the vector isn't 5
     void SetSigmaCoefficients(const std::vector<Variable> &a) {
         if (a.size() != 5)
-            throw Exception("CrystalBallParameters::SetSigmaCoefficients - sigma(ToF) needs to have 5 coefficients!");
+            throw std::invalid_argument("CrystalBallParameters::SetSigmaCoefficients - sigma(ToF) needs to have 5 coefficients!");
         sigmaCoeff_ = a;
     }
 
-    ///@brief A method to set the functional form of alpha(ToF)
-    void SetSigmaFunction(const std::string &a) { sigmaFunction_ = a; }
+    ///@brief A method to set the functional form of sigma(tof)
+    ///@param[in] a : The functional form that we want to set, function of the form sigma(tof)
+    ///@throws invalid_argument if we try to set an empty function
+    void SetSigmaFunction(const std::string &a) {
+        if (a == "")
+            throw std::invalid_argument("CrystalBallParameters::SetSigmaFunction - The functional string was empty!");
+        sigmaFunction_ = a;
+    }
 
 private:
     std::string alphaFunction_; //!< The fucntional form of alpha(ToF)

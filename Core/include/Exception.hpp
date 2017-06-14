@@ -7,6 +7,7 @@
 
 #include <exception>
 #include <string>
+#include <stdexcept>
 
 ///A class to handle exceptions
 class Exception : public std::exception {
