@@ -7,97 +7,43 @@
 #include <UnitTest++.h>
 
 #include "CrystalBallParameters.hpp"
+#include "UnittestConfigurations.hpp"
 
 using namespace std;
+using namespace UnitTests::CrystalBallParameters;
 
 ///This method is the main, and is used to test what the crystal ball parameters do
-TEST(Test_Everything) {
-    CrystalBallParameters params;
-    vector<Variable> alpha_init = {Variable(-0.73110, 0.10206, ""),
-                                   Variable(-0.00101, 0.00574, ""),
-                                   Variable(2.52616e-05, 8.81266e-05, ""),
-                                   Variable(-1.07220e-07, 3.89451e-07, "")};
-    vector<Variable> n_init = {Variable(-4.33787, 1.60649, ""),
-                               Variable(1.65099, 0.09231, ""),
-                               Variable(0.00179, 0.00095, "")};
-    vector<Variable> sigma_init = {Variable(0.18205, 0.120600, ""),
-                                   Variable(0.070225, 0.010693, ""),
-                                   Variable(0.00075, 0.00029, ""),
-                                   Variable(4.90374e-06, 3.14410e-06, ""),
-                                   Variable(-1.19754e-08, 1.09884e-08, "")};
+TEST_FIXTURE(CrystalBallParameters, Test_SettingParameters) {
+    SetAlphaCoefficients(test_alpha);
+    SetNCoefficients(test_n);
+    SetSigmaCoefficients(test_sigma);
 
-    //--------------------------------------------------------------------------
-    cout << "Testing the set methods for SetXXXCoefficients" << endl;
-    try {
-        params.SetAlphaCoefficients(alpha_init);
-        params.SetNCoefficients(n_init);
-        params.SetSigmaCoefficients(sigma_init);
-    } catch (exception &ex) {
-        cout << ex.what() << endl;
-    }
+    CHECK_ARRAY_EQUAL(GetAlphaCoefficients(), test_alpha, test_alpha.size());
+    CHECK_ARRAY_EQUAL(GetNCoefficients(), test_n, test_n.size());
+    CHECK_ARRAY_EQUAL(GetSigmaCoefficients(), test_sigma, test_sigma.size());
+}
 
-    vector<Variable> alpha_coefficients = params.GetAlphaCoefficients();
-    for (const auto i : alpha_coefficients)
-        cout << i.Output();
-    cout << endl;
+TEST(Test_SettingViaConstructor) {
+    CrystalBallParameters crystalBallParameters(test_alpha, test_n, test_sigma);
+    CHECK_ARRAY_EQUAL(crystalBallParameters.GetAlphaCoefficients(), test_alpha, test_alpha.size());
+    CHECK_ARRAY_EQUAL(crystalBallParameters.GetNCoefficients(), test_n, test_n.size());
+    CHECK_ARRAY_EQUAL(crystalBallParameters.GetSigmaCoefficients(), test_sigma, test_sigma.size());
+}
 
-    vector<Variable> n_coefficients = params.GetNCoefficients();
-    for (const auto i : n_coefficients)
-        cout << i.Output();
-    cout << endl;
+TEST_FIXTURE(CrystalBallParameters, Test_Calculations) {
+//   cout << params.CalcAlpha(tof) << " " << params.CalcN(tof) << " "
+//        << params.CalcSigma(tof) << endl;
+}
 
-    vector<Variable> sigma_coefficients = params.GetSigmaCoefficients();
-    for (const auto i : sigma_coefficients)
-        cout << i.Output();
-    cout << endl;
+TEST_FIXTURE(CrystalBallParameters, Test_FunctionReplacements) {
+    SetAlphaFunction(test_alphaFunctionInput);
+    CHECK_EQUAL(GetAlphaFunction(test_replacementString), test_alphaFunctionOutput);
 
-    //--------------------------------------------------------------------------
-    cout << endl << "Testing the constructor accepting the vector of coeff"
-         << endl;
-    try {
-        CrystalBallParameters crystalBallParameters(alpha_init, n_init,
-                                                    sigma_init);
-        alpha_coefficients = crystalBallParameters.GetAlphaCoefficients();
-        for (const auto i : alpha_coefficients)
-            cout << i.Output();
-        cout << endl;
+    SetNFunction(test_nFunctionInput);
+    CHECK_EQUAL(GetNFunction(test_replacementString), test_nFunctionOutput);
 
-        n_coefficients = crystalBallParameters.GetNCoefficients();
-        for (const auto i : n_coefficients)
-            cout << i.Output();
-        cout << endl;
-
-        sigma_coefficients = crystalBallParameters.GetSigmaCoefficients();
-        for (const auto i : sigma_coefficients)
-            cout << i.Output();
-        cout << endl;
-    } catch (exception &ex) {
-        cout << ex.what() << endl;
-    }
-
-    //--------------------------------------------------------------------------
-    cout << endl << "Testing the calculation of the parameters." << endl;
-    double tof = 150;
-    cout << params.CalcAlpha(tof) << " " << params.CalcN(tof) << " "
-         << params.CalcSigma(tof) << endl;
-
-    cout << endl << "Testing the function replacement features." << endl;
-    string alphaFunction = "a4*pow(tof,4)+a3*pow(tof,3)+a2*pow(tof,2)"
-            "+a1*tof+a0";
-    params.SetAlphaFunction(alphaFunction);
-    cout << "Original Function: " << alphaFunction << endl
-         << "New Function : " << params.GetAlphaFunction("mu0") << endl << endl;
-
-    string nFunction = "n2*tof + n1 + n0/tof";
-    params.SetNFunction(nFunction);
-    cout << "Original Function: " << nFunction << endl
-         << "New Function : " << params.GetNFunction("mu0") << endl << endl;
-
-    string sigmaFunction = "s4*pow(tof,4)+ s3*pow(tof,3) + s2*pow(tof,2) + "
-            "s1*tof+s0";
-    params.SetSigmaFunction(sigmaFunction);
-    cout << "Original Function: " << sigmaFunction << endl
-         << "New Function : " << params.GetSigmaFunction("mu0") << endl << endl;
+    SetSigmaFunction(test_sigmaFunctionInput);
+    CHECK_EQUAL(GetSigmaFunction(test_replacementString), test_sigmaFunctionOutput);
 }
 
 int main(int argv, char *argc[]) {
