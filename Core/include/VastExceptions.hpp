@@ -10,14 +10,14 @@
 #include <stdexcept>
 
 ///A class to handle exceptions
-class Exception : public std::exception {
+class VastException : public std::exception {
 public:
     ///@brief Contructor outputing message a
     ///@param a Error message string
-    Exception(const std::string &a) { msg_ = a; };
+    VastException(const std::string &a) { msg_ = a; };
 
     ///@brief Default destructor
-    ~Exception() {};
+    ~VastException() {};
 
     const char *what() const noexcept { return msg_.c_str(); }
 
