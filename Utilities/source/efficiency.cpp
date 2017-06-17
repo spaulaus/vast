@@ -13,6 +13,7 @@
 #include <unistd.h>
 
 #include "EffCalculator.hpp"
+#include "HelperEnumerations.hpp"
 
 using namespace std;
 
@@ -43,13 +44,13 @@ int main(int argc, char* argv[]) {
 
     EffCalculator eff;
     int opt = -1;
-    EffCalculator::EffTypes curve;
+    EfficiencyEnums::EffTypes curve;
     double distance = 0.0, energy = 0.0, sigma = 0.0;
 
     while((opt = getopt (argc, argv, "e:s:bgmcvtd:")) != -1) {
         switch(opt) {
         case 'b': {
-            curve = EffCalculator::EffTypes::beta;
+            curve = EfficiencyEnums::EffTypes::beta;
             break;
         } case 'e': {
             energy = atof(optarg);
@@ -58,19 +59,19 @@ int main(int argc, char* argv[]) {
             sigma = atof(optarg);
             break;
         } case 'g': {
-            curve = EffCalculator::EffTypes::ge;
+            curve = EfficiencyEnums::EffTypes::ge;
             break;
         } case 'v': {
-            curve = EffCalculator::EffTypes::vandle;
+            curve = EfficiencyEnums::EffTypes::vandle;
             break;
         }  case 'c': {
-            curve = EffCalculator::EffTypes::svpBan4;
+            curve = EfficiencyEnums::EffTypes::svpBan4;
             break;
         } case 'm': {
-            curve = EffCalculator::EffTypes::mmfCalc;
+            curve = EfficiencyEnums::EffTypes::mmfCalc;
             break;
         } case 't' : {
-            curve = EffCalculator::EffTypes::mmfTheory;
+            curve = EfficiencyEnums::EffTypes::mmfTheory;
             break;
         } case 'd' : {
             distance = atof(optarg);

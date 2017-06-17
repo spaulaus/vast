@@ -16,6 +16,7 @@
 #include "Integrator.hpp"
 #include "OutputHandler.hpp"
 #include "TofFitter.hpp"
+#include "XmlInterface.hpp"
 
 using namespace std;
 
@@ -25,43 +26,40 @@ int main(int argc, char* argv[]) {
                 "configuration file. " << endl << endl << "Usage: "
                 "./vast /path/to/configuration/file" << endl;
         return 1;
+    } else {
+        XmlInterface::get(argv[1]);
     }
+
+    pugi::xml_node configurationNode = XmlInterface::get()->GetDocument()->child("Configuration");
+    ConfigurationReader cfg;
 
     InputHandler input;
     FileHandler fls;
     Experiment exp;
     OutputHandler output;
-    Variable betaEff;
     FlagHandler flags;
     FitHandler fit;
     Decay decay;
     CrystalBallParameters cbpars;
-    bool basic;
-
-    cout << "vast.cpp : Reading in the configuration file " << argv[1] << endl;
-    ConfigurationReader cfg(argv[1]);
 
     try {
-        fls = cfg.ReadFiles();
-    } catch(...) {
-        cout << "vast.cpp : Exception caught while reading file list. " << endl;
+        cfg.ParseFileNode(configurationNode.child("Files"), fls);
+        cfg.ParseDecayNode(configurationNode.child("Decay"), decay);
+        cfg.ParseExperimentNode(configurationNode.child("Experiment"), exp);
+        cfg.ParseCrystalBallNode(configurationNode.child("CrystalBall"), cbpars);
+        cfg.ParseDecayNode(configurationNode.child("Decay"), decay);
+        cfg.ParseFlagsNode(configurationNode.child("Flags"), flags);
+    } catch(ConfigurationReaderException &ex) {
+        cout << "vast.cpp : " << ex.what() << endl;
     }
 
-    exp = cfg.ReadExperiment();
+    Variable betaEff = exp.GetBetaEff();
+    bool basic = flags.GetFlag("basic");
 
-    betaEff = exp.GetBetaEff();
-    flags = cfg.ReadFlags();
-    basic = flags.GetFlag("basic");
-
-    fit = cfg.ReadFit();
-    cbpars = cfg.ReadCrystalBallParameters();
     if(flags.GetFlag("doFit")) {
         cout << "Performing the Fit and reading the Fit configuration" << endl;
         TofFitter fitter(fit, fls, cbpars);
     }
-
-    cout << "Reading the Decay information" << endl;
-    decay = cfg.ReadDecay();
 
     vector<Neutron> singles;
     cout << "We are now reading the fitted data." << endl;
