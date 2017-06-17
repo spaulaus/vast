@@ -5,6 +5,7 @@
 
 #include "ConfigurationReader.hpp"
 #include "TofFitter.hpp"
+#include "XmlInterface.hpp"
 
 using namespace std;
 
@@ -15,15 +16,25 @@ int main(int argc, char **argv) {
                 "configuration file. " << endl << endl << "Usage: "
                      "./test_toffitter /path/to/configuration/file" << endl;
         return 1;
+    } else {
+        XmlInterface::get(argv[1]);
     }
 
-    cout << "vast.cpp : Reading in the configuration file " << argv[1] << endl;
-    ConfigurationReader cfg(argv[1]);
+    pugi::xml_node configurationNode = XmlInterface::get()->GetDocument()->child("Configuration");
+
+    ConfigurationReader cfg;
+    FitHandler fitHandler;
+    cfg.ParseFitNode(configurationNode.child("Fit"), fitHandler);
+
+    FileHandler fileHandler;
+    cfg.ParseFileNode(configurationNode.child("Files"), fileHandler);
+
+    CrystalBallParameters crystalBallParameters;
+    cfg.ParseCrystalBallNode(configurationNode.child("CrystalBall"), crystalBallParameters);
 
     cout << "Performing the Fit and reading the Fit configuration" << endl;
     try {
-        TofFitter fitter(cfg.ReadFit(), cfg.ReadFiles(),
-                         cfg.ReadCrystalBallParameters());
+        TofFitter fitter(fitHandler, fileHandler, crystalBallParameters);
     } catch (exception &ex) {
         cout << ex.what() << endl;
     }
