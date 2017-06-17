@@ -4,8 +4,9 @@ I (S. V. Paulauskas) wrote VAST to analyze data for my thesis. This software was
  numbers. I will (hopefully) soon be updating this to handle a lot of things better than they are now.  
 
 ## Some prerequisites:
-* ROOT >= 5.99/03
+* ROOT >= 6
 * RooFit >= 3.55
+* Cmake > 3.1
 
 1. SETTING UP 
    A) Directory structure:
