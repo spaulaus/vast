@@ -59,10 +59,10 @@ void OutputHandler::OutputBasics(vector<Neutron> &nvec, Decay &dky,
             << it->GetLogft().OutputData() << " " << endl;
 
     }
-    double pn = totN / dky.GetNumberDecays().GetValue();
+    double pn = totN / dky.GetNumberOfDecays().GetValue();
     ErrorCalculator err;
     double pnErr = err.CalcPnErr(pn, nvec, dky);
-    out << "#Pn = " << totN << " / " << dky.GetNumberDecays().GetValue()
+    out << "#Pn = " << totN << " / " << dky.GetNumberOfDecays().GetValue()
         << " = " << pn << " +- " << pnErr << "  RawN = "
         << rawN << " " << "  RawIntN = " << intN << endl;
     out.close();
