@@ -10,6 +10,7 @@
 #include "BGTCalculator.hpp"
 
 using namespace std;
+using namespace EfficiencyEnums;
 
 static const double bgtCoeff_ = 3812.413; //!< D/(ga/gv)**2 in units of s
 
@@ -30,7 +31,7 @@ BGTCalculator::BGTCalculator(Neutron &neutron, const Decay &decay,
                              const Experiment &exp, const Variable &eg) {
     eG_ = eg;
     if(eg.GetValue() != 0.0) {
-        geEff_ = eff_.GetEff(eg, EffCalculator::ge);
+        geEff_ = eff_.GetEff(eg, EffTypes ::ge);
     }else
         geEff_ = Variable(1.0,0.0,"/100");
 
@@ -69,9 +70,9 @@ Variable BGTCalculator::CalcBranchingRatio(const Variable & en,
                                            const Variable &yld) {
     Variable betaEff = eff_.GetBetaEff(en, decay_);
 
-    double br = yld.GetValue() / decay_.GetNumberDecays().GetValue() /
+    double br = yld.GetValue() / decay_.GetNumberOfDecays().GetValue() /
         omega_.GetValue() / betaEff.GetValue() / geEff_.GetValue();
-    double err = err_.CalcBrErr(br, yld, decay_.GetNumberDecays(),
+    double err = err_.CalcBrErr(br, yld, decay_.GetNumberOfDecays(),
                                 geEff_, betaEff);
     return(Variable(br, err, "/100"));
 }

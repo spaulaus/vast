@@ -8,6 +8,7 @@
 #include <cmath>
 
 #include "EffCalculator.hpp"
+#include "HelperEnumerations.hpp"
 #include "NeutronDensity.hpp"
 
 using namespace std;
@@ -24,7 +25,7 @@ NeutronDensity::NeutronDensity(std::vector<Neutron> &neutrons,
         CalcDensity(ge, Variable(1.0,0.0,""));
     else {
         EffCalculator eff;
-        CalcDensity(ge, eff.GetEff(ge, EffCalculator::EffTypes::ge));
+        CalcDensity(ge, eff.GetEff(ge, EfficiencyEnums::EffTypes::ge));
     }
 }
 

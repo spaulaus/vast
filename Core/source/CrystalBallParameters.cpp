@@ -6,9 +6,10 @@
 
 #include "CrystalBallParameters.hpp"
 
-
 ///For more info on crystal ball function:
 ///https://en.wikipedia.org/wiki/Crystal_Ball_function.
+
+///@TODO Update this to use TF1?
 
 ///This method calculates the Crystal Ball Parameter Alpha
 double CrystalBallParameters::CalcAlpha(const double &tof) const {

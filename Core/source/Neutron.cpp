@@ -7,12 +7,11 @@
 
 #include <cmath>
 
-#include <PhysConstants.hpp>
-
 #include "ErrorCalculator.hpp"
+#include "HelperEnumerations.hpp"
+#include "PhysConstants.hpp"
 
 using namespace std;
-
 
 ///This constructor provides the neutron efficiency, beta resolution and
 /// neutron energy with no error values
@@ -22,7 +21,7 @@ Neutron::Neutron(const double &mu, const double &yld) {
 
     CalcBetaResolution();
     CalcEnergy();
-    eff_ = eff.GetEff(en_, EffCalculator::EffTypes::svpBan4);
+    eff_ = eff.GetEff(en_, EfficiencyEnums::EffTypes::svpBan4);
 }
 
 ///This constructor provides the neutron efficiency, beta resolution and
@@ -34,7 +33,7 @@ Neutron::Neutron(const double &mu, const double &muErr,
 
     CalcBetaResolution();
     CalcEnergy();
-    eff_ = eff.GetEff(en_, EffCalculator::EffTypes::svpBan4);
+    eff_ = eff.GetEff(en_, EfficiencyEnums::EffTypes::svpBan4);
 }
 
 ///This constructor provides the neutron efficiency, beta resolution and
@@ -46,7 +45,7 @@ Neutron::Neutron(const double &mu, const double &muErr,
 
     CalcBetaResolution();
     CalcEnergy();
-    eff_ = eff.GetEff(en_, EffCalculator::EffTypes::svpBan4);
+    eff_ = eff.GetEff(en_, EfficiencyEnums::EffTypes::svpBan4);
 }
 
 ///This method calculates the neutron energy from the time of flight
@@ -65,7 +64,7 @@ void Neutron::CalcEnergy(void) {
 
 ///This method calculates the detection efficiency of the neutron at its energy
 void Neutron::CalcEnEff(void) {
-    eff_ = eff.GetEff(en_, EffCalculator::EffTypes::svpBan4);
+    eff_ = eff.GetEff(en_, EfficiencyEnums::EffTypes::svpBan4);
 }
 
 ///This method adjusts the input variable to account for intrinsic neutron efficiency

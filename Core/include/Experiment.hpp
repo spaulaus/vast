@@ -8,7 +8,7 @@
 
 #include <Variable.hpp>
 
-#include "EffCalculator.hpp"
+#include "HelperEnumerations.hpp"
 
 ///A class that describes the various components of the experimental setup
 class Experiment {
@@ -35,8 +35,7 @@ public:
     Variable GetFlightPath(void) const { return (flightPath_); };
 
     /*! \return the efficiency curved used in the analysis */
-    EffCalculator::EffTypes
-    GetEfficiencyCurveName(void) const { return (effType_); };
+    EfficiencyEnums::EffTypes GetEfficiencyCurveName(void) const { return (effType_); };
 
     /*! Set the efficiency of the beta detector
     *   \param [in] a the beta efficiency */
@@ -60,11 +59,10 @@ public:
 
     /*! Set the efficiency curve that we used in the analysis
     *   \param [in] a : The name of the efficiency curve to use */
-    void
-    SetEfficiencyCurveName(const EffCalculator::EffTypes &a) { effType_ = a; };
+    void SetEfficiencyCurveName(const EfficiencyEnums::EffTypes &a) { effType_ = a; };
 private:
     Variable betaEff_, denRes_, numBars_, omegaPerBar_, flightPath_;
-    EffCalculator::EffTypes effType_;
+    EfficiencyEnums::EffTypes effType_;
 };
 
 #endif //__EXPERIMENT_HPP__

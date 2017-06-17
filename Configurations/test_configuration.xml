@@ -2,14 +2,14 @@
 <Configuration>
     <Author>
         <Name>S. V. Paulauskas</Name>
-        <Email>spaulaus @ utk DOT edu</Email>
+        <Email>stanpaulauskas AT gmail DOT com</Email>
         <Date>November 2013</Date>
         <Updated>June 8, 2014</Updated>
     </Author>
 
     <Description>
         This configuration file is used in conjunction with the
-        test_configuration program to test the functionailty of the reading and
+        test_configuration program to test the functionality of the reading and
         parsing of the XML file.
     </Description>
 
@@ -95,14 +95,12 @@
     </Fitting>
 
     <!--
-    The coefficients in the coefficients node should be insert in
-    ascending power order so that the software records them properly. The
-    dependent variable must be named tof.
+    The coefficients in this node should be insert in ascending power order so that the software records them
+    properly. The dependent variable must be named tof.
     -->
-    <CrystalBallParameters>
+    <CrystalBall>
         <alpha>
-            <function
-                    value="a3*pow(tof,3)+a2*pow(tof,2)+a1*tof+a0"/>
+            <function value="a3*pow(tof,3)+a2*pow(tof,2)+a1*tof+a0"/>
             <coefficients>
                 <a0 value="-0.73110" error="0.10206" units=""/>
                 <a1 value="-0.00101" error="0.00574" units=""/>
@@ -121,8 +119,7 @@
         </n>
 
         <sigma>
-            <function
-                    value="s4*pow(tof,4)+s3*pow(tof,3)+s2*pow(tof,2)+s1*tof+s0"/>
+            <function value="s4*pow(tof,4)+s3*pow(tof,3)+s2*pow(tof,2)+s1*tof+s0"/>
             <coefficients>
                 <s0 value="0.18205" error="0.120600" units=""/>
                 <s1 value="0.070225" error="0.010693" units=""/>
@@ -131,5 +128,5 @@
                 <s4 value="-1.19754e-08" error="1.09884e-08" units=""/>
             </coefficients>
         </sigma>
-    </CrystalBallParameters>
+    </CrystalBall>
 </Configuration>

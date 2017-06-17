@@ -5,8 +5,7 @@
 #define VAST_STRINGMANIPULATION_HPP
 
 #include <string>
-
-#include "Exception.hpp"
+#include <stdexcept>
 
 namespace StringManipulation {
     ///@brief A function that will replace all instances of the search
@@ -14,12 +13,10 @@ namespace StringManipulation {
     ///http://stackoverflow.com/a/14678946
     ///I have modified so that we throw when the search string is empty and
     /// so that we do not modify the input string.
-    static const std::string ReplaceString(const std::string &subject,
-                                           const std::string &search,
+    static const std::string ReplaceString(const std::string &subject, const std::string &search,
                                            const std::string &replace) {
         if (search.empty())
-            throw Exception("StringManipulation::ReplaceString - The search "
-                                    "string was empty!");
+            throw std::invalid_argument("StringManipulation::ReplaceString - The search string was empty!");
         std::string tmp = subject;
         size_t pos = 0;
         while ((pos = tmp.find(search, pos)) != std::string::npos) {

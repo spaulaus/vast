@@ -64,17 +64,26 @@ add_definitions(-D INSTALL_PREFIX="\\"${CMAKE_INSTALL_PREFIX}\\"")
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/CMake/modules/")
 
 #Find ROOT since we need it
-find_package (ROOT REQUIRED COMPONENTS roofit)
+find_package(ROOT REQUIRED COMPONENTS roofit)
 mark_as_advanced(FORCE GENREFLEX_EXECUTABLE ROOTCINT_EXECUTABLE ROOT_CONFIG_EXECUTABLE)
 include_directories(${ROOT_INCLUDE_DIR})
 link_directories(${ROOT_LIBRARY_DIR})
 
+#Find UnitTest++ since we're going to be needing it
+#Find the UnitTest++ Package. This package can be obtained from
+#https://github.com/unittest-cpp/unittest-cpp.git
+if (BUILD_TESTS)
+    find_package(UnitTest++ REQUIRED)
+    link_directories(${UNITTEST++_LIBRARY_DIR})
+    include_directories(${UNITTEST++_INCLUDE_DIR})
+endif (BUILD_TESTS)
+
 #------------------------------------------------------------------------------
 
 #We add a number of include directory since everybody will need parts of them.
-include_directories(Calculators/include Core/include FileIo/include Fitters/include Submodules/pugixml/include
-        Submodules/EZProgressbar/ Submodules/PhysConstants/include Submodules/Signal-Generator/include
-        Submodules/Tokenizer/inc Submodules/Variable/inc)
+include_directories(Calculators/include Core/include FileIo/include Fitters/include
+        Resources/include Submodules/pugixml/include Submodules/EZProgressbar/ Submodules/PhysConstants/include
+        Submodules/Signal-Generator/include Submodules/Tokenizer/inc Submodules/Variable/inc)
 
 #I want to do the submodules first so that we ensure the dependencies compile properly before we get too far.
 add_subdirectory(Submodules)
