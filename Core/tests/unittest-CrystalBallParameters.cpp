@@ -64,6 +64,6 @@ TEST_FIXTURE(CrystalBallParameters, Test_FunctionReplacements) {
     CHECK_THROW(SetSigmaFunction(""), invalid_argument);
 }
 
-int main(int argv, char *argc[]) {
+int main(int argc, char *argv[]) {
     return (UnitTest::RunAllTests());
 }

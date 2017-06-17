@@ -129,8 +129,8 @@ double ErrorCalculator::CalcPnErr(const double &pn,
     for(auto &i : neutrons)
         yldPart += pow(i.GetIntegratedYield().GetError()/
                        i.GetIntegratedYield().GetValue(),2);
-    double ndkyPart = pow(dky.GetNumberDecays().GetError() /
-                          dky.GetNumberDecays().GetValue(),2);
+    double ndkyPart = pow(dky.GetNumberOfDecays().GetError() /
+                          dky.GetNumberOfDecays().GetValue(),2);
     return(pn*sqrt(yldPart+ndkyPart));
 }
 

@@ -18,6 +18,6 @@ TEST(Test_ReplaceString) {
     CHECK(StringManipulation::ReplaceString(original, "bro", "mate") == expected);
 }
 
-int main(int argv, char *argc[]) {
+int main(int argc, char *argv[]) {
     return (UnitTest::RunAllTests());
 }

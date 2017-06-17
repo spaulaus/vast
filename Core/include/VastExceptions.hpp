@@ -9,20 +9,21 @@
 #include <string>
 #include <stdexcept>
 
-///A class to handle exceptions
+///A class that tells us that we had an exception with VAST itself.
 class VastException : public std::exception {
 public:
-    ///@brief Contructor outputing message a
-    ///@param a Error message string
-    VastException(const std::string &a) { msg_ = a; };
-
-    ///@brief Default destructor
-    ~VastException() {};
-
-    const char *what() const noexcept { return msg_.c_str(); }
-
-private:
-    std::string msg_; //!< The message to output with the exception
+    ///@brief Constructor that sets the value of msg_
+    ///@param[in] a : The string that we want to assign to what
+    explicit VastException (const std::string &what) noexcept {}
 };
+
+///A class that tells us that we had an exception with VAST itself.
+class ConfigurationReaderException : public std::exception {
+public:
+    ///@brief Constructor that sets the value of msg_
+    ///@param[in] a : The string that we want to assign to what
+    explicit ConfigurationReaderException (const std::string &what) noexcept {}
+};
+
 
 #endif //VAST_EXCEPTION_HPP

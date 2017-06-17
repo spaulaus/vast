@@ -7,9 +7,9 @@
 
 #include <vector>
 
-#include "Exception.hpp"
 #include "StringManipulation.hpp"
 #include "Variable.hpp"
+#include "VastExceptions.hpp"
 
 ///A class to calculate the parameterized alpha, n, and sigma for Crystal Balls
 class CrystalBallParameters {

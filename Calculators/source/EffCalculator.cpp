@@ -13,6 +13,7 @@
 #include "PhysConstants.hpp"
 
 using namespace std;
+using namespace EfficiencyEnums;
 
 ///This method calculates the efficiency
 Variable EffCalculator::CalcEff(const Variable &energy, std::map<std::string,
