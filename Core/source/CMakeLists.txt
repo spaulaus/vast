@@ -1,8 +1,6 @@
 set(CORE_SOURCES Decay.cpp Gamma.cpp Neutron.cpp CrystalBallParameters.cpp)
-
-message(STATUS "Building Core Shared Object")
-add_library(Core SHARED ${CORE_SOURCES})
-install(TARGETS Core DESTINATION lib)
+add_library(Core STATIC ${CORE_SOURCES})
+target_link_libraries(Core SubmoduleStaticLibrary Calculators)
 
 if(BUILD_VAST)
     add_executable(vast vast.cpp)
