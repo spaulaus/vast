@@ -48,8 +48,7 @@ CrystalBallParameters &pars) {
 void TofFitter::CheckFileExistance(void) {
     ifstream test(dataFile_.c_str());
     if (test.fail())
-        throw Exception("We couldn't open the data file to read in the sexy "
-                                "data!! What I got was " + dataFile_);
+        throw VastException("We couldn't open the data file to read in the sexy data!! What I got was " + dataFile_);
     test.close();
 }
 

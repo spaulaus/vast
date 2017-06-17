@@ -16,6 +16,7 @@
 #include "Integrator.hpp"
 #include "LimitFinder.hpp"
 #include "Neutron.hpp"
+#include "XmlInterface.hpp"
 
 using namespace std;
 
@@ -25,23 +26,36 @@ int main(int argc, char* argv[]) {
                 "configuration file. " << endl << endl << "Usage: "
                      "./vast /path/to/configuration/file" << endl;
         return 1;
+    } else {
+        XmlInterface::get(argv[1]);
     }
 
-    ConfigurationReader cfg(argv[1]);
-    FileHandler fls = cfg.ReadFiles();
-    LimitFinder lim;
-    Decay dky = cfg.ReadDecay();
-    Experiment exp = cfg.ReadExperiment();
+    pugi::xml_node configurationNode = XmlInterface::get()->GetDocument()->child("Configuration");
+    ConfigurationReader cfg;
+
+    FileHandler fileHandler;
+    cfg.ParseFileNode(configurationNode.child("Files"), fileHandler);
+
+    Decay decay;
+    cfg.ParseDecayNode(configurationNode.child("Decay"), decay);
+
+    Experiment experiment;
+    cfg.ParseExperimentNode(configurationNode.child("Experiment"), experiment);
+
+    CrystalBallParameters crystalBallParameters;
+    cfg.ParseCrystalBallNode(configurationNode.child("CrystalBall"), crystalBallParameters);
     
-    ofstream out(fls.GetOutputName("sensitivity").c_str());
+    ofstream out(fileHandler.GetOutputName("sensitivity").c_str());
     out << setw(7) << "#Ex(MeV) BR BRerr B(GT) B(GT)err" << endl;
 
-    double qValue = dky.GetQValue().GetValue();
-    double sn = dky.GetNeutronSepEnergy().GetValue();
+    LimitFinder lim;
+    double qValue = decay.GetQValue().GetValue();
+    double sn = decay.GetNeutronSepEnergy().GetValue();
+
     for(double i = 0.1; i < qValue - sn; i += 0.1) {
-        Neutron n = lim.PerformFit(i, 10.,cfg.ReadCrystalBallParameters());
+        Neutron n = lim.PerformFit(i, 10., crystalBallParameters);
         Integrator integrate(n,make_pair(0.,200.));
-        BGTCalculator bgt(n,dky,exp);
+        BGTCalculator bgt(n, decay, experiment);
 
         out << n.GetExcitationEnergy().GetValue() << " " 
             << n.GetBranchingRatio().GetValue() << " " 

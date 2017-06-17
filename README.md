@@ -4,16 +4,17 @@ I (S. V. Paulauskas) wrote VAST to analyze data for my thesis. This software was
  numbers. I will (hopefully) soon be updating this to handle a lot of things better than they are now.  
 
 ## Some prerequisites:
-* ROOT >= 5.99/03
+* ROOT >= 6
 * RooFit >= 3.55
+* Cmake > 3.1
 
 1. SETTING UP 
    A) Directory structure:
-      I have been using the following drectory structure: data, pics/tof, pics/vast, 
+      I have been using the following directory structure: data, pics/tof, pics/vast, 
       results/tof, results/vast. These have been working pretty well for me but 
-      that doesn't mean it works for you. The configuration file requires that 
+      that does not mean it works for you. The configuration file requires that 
       you put in path names into the files so that there is no need to have a set 
-      directory structure. While this seems inflexable, the idea is that you're 
+      directory structure. While this seems inflexible, the idea is that you're 
       going to have to think about what you're putting into this thing. 
       
    B) Config.xml :
