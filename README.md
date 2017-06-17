@@ -22,3 +22,11 @@ I (S. V. Paulauskas) wrote VAST to analyze data for my thesis. This software was
       bits for the various classes. There will be several classes that only hold 
       information about the setup (paths/etc) and about the experiment (number 
       of bars, solid angle coverage, beta efficiency, etc.).
+      
+# Licensing
+<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">
+<img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" />
+</a>
+<br />
+This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"> Creative 
+Commons Attribution-ShareAlike 4.0 International License </a>.
