@@ -6,6 +6,7 @@
 #include <iostream>
 
 #include "FileHandler.hpp"
+#include "VastExceptions.hpp"
 
 using namespace std;
 
@@ -13,7 +14,7 @@ using namespace std;
 string FileHandler::GetInputName(const string &name) const {
     const map<string,string>::const_iterator it = input_.find(name);
     if(it == input_.end())
-        EndError(name);
+        throw FileHandlerException(EndError(name));
     return(it->second);
 }
 
@@ -21,16 +22,14 @@ string FileHandler::GetInputName(const string &name) const {
 string FileHandler::GetOutputName(const string &name) const {
     const map<string,string>::const_iterator it = output_.find(name);
     if(it == output_.end())
-        EndError(name);
+        throw FileHandlerException(EndError(name));
     return(it->second);
 }
 
-///This method produces the errr message for missing file names
-void FileHandler::EndError(const string &name) const {
-    cerr << "In File Handler: We could not find the requested file name: " 
-         << name << endl << "This is a major issue with me. "
-         << "I am going to give up." << endl;
-    exit(2);
+///This method produces the error message for missing file names
+string FileHandler::EndError(const string &name) const {
+    return "In File Handler: We could not find the requested file name: " + name
+           + "\nIf you need this file define it in the configuration file.";
 }
 
 ///This method sets the input file name
