@@ -124,7 +124,7 @@ void ConfigurationReader::ParseCrystalBallNode(const pugi::xml_node &crystalBall
         } catch (invalid_argument &invalidArgument) {
             cout << "ConfigurationReader::ParseCrystalBallNode - Intercepted invalid argument when setting the "
                     "information from the " + var_name + " node." << endl;
-            throw invalidArgument;
+            throw invalid_argument(invalidArgument.what());
         }
 
         coefficients.clear();

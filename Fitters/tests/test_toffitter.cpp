@@ -24,7 +24,7 @@ int main(int argc, char **argv) {
 
     ConfigurationReader cfg;
     FitHandler fitHandler;
-    cfg.ParseFitNode(configurationNode.child("Fit"), fitHandler);
+    cfg.ParseFitNode(configurationNode.child("Fitting"), fitHandler);
 
     FileHandler fileHandler;
     cfg.ParseFileNode(configurationNode.child("Files"), fileHandler);
@@ -32,10 +32,10 @@ int main(int argc, char **argv) {
     CrystalBallParameters crystalBallParameters;
     cfg.ParseCrystalBallNode(configurationNode.child("CrystalBall"), crystalBallParameters);
 
-    cout << "Performing the Fit and reading the Fit configuration" << endl;
+    cout << "Performing the Fit" << endl;
     try {
         TofFitter fitter(fitHandler, fileHandler, crystalBallParameters);
-    } catch (exception &ex) {
-        cout << ex.what() << endl;
+    } catch (TofFitterException &ex) {
+        cout << "TofFitterException caught : " << ex.what() << endl;
     }
 }

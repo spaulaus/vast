@@ -44,9 +44,8 @@ public:
 private:
     std::map<std::string, std::string> input_, output_;
 
-    ///@brief This method produces the error message when file names can't be
-    /// found
+    ///@brief This method produces the error message when file names can't be found
     ///@param[in] name  : The internal name of the file
-    void EndError(const std::string &name) const;
+    std::string EndError(const std::string &name) const;
 };
 #endif //__FILEHANDLER_HPP__

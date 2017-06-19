@@ -1,6 +1,12 @@
+///@file TofFitter.cpp
+///@brief Convolutes the simulation response functions.
+///@author S. V. Paulauskas
+///@date October 6, 2013
+
 #include <iostream>
 #include <iomanip>
 #include <sstream>
+#include <string>
 
 #include <cmath>
 #include <cstdio>
@@ -48,21 +54,14 @@ SimConvoluter::SimConvoluter(const std::string &cfg) {
         convFile_ = base.child("output").child("convData").child_value();
         fitFile_ = base.child("output").child("fitData").child_value();
 
-        rng_ = make_pair(base.child("range").
-                         child("low").attribute("value").as_double(),
-                         base.child("range").
-                         child("high").attribute("value").as_double());
+        rng_ = make_pair(base.child("range").child("low").attribute("value").as_double(),
+                         base.child("range").child("high").attribute("value").as_double());
 
         for(auto en : base.child("energies").children())
-            energies_.insert(make_pair(en.attribute("energy").as_double(),
-                                       en.attribute("file").value()));
+            energies_.insert(make_pair(en.attribute("energy").as_double(), en.attribute("file").value()));
         FitSim();
-    } else {
-        cerr << "We had errors with the config file. " << endl
-             << "Error Description: " << result.description() << endl;
-        cerr << "This is a fatal problem. Exiting..." << endl;
-        exit(2);
-    }
+    } else
+        throw SimConvoluterException("SimConvoluter::SimConvoluter - There was an error in the config file: " + cfg);
 }
 
 ///This method calculates the beta resolution as a function of ToF
@@ -74,10 +73,8 @@ double SimConvoluter::CalcBetaRes(const double &tof) {
         return((0.0168145157*tof+3.7803929763)/(2*sqrt(2*log(2))));
 }
 
-///This method calculates the convoluted Crystal ball parameters of the Monte
-/// Carlo fit
-void SimConvoluter::FitMc(const double &en, const double &mu,
-                          const double &sigma, const double &alpha,
+///This method calculates the convoluted Crystal ball parameters of the Monte Carlo fit
+void SimConvoluter::FitMc(const double &en, const double &mu, const double &sigma, const double &alpha,
                           const double &n, ofstream &convOut) {
     double simLow  = mu - rng_.first;
     double simHigh = mu + rng_.second;
@@ -106,8 +103,7 @@ void SimConvoluter::FitMc(const double &en, const double &mu,
 
     RooAddPdf model1("model1", "", RooArgList(zCb),RooArgList(zYield));
 
-    RooFitResult *mcFit = model1.fitTo(*mcData, NumCPU(3), Save(),
-                                       Range(simLow, simHigh));
+    RooFitResult *mcFit = model1.fitTo(*mcData, NumCPU(3), Save(), Range(simLow, simHigh));
     if(mcFit->statusCodeHistory(0) == 0) {
         stringstream dataName, modelName;
         dataName << "mc-data-" << en;
@@ -115,16 +111,11 @@ void SimConvoluter::FitMc(const double &en, const double &mu,
         modelName << "conv-" << en;
         model1.Write(modelName.str().c_str());
 
-        convOut << setprecision(6)
-                << en << " " << zMu.getValV() << " "
-                << zSigma.getValV() << " " << zSigma.getError() << " "
-                << zAlpha.getValV() << " " << zAlpha.getError() << " "
+        convOut << setprecision(6) << en << " " << zMu.getValV() << " " << zSigma.getValV() << " "
+                << zSigma.getError() << " " << zAlpha.getValV() << " " << zAlpha.getError() << " "
                 << zN.getValV() << " " << zN.getError() << " " << endl;
-    }else {
-        cout << endl << endl << "Oh man! The fit did not converge for the "
-             << "simulation to the " << en << " keV" << " case." << endl;
-        exit(1);
-    }
+    } else
+        throw SimConvoluterException("SimConvoluter::FitMc - The fit didn't converge. This is problematic...");
 }
 
 ///This method claculates the fit of the simulated data.  This fit is used
@@ -190,11 +181,9 @@ void SimConvoluter::FitSim(void) {
             FitMc(it.first, mu.getValV(), sigma.getValV(), alpha.getValV(),
                   n.getValV(), convOut);
         } else {
-            cerr << endl << endl << "Oh, man! The fit to the simulated data for "
-                 << it.second << "keV.dat did not converge!!" << endl;
             simOut.close();
             f.Close();
-            exit(1);
+            throw SimConvoluterException("SimConvoluter::FitSim - The fit didn't converge. This is problematic...");
         }
     }//for(const auto &it : energies_)
     simOut.close();
