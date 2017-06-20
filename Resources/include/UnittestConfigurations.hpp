@@ -117,25 +117,24 @@ namespace UnitTestVariables {
                         "    </Flags>"
                         "</Configuration>";
 
-        static const std::string test_inputFileName = "input";
-        static const std::string test_inputFilePath = "/testing/input/filepath";
-        static const std::string test_outputFileName = "output";
-        static const std::string test_outputFilePath = "/testing/output/filepath";
+        static const std::string test_fileName = "input";
+        static const std::string test_goodFilePath = "/tmp";
+        static const std::string test_badFilePath = "/testing/output/file/path";
 
-        static const std::string test_fileNode =
-                "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
-                        "<Configuration>"
-                        "    <Files>"
-                        "        <Input>"
-                        "            <" + test_inputFileName + ">" + test_inputFilePath + "</"
-                + test_inputFileName + ">"
-                        "        </Input>"
-                        "        <Output>"
-                        "            <" + test_outputFileName + ">" + test_outputFilePath + "</"
-                + test_outputFileName + ">"
-                        "        </Output>"
-                        "    </Files>"
-                        "</Configuration>";
+        static const std::string FormatFileNodeForUnittest(const std::string &name, const std::string &inputPath,
+                                                           const std::string &outputPath) {
+            return "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+                           "<Configuration>"
+                           "    <Files>"
+                           "        <Input>"
+                           "            <" + name + ">" + inputPath + "</" + name + ">"
+                           "        </Input>"
+                           "        <Output>"
+                           "            <" + name + ">" + outputPath + "</" + name + ">"
+                           "        </Output>"
+                           "    </Files>"
+                           "</Configuration>";
+        }
 
         static const std::string test_fitNode =
                 "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"

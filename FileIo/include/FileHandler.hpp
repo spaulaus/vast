@@ -39,8 +39,7 @@ public:
       \param[in] name : The internal name of the file
       \param[in] val  : The name that will be given to the file on disk
     */
-    void SetOutputNames(const std::string &name,
-                 const std::string &val);
+    void SetOutputNames(const std::string &name, const std::string &val);
 private:
     std::map<std::string, std::string> input_, output_;
 

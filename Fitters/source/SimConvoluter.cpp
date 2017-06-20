@@ -29,7 +29,7 @@
 
 #include <PhysConstants.hpp>
 
-#include "FileChecker.hpp"
+#include "IoHelperFunctions.hpp"
 #include "SimConvoluter.hpp"
 
 using namespace std;
@@ -46,9 +46,15 @@ SimConvoluter::SimConvoluter(const std::string &cfg) {
         flightPath_ = base.child("flightPath").attribute("value").as_double();
 
         inputDir_ = base.child("inputBase").child_value();
-        outputDir_ = base.child("outputBase").child_value();
+        if(!IoHelpers::HasWritePermission(inputDir_))
+            throw VastIoException("SimConvoluter::SimConvoluter - We couldn't open the input directory ("
+                                  + inputDir_ + " )!!");
 
-        FileChecker result ("dir",outputDir_);
+        outputDir_ = base.child("outputBase").child_value();
+        if(!IoHelpers::HasWritePermission(outputDir_))
+            throw VastIoException("SimConvoluter::SimConvoluter - We couldn't open the output directory ("
+                                  + outputDir_ + " )!!");
+
 
         simHists_ = base.child("output").child("sims").child_value();
         convFile_ = base.child("output").child("convData").child_value();
@@ -118,7 +124,7 @@ void SimConvoluter::FitMc(const double &en, const double &mu, const double &sigm
         throw SimConvoluterException("SimConvoluter::FitMc - The fit didn't converge. This is problematic...");
 }
 
-///This method claculates the fit of the simulated data.  This fit is used
+///This method calculates the fit of the simulated data.  This fit is used
 /// to know how large the neutron tails are in the real data.
 void SimConvoluter::FitSim(void) {
     PhysConstants consts;
@@ -144,7 +150,9 @@ void SimConvoluter::FitSim(void) {
 
     for(const auto it : energies_) {
         string inputName = inputDir_ + it.second;
-        FileChecker dataChk("file", inputName);
+
+        if(!IoHelpers::HasWritePermission(inputName))
+            throw VastIoException("SimConvoluter::FitSim - We couldn't open the input file : " + inputName + "!!");
 
         double peak = (flightPath_)*sqrt(mass/(2*it.first/1000.));
 
