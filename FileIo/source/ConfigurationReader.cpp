@@ -8,6 +8,7 @@
 
 #include "ConfigurationReader.hpp"
 #include "HelperEnumerations.hpp"
+#include "IoHelperFunctions.hpp"
 #include "VastExceptions.hpp"
 
 using namespace std;
@@ -40,10 +41,19 @@ void ConfigurationReader::ParseFileNode(const pugi::xml_node &fileHandlerNode, F
     if (fileHandlerNode.empty())
         throw ConfigurationReaderException(EmptyNodeExceptionMessage("ReadFiles", "Files"));
 
-    for (pugi::xml_node attr : fileHandlerNode.child("Input").children())
+    for (pugi::xml_node attr : fileHandlerNode.child("Input").children()) {
+        if(!IoHelpers::HasWritePermission(attr.child_value()))
+            throw VastIoException("ConfigurationReader::ParseFileNode - We don't have permission to write to " 
+                                  + string(attr.child_value()));
         fileHandler.SetInputNames(attr.name(), attr.child_value());
-    for (pugi::xml_node attr : fileHandlerNode.child("Output").children())
+    }
+
+    for (pugi::xml_node attr : fileHandlerNode.child("Output").children()) {
+        if(!IoHelpers::HasWritePermission(attr.child_value()))
+            throw VastIoException("ConfigurationReader::ParseFileNode - We don't have permission to write to " 
+                                  + string(attr.child_value()));
         fileHandler.SetOutputNames(attr.name(), attr.child_value());
+    }
 }
 
 ///This method parses the configuration file using pugixml getting the fitting information.
@@ -124,7 +134,7 @@ void ConfigurationReader::ParseCrystalBallNode(const pugi::xml_node &crystalBall
         } catch (invalid_argument &invalidArgument) {
             cout << "ConfigurationReader::ParseCrystalBallNode - Intercepted invalid argument when setting the "
                     "information from the " + var_name + " node." << endl;
-            throw invalidArgument;
+            throw invalid_argument(invalidArgument.what());
         }
 
         coefficients.clear();

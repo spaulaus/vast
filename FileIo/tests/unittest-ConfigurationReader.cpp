@@ -49,13 +49,23 @@ TEST_FIXTURE(ConfigurationReader, Test_ParseDecayNode) {
 
 TEST_FIXTURE(ConfigurationReader, Test_ParseFileNode) {
     pugi::xml_document doc;
-    doc.load_string(test_fileNode.c_str());
-
     FileHandler files;
-    ParseFileNode(doc.child("Configuration").child("Files"), files);
+
     CHECK_THROW(ParseFileNode(doc.child("Empty"), files), ConfigurationReaderException);
-    CHECK_EQUAL(test_inputFilePath, files.GetInputName(test_inputFileName));
-    CHECK_EQUAL(test_outputFilePath, files.GetOutputName(test_outputFileName));
+
+    doc.load_string(FormatFileNodeForUnittest(test_fileName, test_goodFilePath, test_goodFilePath).c_str());
+    ParseFileNode(doc.child("Configuration").child("Files"), files);
+    CHECK_EQUAL(test_goodFilePath, files.GetInputName(test_fileName));
+    CHECK_EQUAL(test_goodFilePath, files.GetOutputName(test_fileName));
+
+    doc.load_string(FormatFileNodeForUnittest(test_fileName, test_badFilePath, test_goodFilePath).c_str());
+    CHECK_THROW(ParseFileNode(doc.child("Configuration").child("Files"), files), VastIoException);
+
+    doc.load_string(FormatFileNodeForUnittest(test_fileName, test_goodFilePath, test_badFilePath).c_str());
+    CHECK_THROW(ParseFileNode(doc.child("Configuration").child("Files"), files), VastIoException);
+
+    doc.load_string(FormatFileNodeForUnittest(test_fileName, test_badFilePath, test_badFilePath).c_str());
+    CHECK_THROW(ParseFileNode(doc.child("Configuration").child("Files"), files), VastIoException);
 }
 
 TEST_FIXTURE(ConfigurationReader, Test_ParseFlagNode) {

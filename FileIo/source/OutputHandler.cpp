@@ -12,6 +12,7 @@
 
 #include "BGTCalculator.hpp"
 #include "OutputHandler.hpp"
+#include "VastExceptions.hpp"
 
 using namespace std;
 
@@ -21,56 +22,48 @@ bool OutputHandler::NotInfOrNan(const double &val) {
 }
 
 ///This method fills the 1D ROOT histogram
-void OutputHandler::FillHistogram(TH1D &hist,
-                                  const std::map<double, double> &data) {
+void OutputHandler::FillHistogram(TH1D &hist, const std::map<double, double> &data) {
     for (const auto &it : data)
         hist.Fill(it.first, it.second);
 }
 
 ///This method ouputs basic information
-void OutputHandler::OutputBasics(vector<Neutron> &nvec, Decay &dky,
-                                 Experiment &exp, const string &file) {
+void OutputHandler::OutputBasics(vector<Neutron> &nvec, Decay &dky, Experiment &exp, const string &file) {
     ofstream out(file.c_str());
-    if (out.fail()) {
-        cerr << endl << endl
-             << "Woah! Could not open up the output file. Check this  "
-             << file << endl << endl;
-        exit(1);
-    }
+    if (out.fail())
+        throw OutputHandlerException("OutputHandler::OutputBasics - We could not open " + file + " for writing.");
 
     Variable omega = exp.GetOmegaPerBar() * exp.GetNumBars();
     double totN = 0., rawN = 0., intN = 0;
     out << setw(7) << "#Mu(ns) MuErr(ns) E(MeV) EErr(MeV) IntYld IntYldErr "
         << "BR BRerr B(GT) B(GT)err log(ft) log(ft)err" << endl;
+
     EffCalculator eff;
     for (auto it = nvec.begin();
          it != nvec.end(); it++) {
         intN += it->GetRawIntegratedYield().GetValue();
-        totN += it->GetIntegratedYield().GetValue() /
-                eff.GetBetaEff(it->GetEnergy(), dky).GetValue() /
-                omega.GetValue();
+        totN += it->GetIntegratedYield().GetValue() / eff.GetBetaEff(it->GetEnergy(), dky).GetValue()
+                / omega.GetValue();
         rawN += it->GetRawYield().GetValue();
 
-        out << setprecision(5) << it->GetMu().OutputData() << " "
-            << it->GetEnergy().OutputData() << " "
-            << it->GetIntegratedYield().OutputData() << " "
-            << it->GetBranchingRatio().OutputData() << " "
-            << it->GetBgt().OutputData() << " "
-            << it->GetLogft().OutputData() << " " << endl;
+        out << setprecision(5) << it->GetMu().OutputData() << " " << it->GetEnergy().OutputData() << " "
+            << it->GetIntegratedYield().OutputData() << " " << it->GetBranchingRatio().OutputData() << " "
+            << it->GetBgt().OutputData() << " " << it->GetLogft().OutputData() << " " << endl;
 
     }
+
     double pn = totN / dky.GetNumberOfDecays().GetValue();
     ErrorCalculator err;
     double pnErr = err.CalcPnErr(pn, nvec, dky);
-    out << "#Pn = " << totN << " / " << dky.GetNumberOfDecays().GetValue()
-        << " = " << pn << " +- " << pnErr << "  RawN = "
-        << rawN << " " << "  RawIntN = " << intN << endl;
+    out << "#Pn = " << totN << " / " << dky.GetNumberOfDecays().GetValue() << " = " << pn << " +- " << pnErr
+        << "  RawN = " << rawN << " " << "  RawIntN = " << intN << endl;
     out.close();
 }
 
 ///This method outputs information about the neutron density
-void OutputHandler::OutputDensity(const NeutronDensity &nden, const Decay &dky,
-                                  const Experiment &exp, const string &file) {
+void OutputHandler::OutputDensity(const NeutronDensity &nden, const Decay &dky, const Experiment &exp,
+                                  const string &file) {
+
     BGTCalculator ndenBgt(*nden.GetDensity(), dky, exp);
     BGTCalculator ndenBgtLow(*nden.GetDensityLow(), dky, exp, "low");
     BGTCalculator ndenBgtHigh(*nden.GetDensityHigh(), dky, exp, "high");
@@ -112,9 +105,10 @@ void OutputHandler::OutputDensity(const NeutronDensity &nden, const Decay &dky,
 ///@TODO Describe what this CGM calculation is.
 void OutputHandler::OutputTheory(vector<Neutron> &nvec, const string &file) {
     ofstream outTheory(file.c_str());
+    if (outTheory.fail())
+        throw OutputHandlerException("OutputHandler::OutputBasics - We could not open " + file + " for writing.");
     for (auto it = nvec.begin(); it != nvec.end(); it++) {
-        outTheory << it->GetExcitationEnergy().GetValue() << "  "
-                  << it->GetBgt().GetValue() << " "
+        outTheory << it->GetExcitationEnergy().GetValue() << "  " << it->GetBgt().GetValue() << " "
                   << it->GetEnergy().GetError();
         auto itNext = it;
         itNext++;

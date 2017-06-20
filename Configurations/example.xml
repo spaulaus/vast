@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- PUT COPYRIGHT INFO HERE -->
+<!--
+    This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License.
+    The license can be found here, http://creativecommons.org/licenses/by-sa/4.0/
+-->
 
 <!-- This is an example configuration file based on a real experiment.
      Copy this file and modify its content to setup your experiment. -KM
 
-     I totally stole the tmplate of this from Krzysztof Miernik.
+     I totally stole the template of this from Krzysztof Miernik.
      Thanks,buddy! -SVP (see readme for more info)
 
      NOTE: The program only recognizes the information that is currently
@@ -12,210 +15,210 @@
      otherwise noted.
 -->
 <Configuration>
-  <!-- your name, email and date -->
-  <Author>
-    <Name>S. V. Paulauskas</Name>
-    <Email>stanpaulauskas@gmail.com</Email>
-    <Date>November 2013</Date>
-    <Updated>June 08 2014</Updated>
-  </Author>
+    <!-- your name, email and date -->
+    <Author>
+        <Name>S. V. Paulauskas</Name>
+        <Email>stanpaulauskas@gmail.com</Email>
+        <Date>November 2013</Date>
+        <Updated>June 18, 2017</Updated>
+    </Author>
 
-  <!-- Short description of the experiment here. -->
-  <Description>
-    LeRIBSS 2012 VANDLE experiment, 2 Clovers, 2 Beta scintillators,
-    MTC, 48 small VANDLE modules
+    <!-- Short description of the experiment here. -->
+    <Description>
+        LeRIBSS 2012 VANDLE experiment, 2 Clovers, 2 Beta scintillators,MTC, 48 small VANDLE modules
+        This is a testing configuration for the program.
+    </Description>
 
-    This is a testing configuration for the program. I will probably stick
-    to analyzing the 77Cu data with this guy.
-  </Description>
+    <!-- This is the place to put some of the general information about the experiment. -->
+    <Experiment>
+        <NumberOfBars value="9" error="0.0" unit=""/>
+        <!-- This one is from Sergey's simulation -->
+        <OmegaPerBar value="0.0061" error="0.0" unit=""/>
+        <!-- This one is from just a straight calculation -->
+        <!-- <omegaPerBar value="4.727e-3" error="0.0" unit=""/> -->
+        <DensityResolution value="1.0" error="0.0" unit="MeV"/>
+        <FlightPath value="50.5" error="0.0" unit="cm"/>
+        <EfficiencyCurve>mmfCalc</EfficiencyCurve>
+    </Experiment>
 
-  <!-- This is the place to put some of the general information
-       about the experiment.
-  -->
-  <Experiment>
-    <numBars value="9" error="0.0" unit=""/>
-    <!-- This one is from Sergey's simulation -->
-    <omegaPerBar value="0.0061" error="0.0" unit=""/>
-    <!-- This one is from just a straight calculation -->
-    <!-- <omegaPerBar value="4.727e-3" error="0.0" unit=""/> -->
-    <denRes value="0.500" error="0.0" unit="MeV"/>
-    <flightPath value="50.5" error="0.0" unit="cm"/>
-  </Experiment>
+    <!-- These are the input/output files. The program only
+         recognizes the Input/Output nodes for reading. However,
+         anything added under them will be read into the program.
 
-  <!-- These are the input/output files. The program only
-       recognizes the Input/Output nodes for reading. However,
-       anything added under them will be read into the program.
-
-       NOTE: Blank spaces are hazardous to your health..err analysis.
-  -->
-  <Files>
-    <!-- These are the input files -->
-    <Input>
-      <!-- These are the experimental Data -->
-      <gsTof>data/077cu/077cu-testBan1/077cu-testBan1-tof.dat</gsTof>
-      <g1Tof>data/077cu/077cu-ban4-lower/077cu-ban4-lower02Plus.dat</g1Tof>
-      <g2Tof>data/077cu/077cu-ban4-lower/077cu-ban4-lower04Plus.dat</g2Tof>
-    </Input>
-
-    <!-- The output file names (sometimes just the path) -->
-    <Output>
-      <!-- Files for the fitting -->
-      <picDir>pics/tof/working/</picDir>
-      <picGs>pics/tof/working/working.eps</picGs>
-      <gsFit>results/tof/working/working.fit</gsFit>
-      <g1Fit>results/tof/working/working-g1.fit</g1Fit>
-      <g2Fit>results/tof/working/working-g2.fit</g2Fit>
-      <!-- Files for the B(GT) -->
-      <neutrons>results/vast/working/working.dat</neutrons>
-      <cgm>results/vast/working/working.mgb</cgm>
-      <density>results/vast/working/working.bgt</density>
-      <sensitivity>results/vast/working/working.sens</sensitivity>
-    </Output>
-  </Files>
-
-  <Simulation>
-    <!-- These are the simulation data -->
-    <inputBase>data/ilyushkin/8keVee-06-06-2014/</inputBase>
-    <outputBase>results/sim/8keVee-06-06-2014/</outputBase>
-    <energies>
-      <e0  file="0069keV.txt" energy="69"/>
-      <e1  file="0113keV.txt" energy="113"/>
-      <e2  file="0152keV.txt" energy="152"/>
-      <e3  file="0300keV.txt" energy="300"/>
-      <e4  file="0400keV.txt" energy="400"/>
-      <e5  file="0600keV.txt" energy="600"/>
-      <e6  file="0800keV.txt" energy="800"/>
-      <e7  file="1000keV.txt" energy="1000"/>
-      <e8  file="1200keV.txt" energy="1200"/>
-      <e9  file="1800keV.txt" energy="1800"/>
-      <e10 file="2000keV.txt" energy="2000"/>
-      <e11 file="3000keV.txt" energy="3000"/>
-      <e12 file="4000keV.txt" energy="4000"/>
-      <e13 file="5000keV.txt" energy="5000"/>
-    </energies>
-    <output>
-      <!-- These guys will store all the histograms of the fits -->
-      <sims>sims.root</sims>
-      <conv>conv.root</conv>
-      <!-- This one stores the results for the fits to the convolution -->
-      <convData>convParms.dat</convData>
-      <!-- This one stores the results from the un-convoluted fits -->
-      <fitData>fitParms.dat</fitData>
-    </output>
-
-    <!-- The fitting range as measured from the peak position-->
-    <range>
-      <low value="20"/>
-      <high value="1480.0"/>
-    </range>
-  </Simulation>
-
-
-  <!-- This has all the information about the decay of interest. -->
-  <Decay>
-    <!-- z of the parent -->
-    <z value='29' error='0.0' unit=""/>
-    <q value='10.490' error='0.5' unit="MeV"/>
-    <sn value='4.5575' error='0.00025' unit="MeV"/>
-    <qbn value='5.720' error='0.015' unit="MeV"/>
-    <t12 value='0.4679' error='0.00021' unit="s"/>
-
-    <gn> <!-- Information about the normalization gamma -->
-      <area value="351222" error="14751" unit="counts"/>
-      <!-- This will get changed to energy soon -->
-      <eff value="0.0668422" error="0.003" unit="/100"/>
-      <abr value="0.191" error="0.006" unit="/100"/>
-    </gn>
-
-    <g1> <!-- Gating gamma number 1 (not implemented yet)-->
-    </g1>
-
-    <g2> <!-- Gating gamma number 2 (not implemented yet)-->
-    </g2>
-  </Decay>
-
-  <!-- Some flags to control program flow. The program will
-       recognize any flags that are added here.
-  -->
-  <Flags>
-    <doFit value="true"/>
-    <basic value="true"/>
-    <theory value="false"/>
-    <density value="false"/>
-  </Flags>
-
-  <!-- How about some fitting information? -->
-  <Fitting>
-    <!-- the peaks to use in the fitting of the tof -->
-    <peaks>
-      <!-- peaks for the singles fitting -->
-      <sngl>
-        <pk0  value="24.0"/>
-        <pk1  value="30.0"/>
-        <pk2  value="38.128"/>
-        <pk3  value="40.0"/>
-        <pk4  value="44.917"/>
-        <pk5  value="50.181"/>
-        <pk6  value="56.835"/>
-        <pk7  value="65.151"/>
-        <pk8  value="70.826"/>
-        <pk9  value="80.0"/>
-        <pk10 value="87.198"/>
-        <pk11 value="94.690"/>
-        <pk12 value="100.0"/>
-        <pk13 value="104.69"/>
-        <pk14 value="110.0"/>
-        <pk15 value="115.0"/>
-        <pk16 value="135.0"/>
-      </sngl>
-
-      <!-- The peaks for gamma 1 gated spectrum -->
-      <g1>
-        <pk0 value ="20.0"/>
-        <pk1 value ="50.0"/>
-        <pk2 value ="120.0"/>
-      </g1>
-
-      <!-- peaks for gamma 2 gated spectrum -->
-      <g2>
-        <pk0 value ="30.0"/>
-        <pk1 value ="60.0"/>
-      </g2>
-    </peaks>
-
-    <!-- The Peak List to Use in the fit
-         recognizes : sngl,g1,g2
+         NOTE: Blank spaces are hazardous to your health..err analysis.
     -->
-    <pkList value="sngl"/>
+    <Files>
+        <!-- These are the input files -->
+        <Input>
+            <!-- These are the experimental Data -->
+            <gsTof>/home/vincent/data/ornl/vandleLeribss2012/processed/084ga-mmfBan/084ga-mmfBan.dat</gsTof>
+            <g1Tof>/home/vincent/data/084ga/084ga-mmfBan/084ga-mmfBan-247keV.dat</g1Tof>
+        </Input>
 
-    <!-- The fitting range -->
-    <range>
-      <low value="0.0"/>
-      <high value="200.0"/>
-    </range>
+        <!-- The output file names (sometimes just the path) -->
+        <Output>
+            <!-- Files for the fitting -->
+            <resultsDir>/tmp/vast/</resultsDir>
+            <picDir>/tmp/vast/</picDir>
+            <picGs>/tmp/vast/fit.eps</picGs>
+            <gsFit>/tmp/vast/test.fit</gsFit>
+            <g1Fit>/tmp/vast/test-g1.fit</g1Fit>
+            <g2Fit>/tmp/vast/test-g2.fit</g2Fit>
+            <!-- Files for the B(GT) -->
+            <neutrons>/tmp/vast/test.dat</neutrons>
+            <cgm>/tmp/vast/test.mgb</cgm>
+            <density>/tmp/vast/bgt.root</density>
+            <sensitivity>/tmp/vast/test.sens</sensitivity>
+        </Output>
+    </Files>
 
-    <!-- The Binning for the picture -->
-    <binning value="0.5" />
+    <!-- This has all the information about the decay of interest. -->
+    <Decay>
+        <!-- z of the parent -->
+        <z value='31' error='0.0' unit=""/>
+        <q value='13.690' error='0.5' unit="MeV"/>
+        <sn value='5.243' error='0.004' unit="MeV"/>
+        <qbn value='8.600' error='0.006' unit="MeV"/>
+        <t12 value='0.085' error='0.010' unit="s"/>
 
-    <!-- How much can the peaks move -->
-    <wiggle value="200." />
+        <gn> <!-- Information about the normalization gamma -->
+            <area value="7208" error="0.0" unit="counts"/>
+            <en value="0.2473" error="0.0005" unit="MeV"/>
+            <abr value="0.086" error="0.008" unit="/100"/>
+            <!-- This will get changed to energy soon -->
+            <eff value="0.0668422" error="0.003" unit="/100"/>
+        </gn>
 
-    <!-- Parameterization for the fitted parameters (not quite implemented)-->
-    <alpha>
-      <aI value="0.0130289072593045"/>
-      <aH value="-0.641803483244778"/>
-    </alpha>
+        <g1> <!-- Gating gamma number 1 (not implemented yet)-->
+        </g1>
 
-    <sigma>
-      <sM value="-0.000121210451962825"/>
-      <sN value="0.0416568757021418"/>
-      <sO value="0.550158923590531"/>
-    </sigma>
+        <g2> <!-- Gating gamma number 2 (not implemented yet)-->
+        </g2>
+    </Decay>
 
-    <n>
-      <nJ value="2.21591018795502e-06"/>
-      <nK value="0.00189178692442985"/>
-      <nL value="1.33190840921066"/>
-    </n>
-  </Fitting>
+    <!-- Some flags to control program flow. The program will recognize any flags that are added here. -->
+    <Flags>
+        <doFit value="true"/>
+        <basic value="true"/>
+        <theory value="false"/>
+        <density value="true"/>
+    </Flags>
+
+    <!-- How about some fitting information? -->
+    <Fitting>
+        <!-- the peaks to use in the fitting of the tof -->
+        <peaks>
+            <!-- peaks for the singles fitting -->
+            <sngl>
+                <pk value="16.0"/>
+                <pk value="24.0"/>
+                <pk value="26.128"/>
+                <pk value="35.0"/>
+                <pk value="50.181"/>
+                <pk value="56.835"/>
+                <pk value="85.826"/>
+            </sngl>
+
+            <!-- The peaks for gamma 1 gated spectrum -->
+            <g1>
+                <pk value="20.0"/>
+                <pk value="50.0"/>
+                <pk value="120.0"/>
+            </g1>
+
+            <!-- peaks for gamma 2 gated spectrum -->
+            <g2>
+                <pk0 value="30.0"/>
+                <pk1 value="60.0"/>
+            </g2>
+        </peaks>
+
+        <!-- The Peak List to Use in the fit recognizes : sngl,g1,g2 -->
+        <pkList value="sngl"/>
+
+        <!-- The fitting range times in ns -->
+        <range>
+            <low value="0.0"/>
+            <high value="200.0"/>
+        </range>
+
+        <!-- The Binning for the picture -->
+        <binning value="0.5"/>
+
+        <!-- Sets the print level for the fitting -->
+        <PrintLevel value="1"/>
+    </Fitting>
+
+    <!--
+        The coefficients in this node should be insert in ascending power order so that the software records them
+        properly. The dependent variable must be named tof.
+    -->
+    <CrystalBall>
+        <alpha>
+            <function value="a3*pow(tof,3)+a2*pow(tof,2)+a1*tof+a0"/>
+            <coefficients>
+                <a0 value="-0.73110" error="0.10206" units=""/>
+                <a1 value="-0.00101" error="0.00574" units=""/>
+                <a2 value="2.52616e-05" error="8.81266e-05" units=""/>
+                <a3 value="-1.07220e-07" error="3.89451e-07" units=""/>
+            </coefficients>
+        </alpha>
+
+        <n>
+            <function value="n2*tof+n1+n0/tof"/>
+            <coefficients>
+                <n0 value="-4.33787" error="1.60649" units=""/>
+                <n1 value="1.65099" error="0.09231" units=""/>
+                <n2 value="0.00179" error="0.00095" units=""/>
+            </coefficients>
+        </n>
+
+        <sigma>
+            <function value="s4*pow(tof,4)+s3*pow(tof,3)+s2*pow(tof,2)+s1*tof+s0"/>
+            <coefficients>
+                <s0 value="0.18205" error="0.120600" units=""/>
+                <s1 value="0.070225" error="0.010693" units=""/>
+                <s2 value="-0.00075" error="0.00029" units=""/>
+                <s3 value="4.90374e-06" error="3.14410e-06" units=""/>
+                <s4 value="-1.19754e-08" error="1.09884e-08" units=""/>
+            </coefficients>
+        </sigma>
+    </CrystalBall>
+
+    <Simulation>
+        <!-- These are the simulation data -->
+        <inputBase>data/ilyushkin/8keVee-06-06-2014/</inputBase>
+        <outputBase>results/sim/8keVee-06-06-2014/</outputBase>
+        <energies>
+            <e0 file="0069keV.txt" energy="69"/>
+            <e1 file="0113keV.txt" energy="113"/>
+            <e2 file="0152keV.txt" energy="152"/>
+            <e3 file="0300keV.txt" energy="300"/>
+            <e4 file="0400keV.txt" energy="400"/>
+            <e5 file="0600keV.txt" energy="600"/>
+            <e6 file="0800keV.txt" energy="800"/>
+            <e7 file="1000keV.txt" energy="1000"/>
+            <e8 file="1200keV.txt" energy="1200"/>
+            <e9 file="1800keV.txt" energy="1800"/>
+            <e10 file="2000keV.txt" energy="2000"/>
+            <e11 file="3000keV.txt" energy="3000"/>
+            <e12 file="4000keV.txt" energy="4000"/>
+            <e13 file="5000keV.txt" energy="5000"/>
+        </energies>
+        <output>
+            <!-- These guys will store all the histograms of the fits -->
+            <sims>sims.root</sims>
+            <conv>conv.root</conv>
+            <!-- This one stores the results for the fits to the convolution -->
+            <convData>convParms.dat</convData>
+            <!-- This one stores the results from the un-convoluted fits -->
+            <fitData>fitParms.dat</fitData>
+        </output>
+
+        <!-- The fitting range as measured from the peak position-->
+        <range>
+            <low value="20"/>
+            <high value="1480.0"/>
+        </range>
+    </Simulation>
 </Configuration>

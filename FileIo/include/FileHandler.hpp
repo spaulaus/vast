@@ -39,14 +39,12 @@ public:
       \param[in] name : The internal name of the file
       \param[in] val  : The name that will be given to the file on disk
     */
-    void SetOutputNames(const std::string &name,
-                 const std::string &val);
+    void SetOutputNames(const std::string &name, const std::string &val);
 private:
     std::map<std::string, std::string> input_, output_;
 
-    ///@brief This method produces the error message when file names can't be
-    /// found
+    ///@brief This method produces the error message when file names can't be found
     ///@param[in] name  : The internal name of the file
-    void EndError(const std::string &name) const;
+    std::string EndError(const std::string &name) const;
 };
 #endif //__FILEHANDLER_HPP__
