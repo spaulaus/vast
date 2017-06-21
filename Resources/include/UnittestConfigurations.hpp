@@ -130,6 +130,7 @@ namespace UnitTestVariables {
                            "            <" + name + ">" + inputPath + "</" + name + ">"
                            "        </Input>"
                            "        <Output>"
+                           "            <OutputPath>" + outputPath + "</OutputPath>"
                            "            <" + name + ">" + outputPath + "</" + name + ">"
                            "        </Output>"
                            "    </Files>"
