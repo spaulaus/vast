@@ -57,6 +57,7 @@ TEST_FIXTURE(ConfigurationReader, Test_ParseFileNode) {
     ParseFileNode(doc.child("Configuration").child("Files"), files);
     CHECK_EQUAL(test_goodFilePath, files.GetInputName(test_fileName));
     CHECK_EQUAL(test_goodFilePath, files.GetOutputName(test_fileName));
+    CHECK_EQUAL(test_goodFilePath, files.GetOutputPath());
 
     doc.load_string(FormatFileNodeForUnittest(test_fileName, test_badFilePath, test_goodFilePath).c_str());
     CHECK_THROW(ParseFileNode(doc.child("Configuration").child("Files"), files), VastIoException);

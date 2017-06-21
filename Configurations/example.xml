@@ -52,14 +52,13 @@
         <Input>
             <!-- These are the experimental Data -->
             <gsTof>/home/vincent/data/ornl/vandleLeribss2012/processed/084ga-mmfBan/084ga-mmfBan.dat</gsTof>
-            <g1Tof>/home/vincent/data/084ga/084ga-mmfBan/084ga-mmfBan-247keV.dat</g1Tof>
         </Input>
 
         <!-- The output file names (sometimes just the path) -->
         <Output>
             <!-- Files for the fitting -->
-            <resultsDir>/tmp/vast/</resultsDir>
-            <picDir>/tmp/vast/</picDir>
+            <OutputPath>/tmp/vast</OutputPath>
+            <picDir>/tmp/vast</picDir>
             <picGs>/tmp/vast/fit.eps</picGs>
             <gsFit>/tmp/vast/test.fit</gsFit>
             <g1Fit>/tmp/vast/test-g1.fit</g1Fit>

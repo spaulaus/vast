@@ -29,19 +29,26 @@ public:
     */
     std::string GetOutputName(const std::string &name) const;
 
+    ///@returns the output path
+    std::string GetOutputPath() const { return outputPath_; }
+
     /*! Set the name of an input file
       \param[in] name : The internal name of the file
       \param[in] val  : The name that will be given to the file on disk
     */
-    void SetInputNames(const std::string &name,
-                 const std::string &val);
+    void SetInputNames(const std::string &name, const std::string &val);
     /*! Set the name of an output file
       \param[in] name : The internal name of the file
       \param[in] val  : The name that will be given to the file on disk
     */
     void SetOutputNames(const std::string &name, const std::string &val);
+
+    /// Sets the output path
+    ///@param[in] a : the path that we want to use for output.
+    void SetOutputPath(const std::string &a) { outputPath_ = a;}
 private:
     std::map<std::string, std::string> input_, output_;
+    std::string outputPath_; ///< The path that we will dump all files into.
 
     ///@brief This method produces the error message when file names can't be found
     ///@param[in] name  : The internal name of the file
