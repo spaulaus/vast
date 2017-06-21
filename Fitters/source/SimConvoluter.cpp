@@ -46,15 +46,14 @@ SimConvoluter::SimConvoluter(const std::string &cfg) {
         flightPath_ = base.child("flightPath").attribute("value").as_double();
 
         inputDir_ = base.child("inputBase").child_value();
-        if(!IoHelpers::HasWritePermission(inputDir_))
+        if(!IoHelpers::CheckFileOrDirectoryExistance(inputDir_))
             throw VastIoException("SimConvoluter::SimConvoluter - We couldn't open the input directory ("
                                   + inputDir_ + " )!!");
 
         outputDir_ = base.child("outputBase").child_value();
-        if(!IoHelpers::HasWritePermission(outputDir_))
+        if(!IoHelpers::CheckFileOrDirectoryExistance(outputDir_))
             throw VastIoException("SimConvoluter::SimConvoluter - We couldn't open the output directory ("
                                   + outputDir_ + " )!!");
-
 
         simHists_ = base.child("output").child("sims").child_value();
         convFile_ = base.child("output").child("convData").child_value();
@@ -151,7 +150,7 @@ void SimConvoluter::FitSim(void) {
     for(const auto it : energies_) {
         string inputName = inputDir_ + it.second;
 
-        if(!IoHelpers::HasWritePermission(inputName))
+        if(!IoHelpers::CheckFileOrDirectoryExistance(inputName))
             throw VastIoException("SimConvoluter::FitSim - We couldn't open the input file : " + inputName + "!!");
 
         double peak = (flightPath_)*sqrt(mass/(2*it.first/1000.));

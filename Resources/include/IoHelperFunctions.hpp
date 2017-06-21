@@ -7,14 +7,16 @@
 
 #ifndef VANDLEANALYSISSOFTWARETOOLKIT_IOHELPERFUNCTIONS_HPP
 #define VANDLEANALYSISSOFTWARETOOLKIT_IOHELPERFUNCTIONS_HPP
+#include <fstream>
 
 #include <sys/stat.h>
 
 namespace IoHelpers {
-    /// A POSIX compliant way to check if we have write permisisons to a file or directory. Taken from the following
+    /// A POSIX compliant way to check if a file or directory exists. Taken from the following
     /// forum : https://stackoverflow.com/questions/12774207/fastest-way-to-check-if-a-file-exist-using-standard-c-c11-c
     ///@param[in] name : The name of the file or directory we want to try writing to.
-    inline bool HasWritePermission(const std::string &name) {
+    ///@returns True if we had permission to write to the file or directory
+    inline bool CheckFileOrDirectoryExistance(const std::string &name) {
         struct stat buffer;
         return stat(name.c_str(), &buffer) == 0;
     }

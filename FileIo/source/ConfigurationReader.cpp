@@ -42,18 +42,31 @@ void ConfigurationReader::ParseFileNode(const pugi::xml_node &fileHandlerNode, F
         throw ConfigurationReaderException(EmptyNodeExceptionMessage("ReadFiles", "Files"));
 
     for (pugi::xml_node attr : fileHandlerNode.child("Input").children()) {
-        if(!IoHelpers::HasWritePermission(attr.child_value()))
-            throw VastIoException("ConfigurationReader::ParseFileNode - We don't have permission to write to " 
-                                  + string(attr.child_value()));
+        if(!IoHelpers::CheckFileOrDirectoryExistance(attr.child_value()))
+            throw VastIoException("ConfigurationReader::ParseFileNode - The requested file doesn't seem to exist. "
+                                          "Please verify you can read from " + string(attr.child_value()));
         fileHandler.SetInputNames(attr.name(), attr.child_value());
     }
 
+    string name = "";
     for (pugi::xml_node attr : fileHandlerNode.child("Output").children()) {
-        if(!IoHelpers::HasWritePermission(attr.child_value()))
-            throw VastIoException("ConfigurationReader::ParseFileNode - We don't have permission to write to " 
-                                  + string(attr.child_value()));
-        fileHandler.SetOutputNames(attr.name(), attr.child_value());
+        name = attr.name();
+
+        if(name != "OutputPath") {
+            fileHandler.SetOutputNames(attr.name(), attr.child_value());
+        } else {
+            if (!IoHelpers::CheckFileOrDirectoryExistance(attr.child_value()))
+                throw VastIoException("ConfigurationReader::ParseFileNode - The requested OutputPath doesn't seem to "
+                                              "exist!! Ensure it's in your config and that you can write to "
+                                      + string(attr.child_value()));
+            fileHandler.SetOutputPath(attr.child_value());
+        }
     }
+
+    if(fileHandler.GetOutputPath() == "")
+        throw VastIoException("ConfigurationReader::ParseFileNode - It seems you didn't specify the "
+                                      "/Configuration/Files/OutputPath node in the configuration file! We're going "
+                                      "to need that!");
 }
 
 ///This method parses the configuration file using pugixml getting the fitting information.
