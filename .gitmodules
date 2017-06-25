@@ -1,6 +1,6 @@
 [submodule "Submodules/EZProgressbar"]
 	path = Submodules/EZProgressbar
-	url = https://git.code.sf.net/p/ezprogressbar/code
+	url = https://github.com/spaulaus/ezprogressbar
 [submodule "Submodules/PhysConstants"]
 	path = Submodules/PhysConstants
 	url = https://github.com/spaulaus/PhysConstants
