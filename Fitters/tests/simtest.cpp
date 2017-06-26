@@ -1,3 +1,7 @@
+///@file TofFitter.cpp
+///@brief A program that tests the simulation convoluter
+///@author S. V. Paulauskas
+///@date October 6, 2013
 #include <string>
 #include <vector>
 #include <utility>
@@ -13,7 +17,7 @@ int main(int argc, char* argv[]) {
         cerr << "You must provide the name of the configuration file!!"
              << endl;
         cerr << "Usage: ./vast /path/to/configuration/file" << endl;
-        exit(0);
+        return 0;
     }
     SimConvoluter sim(argv[1]);
 }

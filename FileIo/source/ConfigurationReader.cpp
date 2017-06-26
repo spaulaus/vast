@@ -8,6 +8,7 @@
 
 #include "ConfigurationReader.hpp"
 #include "HelperEnumerations.hpp"
+#include "IoHelperFunctions.hpp"
 #include "VastExceptions.hpp"
 
 using namespace std;
@@ -40,10 +41,32 @@ void ConfigurationReader::ParseFileNode(const pugi::xml_node &fileHandlerNode, F
     if (fileHandlerNode.empty())
         throw ConfigurationReaderException(EmptyNodeExceptionMessage("ReadFiles", "Files"));
 
-    for (pugi::xml_node attr : fileHandlerNode.child("Input").children())
+    for (pugi::xml_node attr : fileHandlerNode.child("Input").children()) {
+        if(!IoHelpers::CheckFileOrDirectoryExistance(attr.child_value()))
+            throw VastIoException("ConfigurationReader::ParseFileNode - The requested file doesn't seem to exist. "
+                                          "Please verify you can read from " + string(attr.child_value()));
         fileHandler.SetInputNames(attr.name(), attr.child_value());
-    for (pugi::xml_node attr : fileHandlerNode.child("Output").children())
-        fileHandler.SetOutputNames(attr.name(), attr.child_value());
+    }
+
+    string name = "";
+    for (pugi::xml_node attr : fileHandlerNode.child("Output").children()) {
+        name = attr.name();
+
+        if(name != "OutputPath") {
+            fileHandler.SetOutputNames(attr.name(), attr.child_value());
+        } else {
+            if (!IoHelpers::CheckFileOrDirectoryExistance(attr.child_value()))
+                throw VastIoException("ConfigurationReader::ParseFileNode - The requested OutputPath doesn't seem to "
+                                              "exist!! Ensure it's in your config and that you can write to "
+                                      + string(attr.child_value()));
+            fileHandler.SetOutputPath(attr.child_value());
+        }
+    }
+
+    if(fileHandler.GetOutputPath() == "")
+        throw VastIoException("ConfigurationReader::ParseFileNode - It seems you didn't specify the "
+                                      "/Configuration/Files/OutputPath node in the configuration file! We're going "
+                                      "to need that!");
 }
 
 ///This method parses the configuration file using pugixml getting the fitting information.
@@ -124,7 +147,7 @@ void ConfigurationReader::ParseCrystalBallNode(const pugi::xml_node &crystalBall
         } catch (invalid_argument &invalidArgument) {
             cout << "ConfigurationReader::ParseCrystalBallNode - Intercepted invalid argument when setting the "
                     "information from the " + var_name + " node." << endl;
-            throw invalidArgument;
+            throw invalid_argument(invalidArgument.what());
         }
 
         coefficients.clear();

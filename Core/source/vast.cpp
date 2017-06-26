@@ -44,50 +44,52 @@ int main(int argc, char* argv[]) {
 
     try {
         cfg.ParseFileNode(configurationNode.child("Files"), fls);
-        cfg.ParseDecayNode(configurationNode.child("Decay"), decay);
         cfg.ParseExperimentNode(configurationNode.child("Experiment"), exp);
         cfg.ParseCrystalBallNode(configurationNode.child("CrystalBall"), cbpars);
         cfg.ParseDecayNode(configurationNode.child("Decay"), decay);
         cfg.ParseFlagsNode(configurationNode.child("Flags"), flags);
+        cfg.ParseFitNode(configurationNode.child("Fitting"), fit);
+
+        if(flags.GetFlag("doFit")) {
+            cout << "Performing the Fit and reading the Fit configuration" << endl;
+            TofFitter fitter(fit, fls, cbpars);
+        }
+
+        vector<Neutron> singles;
+        cout << "We are now reading the fitted data." << endl;
+        input.ReadFitOutput(singles, fls.GetOutputName("gsFit"));
+
+        cout << "Integrating neutron peaks and calculating B(GT)" << endl;
+        ez::ezETAProgressBar eta((unsigned int) singles.size());
+        eta.start();
+        for(vector<Neutron>::iterator it = singles.begin(); it!= singles.end(); it++, ++eta) {
+            Integrator integrator(*it, fit.GetRange());
+            BGTCalculator bgt(*it, decay, exp);
+        }
+
+        if(flags.GetFlag("basic")) {
+            cout << "Outputting the basic neutron information" << endl;
+            output.OutputBasics(singles, decay, exp, fls.GetOutputName("neutrons"));
+        }
+
+        if(flags.GetFlag("theory")) {
+            cout << "Outputting the information for the CGM calculations"
+                 << endl;
+            output.OutputTheory(singles, fls.GetOutputName("cgm"));
+        }
+
+        if(flags.GetFlag("density")) {
+            cout << "Calculating the neutron density " << endl;
+            NeutronDensity nden(singles, decay.GetQBetaN().GetValue());
+            output.OutputDensity(nden, decay, exp, fls.GetOutputName("density"));
+        }
     } catch(ConfigurationReaderException &ex) {
         cout << "vast.cpp : " << ex.what() << endl;
-    }
-
-    Variable betaEff = exp.GetBetaEff();
-    bool basic = flags.GetFlag("basic");
-
-    if(flags.GetFlag("doFit")) {
-        cout << "Performing the Fit and reading the Fit configuration" << endl;
-        TofFitter fitter(fit, fls, cbpars);
-    }
-
-    vector<Neutron> singles;
-    cout << "We are now reading the fitted data." << endl;
-    input.ReadFitOutput(singles, fls.GetOutputName("gsFit"));
-
-    cout << "Integrating neutron peaks and calculating B(GT)" << endl;
-    ez::ezETAProgressBar eta((unsigned int) singles.size());
-    eta.start();
-    for(vector<Neutron>::iterator it = singles.begin(); it!= singles.end();
-        it++, ++eta) {
-        Integrator integrator(*it, fit.GetRange());
-        BGTCalculator bgt(*it, decay, exp);
-    }
-
-    if(basic) {
-        cout << "Outputting the basic neutron information" << endl;
-        output.OutputBasics(singles, decay, exp, fls.GetOutputName("neutrons"));
-    }
-
-    if(flags.GetFlag("theory")) {
-        cout << "Outputting the information for the CGM calculations"
-             << endl;
-        output.OutputTheory(singles, fls.GetOutputName("cgm"));
-    }
-
-    if(flags.GetFlag("density")) {
-        cout << "Calculating the neutron density " << endl;
-        NeutronDensity nden(singles, decay.GetQBetaN().GetValue());
-        output.OutputDensity(nden, decay, exp, fls.GetOutputName("density"));
+    } catch (TofFitterException &ex) {
+        cout << "vast.cpp : " << ex.what() << endl;
+    } catch (InputHandlerException &ex) {
+        cout << "vast.cpp : " << ex.what() << endl;
+    } catch (OutputHandlerException &ex) {
+        cout << "vast.cpp : " << ex.what() << endl;
     }
 }

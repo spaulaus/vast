@@ -19,10 +19,8 @@
 using namespace std;
 using namespace RooFit;
 
-///This method performs the fit needed to calculates the sensitivity limit of
-/// the detectors
-Neutron LimitFinder::PerformFit(const double &edge, const double &yield,
-                                const CrystalBallParameters &cbpars) {
+///This method performs the fit needed to calculates the sensitivity limit of the detectors
+Neutron LimitFinder::PerformFit(const double &edge, const double &yield, const CrystalBallParameters &cbpars) {
     PhysConstants consts;
 
     double mass = consts.GetConstant("neutronMass").GetValue(); //MeV/c^2
@@ -56,13 +54,11 @@ Neutron LimitFinder::PerformFit(const double &edge, const double &yield,
     //---------- The Variables for the cb to generate the peak
     RooConstVar mu("mu", "", edg);
     string fAlph = cbpars.GetAlphaFunction("mu");
-    RooFormulaVar alpha("alpha", "", fAlph.c_str(),
-                        RooArgList(a3, a2, a1, a0, mu));
+    RooFormulaVar alpha("alpha", "", fAlph.c_str(), RooArgList(a3, a2, a1, a0, mu));
     string fN = cbpars.GetNFunction("mu");
     RooFormulaVar n("n", fN.c_str(), RooArgList(n2, n1, n0, mu));
     string fSig = cbpars.GetSigmaFunction("mu");
-    RooFormulaVar sigma("sigma", "", fSig.c_str(),
-                        RooArgList(s4, s3, s2, s1, s0, mu));
+    RooFormulaVar sigma("sigma", "", fSig.c_str(), RooArgList(s4, s3, s2, s1, s0, mu));
     RooCBShape cb("cb", "", tof, mu, sigma, alpha, n);
 
     //---------- Generate the data set from the above peak
@@ -72,20 +68,17 @@ Neutron LimitFinder::PerformFit(const double &edge, const double &yield,
     RooRealVar yld("yld", "", yield, 0.0, yield * 2);
     RooRealVar mu1("mu1", "", edg, 0., 200.);
     fAlph = cbpars.GetAlphaFunction("mu1");
-    RooFormulaVar alpha1("alpha1", "", fAlph.c_str(), RooArgList(a3,a2,a1,a0,
-                                                                 mu1));
+    RooFormulaVar alpha1("alpha1", "", fAlph.c_str(), RooArgList(a3,a2,a1,a0, mu1));
     fN = cbpars.GetNFunction("mu1");
     RooFormulaVar nalt("nalt", fN.c_str(), RooArgList(n2,n1,n0,mu1));
     fSig = cbpars.GetSigmaFunction("mu1");
-    RooFormulaVar sigma1("sigma1", "", fSig.c_str(),
-                         RooArgList(s4,s3,s2,s1,s0, mu1));
+    RooFormulaVar sigma1("sigma1", "", fSig.c_str(), RooArgList(s4,s3,s2,s1,s0, mu1));
     RooCBShape cb1("cb1", "", tof, mu1, sigma1, alpha1, nalt);
 
     RooAddPdf model("model", "", RooArgList(cb1), RooArgList(yld));
 
     //---------- Fit the new CB to the generated data set
-    RooFitResult *fitResult = model.fitTo(*mcData, NumCPU(3), Save(),
-                                          Range(0., 200.));
+    RooFitResult *fitResult = model.fitTo(*mcData, NumCPU(3), Save(), Range(0., 200.));
 
     bool hasConvergence = fitResult->statusCodeHistory(0) == 0;
     bool hasHesseCalc = fitResult->statusCodeHistory(1) == 0;
@@ -113,14 +106,12 @@ Neutron LimitFinder::PerformFit(const double &edge, const double &yield,
         delete (fitResult);
         return (pk);
     } else {
-        if (!hasConvergence)
-            cerr << endl << endl << "Oh, Jesus, the fit did not converge."
-                 << endl;
-        if (!hasHesseCalc)
-            cerr << "Hesse FAILED to calculate things properly."
-                 << endl << endl;
+        delete fitResult;
 
-        delete (fitResult);
-        exit(1);
+        if (!hasConvergence)
+            throw TofFitterException("TofFitter::PerformFit - The fit didn't converge. Cannot proceed with analysis!");
+        if (!hasHesseCalc)
+            throw TofFitterException("TofFitter::PerformFit - Hesse failed, the error bars cannot be used! Cannot "
+                                             "proceed with analysis.");
     }
 }
