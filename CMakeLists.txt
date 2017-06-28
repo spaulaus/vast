@@ -61,7 +61,7 @@ add_definitions(-D INSTALL_PREFIX="\\"${CMAKE_INSTALL_PREFIX}\\"")
 
 #Find packages
 #Load additional find_package scripts.
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/CMake/modules/")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/CMake-modules/")
 
 #Find ROOT since we need it
 find_package(ROOT REQUIRED COMPONENTS roofit)

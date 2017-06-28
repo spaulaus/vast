@@ -10,3 +10,6 @@
 [submodule "Submodules/Tokenizer"]
 	path = Submodules/StringManipulators
 	url = https://github.com/spaulaus/StringManipulators
+[submodule "CMake-modules"]
+	path = CMake-modules
+	url = https://github.com/spaulaus/CMake-modules.git
