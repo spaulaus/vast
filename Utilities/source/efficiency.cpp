@@ -95,8 +95,7 @@ int main(int argc, char* argv[]) {
              << "energy." << endl << "Make sure you entered it in MeV !!"
              << endl;
     else
-        cout << "The efficiency for " << en.Output() << " is "
-             << result.Output() << endl;
+        cout << "The efficiency for " << en << " is " << result << endl;
 
     return 0;
 }

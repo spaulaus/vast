@@ -1,4 +1,3 @@
-set(SubmoduleSources PhysConstants/src/PhysConstants.cpp pugixml/source/pugixml.cpp
-        Signal-Generator/src/SignalGenerator.cpp)
+set(SubmoduleSources pugixml/source/pugixml.cpp)
 add_library(SubmoduleStaticLibrary STATIC ${SubmoduleSources})
 

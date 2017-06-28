@@ -12,26 +12,25 @@
 #include <RooFitResult.h>
 #include <RooRealVar.h>
 
-#include <PhysConstants.hpp>
 
 #include "LimitFinder.hpp"
+#include "PhysicalConstants.hpp"
 
 using namespace std;
 using namespace RooFit;
+using namespace PhysicalConstants;
 
 ///This method performs the fit needed to calculates the sensitivity limit of the detectors
 Neutron LimitFinder::PerformFit(const double &edge, const double &yield, const CrystalBallParameters &cbpars) {
-    PhysConstants consts;
-
-    double mass = consts.GetConstant("neutronMass").GetValue(); //MeV/c^2
-    double c = consts.GetConstant("c").GetValue() * (100 / 1e9); //cm/ns
+    double mass = Masses::Neutron.GetValue(); //MeV/c^2
+    double c = General::SpeedOfLight.GetValue() * (100 / 1e9); //cm/ns
+    ///@TODO Another hard coded distance.
     double edg = (50.5 / c) * sqrt(mass / (2 * edge));
 
     RooRealVar tof("tof", "tof", 0.0, 0.0, 200.);
 
-    ///@TODO Could we make this a little cleaner like we do below? Make a loop
-    /// that
-    /// way we don't have to worry about setting all these by hand?
+    ///@TODO Could we make this a little cleaner like we do below? Make a loop that way we don't have to worry about
+    /// setting all these by hand?
     vector<Variable> alphaCoefficients = cbpars.GetAlphaCoefficients();
     RooConstVar a3("a3", "", alphaCoefficients[3].GetValue());
     RooConstVar a2("a2", "", alphaCoefficients[2].GetValue());

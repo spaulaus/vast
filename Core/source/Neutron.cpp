@@ -9,9 +9,10 @@
 
 #include "ErrorCalculator.hpp"
 #include "HelperEnumerations.hpp"
-#include "PhysConstants.hpp"
+#include "PhysicalConstants.hpp"
 
 using namespace std;
+using namespace PhysicalConstants;
 
 ///This constructor provides the neutron efficiency, beta resolution and
 /// neutron energy with no error values
@@ -49,10 +50,10 @@ Neutron::Neutron(const double &mu, const double &muErr,
 }
 
 ///This method calculates the neutron energy from the time of flight
+///@TODO This has a hard coded distance in it. We need to update this using the experiment node.
 void Neutron::CalcEnergy(void) {
-    PhysConstants consts;
-    double c = consts.GetConstant("c").GetValue() * (100 / 1e9);
-    double mn = consts.GetConstant("neutronMass").GetValue() / c / c;
+    double c = General::SpeedOfLight.GetValue() * (100 / 1e9);
+    double mn = Masses::Neutron.GetValue() / c / c;
     double energy = 0.5 * mn * pow(50.5 / mu_.GetValue(), 2.);
 
     en_ = Variable(energy, 0.0, "MeV");

@@ -27,36 +27,36 @@ void OutputHandler::FillHistogram(TH1D &hist, const std::map<double, double> &da
         hist.Fill(it.first, it.second);
 }
 
-///This method ouputs basic information
+///This method outputs basic information
 void OutputHandler::OutputBasics(vector<Neutron> &nvec, Decay &dky, Experiment &exp, const string &file) {
     ofstream out(file.c_str());
     if (out.fail())
         throw OutputHandlerException("OutputHandler::OutputBasics - We could not open " + file + " for writing.");
 
     Variable omega = exp.GetOmegaPerBar() * exp.GetNumBars();
-    double totN = 0., rawN = 0., intN = 0;
+    Variable totN(0, 0, "counts"), rawN(0, 0, "counts"), intN(0, 0, "counts");
     out << setw(7) << "#Mu(ns) MuErr(ns) E(MeV) EErr(MeV) IntYld IntYldErr "
         << "BR BRerr B(GT) B(GT)err log(ft) log(ft)err" << endl;
 
     EffCalculator eff;
-    for (auto it = nvec.begin();
-         it != nvec.end(); it++) {
-        intN += it->GetRawIntegratedYield().GetValue();
-        totN += it->GetIntegratedYield().GetValue() / eff.GetBetaEff(it->GetEnergy(), dky).GetValue()
-                / omega.GetValue();
-        rawN += it->GetRawYield().GetValue();
+    for (auto &it : nvec) {
+        rawN += it.GetRawYield();
+        intN += it.GetRawIntegratedYield();
 
-        out << setprecision(5) << it->GetMu().OutputData() << " " << it->GetEnergy().OutputData() << " "
-            << it->GetIntegratedYield().OutputData() << " " << it->GetBranchingRatio().OutputData() << " "
-            << it->GetBgt().OutputData() << " " << it->GetLogft().OutputData() << " " << endl;
+        Variable tmp_totalN = it.GetIntegratedYield() / eff.GetBetaEff(it.GetEnergy(), dky) / omega;
+        tmp_totalN.SetUnits("counts");
+        totN += tmp_totalN;
 
+        out << setprecision(5) << it.GetMu().OutputForDataFile() << " " << it.GetEnergy().OutputForDataFile() << " "
+            << it.GetIntegratedYield().OutputForDataFile() << " " << it.GetBranchingRatio().OutputForDataFile() << " "
+            << it.GetBgt().OutputForDataFile() << " " << it.GetLogft().OutputForDataFile() << " " << endl;
     }
 
-    double pn = totN / dky.GetNumberOfDecays().GetValue();
-    ErrorCalculator err;
-    double pnErr = err.CalcPnErr(pn, nvec, dky);
-    out << "#Pn = " << totN << " / " << dky.GetNumberOfDecays().GetValue() << " = " << pn << " +- " << pnErr
-        << "  RawN = " << rawN << " " << "  RawIntN = " << intN << endl;
+    out << "#Number of Raw Neutron Events = " << rawN << endl
+        << "#Number of Integrated Neutron Events = " << intN << endl
+        << "#Efficiency adjusted Number of Neutrons = " << totN << endl
+        << "#Calculated number of decays = " << dky.GetNumberOfDecays() << endl
+        << "#Neutron Branching Ratio = " << totN / dky.GetNumberOfDecays() << endl;
     out.close();
 }
 
@@ -120,14 +120,14 @@ void OutputHandler::OutputTheory(vector<Neutron> &nvec, const string &file) {
 
 ///This method sets various options for the ROOT histogram
 void OutputHandler::SetHistOptions(TH1D &hist, const std::string &type) {
-    stringstream label;
+    string label = "";
     if (type == "bgt")
-        label << "B(GT) / ";
+        label += "B(GT) / ";
     if (type == "den")
-        label << "Intensity / ";
-    label << "(" << resolution_ << " MeV)";
+        label += "Intensity / ";
+    label += "(" + to_string(resolution_) + " MeV)";
 
-    hist.SetYTitle(label.str().c_str());
+    hist.SetYTitle(label.c_str());
     hist.SetTitleOffset(1.5, "Y");
     hist.SetXTitle("Excitation Energy (MeV)");
     hist.SetLineColor(2002);
