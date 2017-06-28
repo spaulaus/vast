@@ -83,7 +83,7 @@ endif (BUILD_TESTS)
 #We add a number of include directory since everybody will need parts of them.
 include_directories(Calculators/include Core/include FileIo/include Fitters/include
         Resources/include Submodules/pugixml/include Submodules/EZProgressbar/ Submodules/PhysConstants/
-        Submodules/Tokenizer/inc Submodules/Variable/include)
+        Submodules/StringManipulators/include Submodules/Variable/include)
 
 #I want to do the submodules first so that we ensure the dependencies compile properly before we get too far.
 add_subdirectory(Submodules)
