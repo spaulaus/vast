@@ -10,14 +10,14 @@
 #include "Decay.hpp"
 #include "EffCalculator.hpp"
 #include "ErrorCalculator.hpp"
-#include "PhysConstants.hpp"
+#include "PhysicalConstants.hpp"
 
 using namespace std;
 using namespace EfficiencyEnums;
+using namespace PhysicalConstants;
 
 ///This method calculates the efficiency
-Variable EffCalculator::CalcEff(const Variable &energy, std::map<std::string,
-                                Variable> &coeffs) {
+Variable EffCalculator::CalcEff(const Variable &energy, std::map<std::string, Variable> &coeffs) {
     double en = energy.GetValue();
     double x = log(en/coeffs["e1"].GetValue());
     double y = log(en/coeffs["e2"].GetValue());
@@ -51,9 +51,8 @@ Variable EffCalculator::CalcSimRollingEff(const Variable &en) {
 
 ///This method calculates the time of flight
 double EffCalculator::CalcTof(const double &en) {
-    PhysConstants consts;
-    double c  = consts.GetConstant("c").GetValue()*(100/1e9);
-    double mn = consts.GetConstant("neutronMass").GetValue()/c/c;
+    double c  = General::SpeedOfLight.GetValue()*(100/1e9);
+    double mn = Masses::Neutron.GetValue()/c/c;
     return(distance_ * sqrt(mn/2/en));
 }
 
