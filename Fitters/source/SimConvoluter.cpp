@@ -27,13 +27,13 @@
 #include <TCanvas.h>
 #include <TFile.h>
 
-#include <PhysConstants.hpp>
-
 #include "IoHelperFunctions.hpp"
+#include "PhysicalConstants.hpp"
 #include "SimConvoluter.hpp"
 
 using namespace std;
 using namespace RooFit;
+using namespace PhysicalConstants;
 
 SimConvoluter::SimConvoluter(const std::string &cfg) {
     pugi::xml_document doc;
@@ -126,9 +126,8 @@ void SimConvoluter::FitMc(const double &en, const double &mu, const double &sigm
 ///This method calculates the fit of the simulated data.  This fit is used
 /// to know how large the neutron tails are in the real data.
 void SimConvoluter::FitSim(void) {
-    PhysConstants consts;
-    double c = consts.GetConstant("c").GetValue()*(100/1e9); //cm/ns
-    double mass = consts.GetConstant("neutronMass").GetValue()/c/c; //MeV
+    double c = General::SpeedOfLight.GetValue()*(100/1e9); //cm/ns
+    double mass = Masses::Neutron.GetValue()/c/c; //MeV
 
     ofstream simOut((outputDir_+fitFile_).c_str());
     simOut << header_ << endl;

@@ -7,17 +7,15 @@
 #include <iostream>
 #include <random>
 
-#include <PhysConstants.hpp>
-
 #include "ErrorCalculator.hpp"
+#include "PhysicalConstants.hpp"
 
 using namespace std;
+using namespace PhysicalConstants;
 
-static const int numSamples=1e5;  //!< The number of MC tries for Eff calc
 
 ///This method calculates the B(GT) error
-double ErrorCalculator::CalcBgtErr(const double &bgt, const Variable &br,
-                                   const Variable &halfLife) {
+double ErrorCalculator::CalcBgtErr(const double &bgt, const Variable &br, const Variable &halfLife) {
     double brPart = br.GetError() / br.GetValue();
     double hlPart = halfLife.GetError() / halfLife.GetValue();
     double sqrtPart = sqrt(pow(brPart,2)+pow(hlPart,2));
@@ -25,34 +23,31 @@ double ErrorCalculator::CalcBgtErr(const double &bgt, const Variable &br,
 }
 
 ///This method calculates the neutron branching ratio error
-double ErrorCalculator::CalcBrErr(const double &br, const Variable &yld,
-                                  const Variable &ndky, const Variable &gammaEff,
+double ErrorCalculator::CalcBrErr(const double &br, const Variable &yld, const Variable &ndky, const Variable &gammaEff,
                                   const Variable &betaEff) {
     double yldPart = yld.GetError() / yld.GetValue();
     double dkyPart = ndky.GetError() / ndky.GetValue();
     double gammaPart = gammaEff.GetError() / gammaEff.GetValue();
     double betaPart = betaEff.GetError() / betaEff.GetValue();
-    double sqrtPart = sqrt(pow(yldPart,2) + pow(dkyPart,2) +
-                           pow(gammaPart,2) + pow(betaPart,2));
+    double sqrtPart = sqrt(pow(yldPart,2) + pow(dkyPart,2) + pow(gammaPart,2) + pow(betaPart,2));
     return(br*sqrtPart);
 }
 
 ///This method calculates the error on the gamma efficiency using MC method
-double ErrorCalculator::CalcEffErr(const map<string,Variable> &vars,
-                                   const Variable &energy) {
-    unsigned seed1 = chrono::system_clock::now().time_since_epoch().count();
+double ErrorCalculator::CalcEffErr(const map<string,Variable> &vars, const Variable &energy) {
+    static const unsigned int numSamples = 1e5;  //!< The number of MC tries for Eff calc
+
+    long seed1 = chrono::system_clock::now().time_since_epoch().count();
 
     mt19937_64 generator(seed1);
     map<string, normal_distribution<double> > randDists;
     vector<double> mcEffs;
 
     for(const auto &it : vars) {
-        normal_distribution<double> dist(it.second.GetValue(),
-                                         it.second.GetError());
+        normal_distribution<double> dist(it.second.GetValue(), it.second.GetError());
         randDists.insert(make_pair(it.first, dist));
     }
-    normal_distribution<double> eDist(energy.GetValue(),
-                                      energy.GetError());
+    normal_distribution<double> eDist(energy.GetValue(), energy.GetError());
 
     for(unsigned int i = 0; i < numSamples; i++) {
         double a  = randDists["a"](generator);
@@ -85,8 +80,7 @@ double ErrorCalculator::CalcEffErr(const map<string,Variable> &vars,
 
 ///This method calculates the error of the energy of the neutron peak
 double ErrorCalculator::CalcEnergyErr(Neutron &neutron) {
-    double tofPart = pow(2 * neutron.GetBetaResolution().GetValue() /
-                        neutron.GetMu().GetValue(), 2);
+    double tofPart = pow(2 * neutron.GetBetaResolution().GetValue() / neutron.GetMu().GetValue(), 2);
     double physicalPart = pow(2 * 3 / 50.5, 2);
     double sqrtPart = sqrt(tofPart + physicalPart);
     double err = sqrtPart * neutron.GetEnergy().GetValue();
@@ -94,27 +88,22 @@ double ErrorCalculator::CalcEnergyErr(Neutron &neutron) {
 }
 
 ///This method calculates the integrated yield error
-double ErrorCalculator::CalcIntegratedYldErr(const double &fitYldErr,
-                                             const double &fitSimp,
-                                             const double &infSimp){
+double ErrorCalculator::CalcIntegratedYldErr(const double &fitYldErr, const double &fitSimp, const double &infSimp){
     double xErr = (fitYldErr/fitSimp) * infSimp;
     double err = sqrt(xErr*xErr+fitYldErr*fitYldErr);
     return(err);
 }
 
 ///This method calculates the log(ft) error
-double ErrorCalculator::CalcLogftErr(const Variable &br,
-                                     const Variable &halfLife) {
+double ErrorCalculator::CalcLogftErr(const Variable &br, const Variable &halfLife) {
     double brPart = br.GetError() / br.GetValue() / log(10);
     double hlPart = halfLife.GetError() / halfLife.GetValue() / log(10);
     return(sqrt(pow(brPart,2)+pow(hlPart,2)));
 }
 
 ///This method calculates the error on the number of decays
-double ErrorCalculator::CalcNumDkyErr(const double &numDky,
-                                        const Variable &rawGammaCounts,
-                                        const Variable &gammaEff,
-                                        const Variable &gammaBr){
+double ErrorCalculator::CalcNumDkyErr(const double &numDky, const Variable &rawGammaCounts, const Variable &gammaEff,
+                                      const Variable &gammaBr){
     double areaPart = rawGammaCounts.GetError()/ rawGammaCounts.GetValue();
     double effPart  = gammaEff.GetError() / gammaEff.GetValue();
     double brPart  = gammaBr.GetError() / gammaBr.GetValue();
@@ -122,9 +111,7 @@ double ErrorCalculator::CalcNumDkyErr(const double &numDky,
 }
 
 ///This method calculates the error of the neutron branching ratio
-double ErrorCalculator::CalcPnErr(const double &pn,
-                                  vector<Neutron> &neutrons,
-                                  const Decay &dky) {
+double ErrorCalculator::CalcPnErr(const double &pn, vector<Neutron> &neutrons, const Decay &dky) {
     double yldPart;
     for(auto &i : neutrons)
         yldPart += pow(i.GetIntegratedYield().GetError()/
@@ -143,8 +130,7 @@ double ErrorCalculator::CalcMean(const vector<double> &mcVals) {
 }
 
 ///This method calculates the variance
-double ErrorCalculator::CalcVariance(const vector<double> &mcVals,
-                                     const double &mean) {
+double ErrorCalculator::CalcVariance(const vector<double> &mcVals, const double &mean) {
     double var = 0;
     for(const auto &i : mcVals)
         var += pow(i-mean,2);

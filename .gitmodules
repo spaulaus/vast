@@ -1,15 +1,15 @@
 [submodule "Submodules/EZProgressbar"]
 	path = Submodules/EZProgressbar
-	url = https://git.code.sf.net/p/ezprogressbar/code
+	url = https://github.com/spaulaus/ezprogressbar
 [submodule "Submodules/PhysConstants"]
 	path = Submodules/PhysConstants
 	url = https://github.com/spaulaus/PhysConstants
-[submodule "Submodules/Signal-Generator"]
-	path = Submodules/Signal-Generator
-	url = https://github.com/spaulaus/Signal-Generator
 [submodule "Submodules/Variable"]
 	path = Submodules/Variable
 	url = https://github.com/spaulaus/Variable
 [submodule "Submodules/Tokenizer"]
-	path = Submodules/Tokenizer
-	url = https://github.com/spaulaus/Tokenizer
+	path = Submodules/StringManipulators
+	url = https://github.com/spaulaus/StringManipulators
+[submodule "CMake-modules"]
+	path = CMake-modules
+	url = https://github.com/spaulaus/CMake-modules.git
