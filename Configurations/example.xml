@@ -99,7 +99,7 @@
     <Flags>
         <doFit value="true"/>
         <basic value="true"/>
-        <theory value="false"/>
+        <theory value="true"/>
         <density value="true"/>
     </Flags>
 

@@ -61,7 +61,7 @@ add_definitions(-D INSTALL_PREFIX="\\"${CMAKE_INSTALL_PREFIX}\\"")
 
 #Find packages
 #Load additional find_package scripts.
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/CMake/modules/")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/CMake-modules/")
 
 #Find ROOT since we need it
 find_package(ROOT REQUIRED COMPONENTS roofit)
@@ -82,8 +82,8 @@ endif (BUILD_TESTS)
 
 #We add a number of include directory since everybody will need parts of them.
 include_directories(Calculators/include Core/include FileIo/include Fitters/include
-        Resources/include Submodules/pugixml/include Submodules/EZProgressbar/ Submodules/PhysConstants/include
-        Submodules/Signal-Generator/include Submodules/Tokenizer/inc Submodules/Variable/inc)
+        Resources/include Submodules/pugixml/include Submodules/EZProgressbar/ Submodules/PhysConstants/
+        Submodules/StringManipulators/include Submodules/Variable/include)
 
 #I want to do the submodules first so that we ensure the dependencies compile properly before we get too far.
 add_subdirectory(Submodules)

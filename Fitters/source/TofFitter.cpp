@@ -17,6 +17,7 @@
 
 #include <TAxis.h>
 #include <TCanvas.h>
+#include <TFile.h>
 
 #include "CrystalBallParameters.hpp"
 #include "TofFitter.hpp"
@@ -202,7 +203,7 @@ void TofFitter::PerformMcStudy(void) {
     RooConstVar s0("s0", "", sigmaCoefficients[0].GetValue());
 
     cout << endl << endl << "Starting to do the MC Study" << endl << endl;
-    RooArgList newcb, newyld;
+    RooArgList newcb, newyld, mus;
     for (unsigned int i = 0; i < yields_.size(); i++) {
         RooRealVar *yield = new RooRealVar(yields_[i].c_str(), "", yStart_, yLow_, yHigh_);
         RooRealVar *mu = new RooRealVar(mus_[i].c_str(), "", peaks_[i], rng_.first, rng_.second);
@@ -215,6 +216,7 @@ void TofFitter::PerformMcStudy(void) {
         RooCBShape *cb = new RooCBShape(components_[i].c_str(), "", tof, *mu, *sigma, *alpha, *n);
         newcb.add(*cb);
         newyld.add(*yield);
+        mus.add(*mu);
     }
 
     RooAddPdf model1("model1", "", newcb, newyld);
@@ -223,6 +225,11 @@ void TofFitter::PerformMcStudy(void) {
                        FitOptions(Save(kTRUE), Range(rng_.first, rng_.second), PrintEvalErrors(0)));
 
     mcstudy.generateAndFit(200);
+
+    TFile test(string(picDir_+"/pulls.root").c_str(), "RECREATE");
+
+    test.mkdir("yieldPulls");
+    test.cd("yieldPulls");
     for (unsigned int i = 0; i < yields_.size(); i++) {
         RooPlot *frame1 = mcstudy.plotNLL(Bins(40));
 
@@ -231,7 +238,7 @@ void TofFitter::PerformMcStudy(void) {
         RooPlot *frame3 = mcstudy.plotError(subject, Bins(40));
         RooPlot *frame4 = mcstudy.plotPull(subject, Bins(40), FitGauss(kTRUE));
 
-        TCanvas *cc = new TCanvas("cc", "", 900, 900);
+        TCanvas *cc = new TCanvas("cc", string("Pull of " + yields_.at(i)).c_str(), 900, 900);
         cc->Divide(2, 2);
         cc->cd(1);
         frame1->GetYaxis()->SetTitleOffset(1.4);
@@ -246,11 +253,39 @@ void TofFitter::PerformMcStudy(void) {
         frame4->GetYaxis()->SetTitleOffset(1.4);
         frame4->Draw();
 
-        stringstream name;
-        name << picDir_ << mod_ << "/" << yields_.at(i) << ".jpg";
-        cc->SaveAs(name.str().c_str());
+        cc->Write(yields_.at(i).c_str());
         delete (cc);
     }
+
+    test.mkdir("muPulls");
+    test.cd("muPulls");
+    for (unsigned int i = 0; i < mus_.size(); i++) {
+        RooPlot *frame1 = mcstudy.plotNLL(Bins(40));
+
+        RooRealVar subject = *((RooRealVar *) mus.at(i));
+        RooPlot *frame2 = mcstudy.plotParam(subject, Bins(40));
+        RooPlot *frame3 = mcstudy.plotError(subject, Bins(40));
+        RooPlot *frame4 = mcstudy.plotPull(subject, Bins(40), FitGauss(kTRUE));
+
+        TCanvas *cc = new TCanvas("cc", string("Pull of " + mus_.at(i)).c_str(), 900, 900);
+        cc->Divide(2, 2);
+        cc->cd(1);
+        frame1->GetYaxis()->SetTitleOffset(1.4);
+        frame1->Draw();
+        cc->cd(2);
+        frame2->GetYaxis()->SetTitleOffset(1.4);
+        frame2->Draw();
+        cc->cd(3);
+        frame3->GetYaxis()->SetTitleOffset(1.4);
+        frame3->Draw();
+        cc->cd(4);
+        frame4->GetYaxis()->SetTitleOffset(1.4);
+        frame4->Draw();
+
+        cc->Write(mus_.at(i).c_str());
+        delete (cc);
+    }
+    test.Close();
 }
 
 ///This method calls the others to make the fitter run
