@@ -88,7 +88,6 @@ TEST_FIXTURE(ConfigurationReader, Test_ParseFitNode) {
     //ParseFitNode(doc.child("Configuration").child("Fit"), fit);
 
     CHECK_THROW(ParseFitNode(doc.child("Empty"), fit), ConfigurationReaderException);
-
 }
 
 TEST_FIXTURE(ConfigurationReader, Test_ParseCrystalBallNode) {

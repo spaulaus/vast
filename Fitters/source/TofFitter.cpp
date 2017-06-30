@@ -123,7 +123,8 @@ void TofFitter::PerformFit(void) {
 
     RooAddPdf model("model", "", cbs, ylds);
     RooDataSet *data = RooDataSet::read(dataFile_.c_str(), RooArgList(tof));
-    RooFitResult *fitResult = model.fitTo(*data, NumCPU(3), Save(), Offset(kTRUE), PrintLevel(fit_.GetPrintLevel()),
+    RooFitResult *fitResult = model.fitTo(*data, NumCPU(fit_.GetNumberOfCpus()), Save(), Offset(kTRUE),
+                                          PrintLevel(fit_.GetPrintLevel()),
                                           Minimizer("Minuit2"), Range(rng_.first, rng_.second));
 
     hasConvergence_ = fitResult->statusCodeHistory(0) == 0;
