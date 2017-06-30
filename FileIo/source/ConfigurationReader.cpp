@@ -103,6 +103,7 @@ void ConfigurationReader::ParseFitNode(const pugi::xml_node &fitHandlerNode, Fit
 
     fitHandler.SetBinning(fitHandlerNode.child("binning").attribute("value").as_double(0.5));
     fitHandler.SetPrintLevel(fitHandlerNode.child("PrintLevel").attribute("value").as_int(1));
+    fitHandler.SetNumberOfCpus(fitHandlerNode.child("NumCpu").attribute("value").as_uint(1));
 
     double low = fitHandlerNode.child("range").child("low").attribute("value").as_double();
     double high = fitHandlerNode.child("range").child("high").attribute("value").as_double();
