@@ -1,0 +1,15 @@
+#%Module1.0
+##
+## modulefiles/vast
+##
+## @author S. V. Paulauskas
+proc ModulesHelp {} {
+        global version modroot
+
+        puts stderr "vast - VANDLE Analysis Software Toolkit"
+}
+module-whatis "VAST provides software useful when analyzing VANDLE data."
+
+set topdir      @CMAKE_INSTALL_PREFIX@
+
+prepend-path PATH       $topdir/bin
