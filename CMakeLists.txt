@@ -93,6 +93,7 @@ add_subdirectory(Calculators)
 add_subdirectory(Core)
 add_subdirectory(FileIo)
 add_subdirectory(Fitters)
+add_subdirectory(Share)
 
 if(BUILD_UTILITIES)
     add_subdirectory(Utilities)
