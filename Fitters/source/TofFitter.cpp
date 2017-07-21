@@ -110,11 +110,11 @@ void TofFitter::PerformFit(void) {
         RooRealVar *yield = new RooRealVar(yields_[i].c_str(), "", yStart_, yLow_, yHigh_);
 
         RooRealVar *mu = new RooRealVar(mus_[i].c_str(), "", peaks_[i], rng_.first, rng_.second);
-        RooFormulaVar *alpha = new RooFormulaVar(alphas_[i].c_str(), cbPars_.GetAlphaFunction(mus_[i]).c_str(),
+        RooFormulaVar *alpha = new RooFormulaVar(alphas_[i].c_str(), cbPars_.GetAlphaFunctionString(mus_[i]).c_str(),
                                                  RooArgList(a3, a2, a1, a0, *mu));
-        RooFormulaVar *n = new RooFormulaVar(ns_[i].c_str(), cbPars_.GetNFunction(mus_[i]).c_str(),
+        RooFormulaVar *n = new RooFormulaVar(ns_[i].c_str(), cbPars_.GetNFunctionString(mus_[i]).c_str(),
                                              RooArgList(n2, n1, n0, *mu));
-        RooFormulaVar *sigma = new RooFormulaVar(sigmas_[i].c_str(), cbPars_.GetSigmaFunction(mus_[i]).c_str(),
+        RooFormulaVar *sigma = new RooFormulaVar(sigmas_[i].c_str(), cbPars_.GetSigmaFunctionString(mus_[i]).c_str(),
                                                  RooArgList(s4, s3, s2, s1, s0, *mu));
         RooCBShape *cb = new RooCBShape(components_[i].c_str(), "", tof, *mu, *sigma, *alpha, *n);
         cbs.add(*cb);
@@ -123,7 +123,8 @@ void TofFitter::PerformFit(void) {
 
     RooAddPdf model("model", "", cbs, ylds);
     RooDataSet *data = RooDataSet::read(dataFile_.c_str(), RooArgList(tof));
-    RooFitResult *fitResult = model.fitTo(*data, NumCPU(3), Save(), Offset(kTRUE), PrintLevel(fit_.GetPrintLevel()),
+    RooFitResult *fitResult = model.fitTo(*data, NumCPU(fit_.GetNumberOfCpus()), Save(), Offset(kTRUE),
+                                          PrintLevel(fit_.GetPrintLevel()),
                                           Minimizer("Minuit2"), Range(rng_.first, rng_.second));
 
     hasConvergence_ = fitResult->statusCodeHistory(0) == 0;
@@ -207,11 +208,11 @@ void TofFitter::PerformMcStudy(void) {
     for (unsigned int i = 0; i < yields_.size(); i++) {
         RooRealVar *yield = new RooRealVar(yields_[i].c_str(), "", yStart_, yLow_, yHigh_);
         RooRealVar *mu = new RooRealVar(mus_[i].c_str(), "", peaks_[i], rng_.first, rng_.second);
-        RooFormulaVar *alpha = new RooFormulaVar(alphas_[i].c_str(), cbPars_.GetAlphaFunction(mus_[i]).c_str(),
+        RooFormulaVar *alpha = new RooFormulaVar(alphas_[i].c_str(), cbPars_.GetAlphaFunctionString(mus_[i]).c_str(),
                                                  RooArgList(a3, a2, a1, a0, *mu));
-        RooFormulaVar *n = new RooFormulaVar(ns_[i].c_str(), cbPars_.GetNFunction(mus_[i]).c_str(),
+        RooFormulaVar *n = new RooFormulaVar(ns_[i].c_str(), cbPars_.GetNFunctionString(mus_[i]).c_str(),
                                              RooArgList(n2, n1, n0, *mu));
-        RooFormulaVar *sigma = new RooFormulaVar(sigmas_[i].c_str(), cbPars_.GetSigmaFunction(mus_[i]).c_str(),
+        RooFormulaVar *sigma = new RooFormulaVar(sigmas_[i].c_str(), cbPars_.GetSigmaFunctionString(mus_[i]).c_str(),
                                                  RooArgList(s4, s3, s2, s1, s0, *mu));
         RooCBShape *cb = new RooCBShape(components_[i].c_str(), "", tof, *mu, *sigma, *alpha, *n);
         newcb.add(*cb);

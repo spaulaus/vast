@@ -58,12 +58,12 @@ public:
     explicit VastIoException (const std::string &what) noexcept : VastException(what) {}
 };
 
-///A class that tells us that we had an exception when using the SimConvoluter.
-class SimConvoluterException : public VastException {
+///A class that tells us that we had an exception when using the ResponseFunctionAnalyzer.
+class ResponseFunctionAnalyzerException : public VastException {
 public:
     ///@brief Constructor that sets the value of what
     ///@param[in] what : The string that we want to assign to what
-    explicit SimConvoluterException (const std::string &what) noexcept : VastException(what) {}
+    explicit ResponseFunctionAnalyzerException (const std::string &what) noexcept : VastException(what) {}
 };
 
 ///A class that tells us that we had an exception when using the FileHandler.

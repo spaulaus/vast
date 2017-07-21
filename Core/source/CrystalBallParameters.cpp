@@ -1,36 +1,58 @@
-/** \file CrystalBallParameters.cpp
- *  \brief A class to find the sensitivity limit of the analysis
- *  \author S. V. Paulauskas
- *  \date 12 November 2013
- */
+///@file CrystalBallParameters.cpp
+///@brief A class that handles setup and calculation of the crystal ball parameters.
+///@author S. V. Paulauskas
+///@date November 12, 2013
+#include <iostream>
 
 #include "CrystalBallParameters.hpp"
 
-///For more info on crystal ball function:
-///https://en.wikipedia.org/wiki/Crystal_Ball_function.
+using namespace std;
 
-///@TODO Update this to use TF1?
+void CrystalBallParameters::VerifyInputs(const string &name, const string &function, const vector<Variable> &coeffs) {
+    if (function == "")
+        throw invalid_argument("CrystalBallParameters::VerifyInputs - The functional string for "
+                                    + name + " was empty!");
+    if (coeffs.empty())
+        throw invalid_argument("CrystalBallParameters::VerifyInputs - The coefficients vector for "
+                                    + name + " was empty!");
 
-///This method calculates the Crystal Ball Parameter Alpha
-double CrystalBallParameters::CalcAlpha(const double &tof) const {
-    return alphaCoeff_[3].GetValue() * tof * tof * tof +
-           alphaCoeff_[2].GetValue() * tof * tof +
-           alphaCoeff_[1].GetValue() * tof +
-           alphaCoeff_[0].GetValue();
+    size_t foundCoefficient = function.find(name.at(0));
+
+    if(foundCoefficient == string::npos)
+        throw invalid_argument("CrystalBallParameters::VerifyInputs - We didn't find any coefficients listed"
+                                            " in the function!!");
+
+    unsigned long coefficientOrder = stoul(&function.at(foundCoefficient + 1));
+
+    while (foundCoefficient != string::npos) {
+        foundCoefficient = function.find("c", foundCoefficient + 1);
+
+        if(foundCoefficient == string::npos)
+            break;
+
+        if (stoul(&function.at(foundCoefficient + 1)) > coefficientOrder)
+            coefficientOrder = stoul(&function.at(foundCoefficient + 1));
+        foundCoefficient++;
+    }
+
+    if (coeffs.size() != coefficientOrder + 1)
+        throw invalid_argument("CrystalBallParameters::SetupFunction - The coefficients vector for "
+                                    + name + " did not contain all coefficients defined in the function!");
 }
 
-///This method calculates the Crystal Ball Parameter N
-double CrystalBallParameters::CalcN(const double &tof) const {
-    return nCoeff_[2].GetValue() * tof +
-           nCoeff_[1].GetValue() +
-           nCoeff_[0].GetValue() / tof;
-}
+TF1 CrystalBallParameters::GenerateRootFunction(const string &name, const string &originalString,
+                                                const vector<Variable> &coeffs) {
+    string functionString = StringManipulation::ReplaceString(originalString, "tof", "x");
+    for (unsigned int i = 0; i < coeffs.size(); i++) {
+        string toReplace = name.at(0) + to_string(i);
+        string replaceWith = "[" + to_string(i) + "]";
+        functionString = StringManipulation::ReplaceString(functionString, toReplace, replaceWith);
+    }
 
-///This method calculates the Crystal Ball Parameter Sigma
-double CrystalBallParameters::CalcSigma(const double &tof) const {
-    return sigmaCoeff_[4].GetValue() * tof * tof * tof * tof +
-           sigmaCoeff_[3].GetValue() * tof * tof * tof +
-           sigmaCoeff_[2].GetValue() * tof * tof +
-           sigmaCoeff_[1].GetValue() * tof +
-           sigmaCoeff_[0].GetValue();
+    TF1 function = TF1(name.c_str(), functionString.c_str(), -100, 100);
+
+    for (unsigned int i = 0; i < coeffs.size(); i++)
+        function.SetParameter(i, coeffs[i].GetValue());
+
+    return function;
 }

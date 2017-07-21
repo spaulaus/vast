@@ -1,27 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Configuration>
-    <!-- your name, email and date -->
     <Author>
         <Name>S. V. Paulauskas</Name>
         <Email>stanpaulauskas@gmail.com</Email>
-        <Date>February 28, 2015</Date>
+        <Date>July 8, 2017</Date>
     </Author>
 
-    <!-- Short description of the experiment here. -->
     <Description>
-        Configuration file for doing the analysis of the detector response
-        simulations performed by Sergey.
+        Configuration file for doing the analysis of the detector response simulations.
     </Description>
 
-    <Simulation>
+    <ResponseFunctionAnalysis>
         <!-- These are the simulation data -->
-        <inputBase>data/ilyushkin/vandle/response/8keVee-06-06-2014/</inputBase>
-        <outputBase>results/sim/working/</outputBase>
+        <inputBase>/home/vincent/data/ornl/vandleLeribss2012/simulated/8keVee-06-06-2014/</inputBase>
+        <outputBase>/tmp/vast</outputBase>
 
         <flightPath value="50.5" error="0.0" unit="cm"/>
 
         <energies>
             <e0  file="0069keV.txt" energy="69"/>
+            <!--
             <e1  file="0113keV.txt" energy="113"/>
             <e2  file="0152keV.txt" energy="152"/>
             <e3  file="0300keV.txt" energy="300"/>
@@ -35,9 +33,10 @@
             <e11 file="3000keV.txt" energy="3000"/>
             <e12 file="4000keV.txt" energy="4000"/>
             <e13 file="5000keV.txt" energy="5000"/>
+            -->
         </energies>
+
         <output>
-            <!-- These guys will store all the histograms of the fits -->
             <sims>sims.root</sims>
             <!-- This one stores the results for the fits to the convolution -->
             <convData>convParms.dat</convData>
@@ -50,5 +49,5 @@
             <low value="20"/>
             <high value="1480.0"/>
         </range>
-    </Simulation>
+    </ResponseFunctionAnalysis>
 </Configuration>

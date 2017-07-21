@@ -103,6 +103,7 @@ void ConfigurationReader::ParseFitNode(const pugi::xml_node &fitHandlerNode, Fit
 
     fitHandler.SetBinning(fitHandlerNode.child("binning").attribute("value").as_double(0.5));
     fitHandler.SetPrintLevel(fitHandlerNode.child("PrintLevel").attribute("value").as_int(1));
+    fitHandler.SetNumberOfCpus(fitHandlerNode.child("NumCpu").attribute("value").as_uint(1));
 
     double low = fitHandlerNode.child("range").child("low").attribute("value").as_double();
     double high = fitHandlerNode.child("range").child("high").attribute("value").as_double();
@@ -134,16 +135,12 @@ void ConfigurationReader::ParseCrystalBallNode(const pugi::xml_node &crystalBall
             coefficients.push_back(NodeToVar(coeffs));
 
         try {
-            if (var_name == "alpha") {
-                crystalBall.SetAlphaFunction(function);
-                crystalBall.SetAlphaCoefficients(coefficients);
-            } else if (var_name == "n") {
-                crystalBall.SetNFunction(function);
-                crystalBall.SetNCoefficients(coefficients);
-            } else if (var_name == "sigma") {
-                crystalBall.SetSigmaFunction(function);
-                crystalBall.SetSigmaCoefficients(coefficients);
-            }
+            if (var_name == "alpha")
+                crystalBall.SetupAlphaFunction(function, coefficients);
+            if (var_name == "n")
+                crystalBall.SetupNFunction(function, coefficients);
+            if (var_name == "sigma")
+                crystalBall.SetupSigmaFunction(function, coefficients);
         } catch (invalid_argument &invalidArgument) {
             cout << "ConfigurationReader::ParseCrystalBallNode - Intercepted invalid argument when setting the "
                     "information from the " + var_name + " node." << endl;
