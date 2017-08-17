@@ -13,6 +13,7 @@ using namespace std;
 using namespace EfficiencyEnums;
 
 static const double bgtCoeff_ = 3812.413; //!< D/(ga/gv)**2 in units of s
+static const Variable bgtCoeffVar(bgtCoeff_,0.0,"sec");
 
 ///This constructor is used for calculating B(GT)
 BGTCalculator::BGTCalculator(const std::map<double, double> &density,
@@ -59,10 +60,12 @@ Variable BGTCalculator::CalcBgt(const Variable &en, const Variable &val,
         halfLife = hl.GetValue()+hl.GetError();
     else
         halfLife = hl.GetValue();
-    double bgt = bgtCoeff_ / CalcF(en) / (halfLife / br.GetValue());
-    if(std::isnan(bgt))
-        bgt = 0;
-    return(Variable(bgt,err_.CalcBgtErr(bgt,br,hl),""));
+    Variable bgt = bgtCoeffVar / Variable(CalcF(en),0.0,"") / ((Variable
+            (halfLife,hl.GetError(),hl.GetUnits())) / Variable(br.GetValue(),br
+            .GetError(),br.GetUnits()));
+    if(std::isnan(bgt.GetValue()))
+        bgt.SetValue(0.0);
+    return(bgt);
 }
 
 ///This method calculates the branching ratio

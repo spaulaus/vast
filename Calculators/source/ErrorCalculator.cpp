@@ -14,14 +14,6 @@ using namespace std;
 using namespace PhysicalConstants;
 
 
-///This method calculates the B(GT) error
-double ErrorCalculator::CalcBgtErr(const double &bgt, const Variable &br, const Variable &halfLife) {
-    double brPart = br.GetError() / br.GetValue();
-    double hlPart = halfLife.GetError() / halfLife.GetValue();
-    double sqrtPart = sqrt(pow(brPart,2)+pow(hlPart,2));
-    return(bgt*sqrtPart);
-}
-
 ///This method calculates the neutron branching ratio error
 double ErrorCalculator::CalcBrErr(const double &br, const Variable &yld, const Variable &ndky, const Variable &gammaEff,
                                   const Variable &betaEff) {
