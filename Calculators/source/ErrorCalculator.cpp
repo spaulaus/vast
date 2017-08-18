@@ -14,17 +14,6 @@ using namespace std;
 using namespace PhysicalConstants;
 
 
-///This method calculates the neutron branching ratio error
-double ErrorCalculator::CalcBrErr(const double &br, const Variable &yld, const Variable &ndky, const Variable &gammaEff,
-                                  const Variable &betaEff) {
-    double yldPart = yld.GetError() / yld.GetValue();
-    double dkyPart = ndky.GetError() / ndky.GetValue();
-    double gammaPart = gammaEff.GetError() / gammaEff.GetValue();
-    double betaPart = betaEff.GetError() / betaEff.GetValue();
-    double sqrtPart = sqrt(pow(yldPart,2) + pow(dkyPart,2) + pow(gammaPart,2) + pow(betaPart,2));
-    return(br*sqrtPart);
-}
-
 ///This method calculates the error on the gamma efficiency using MC method
 double ErrorCalculator::CalcEffErr(const map<string,Variable> &vars, const Variable &energy) {
     static const unsigned int numSamples = 1e5;  //!< The number of MC tries for Eff calc

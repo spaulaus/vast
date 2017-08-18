@@ -73,11 +73,8 @@ Variable BGTCalculator::CalcBranchingRatio(const Variable & en,
                                            const Variable &yld) {
     Variable betaEff = eff_.GetBetaEff(en, decay_);
 
-    double br = yld.GetValue() / decay_.GetNumberOfDecays().GetValue() /
-        omega_.GetValue() / betaEff.GetValue() / geEff_.GetValue();
-    double err = err_.CalcBrErr(br, yld, decay_.GetNumberOfDecays(),
-                                geEff_, betaEff);
-    return(Variable(br, err, "/100"));
+    Variable br = yld / decay_.GetNumberOfDecays() / omega_ / betaEff / geEff_;
+    return(br);
 }
 
 ///This method calculates the Fermi integral
