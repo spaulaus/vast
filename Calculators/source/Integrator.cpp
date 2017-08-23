@@ -24,11 +24,11 @@ Integrator::Integrator(Neutron &neutron,
 
     double fSimp = AdaptiveSimpsons(range.first, range.second, 1.e-20, 30);
     double uSimp = AdaptiveSimpsons(range.second, 1.e8, 1.e-20, 30);
-    double intYld = (yld.GetValue()/fSimp)*uSimp + yld.GetValue();
+    Variable intYld = (Variable(yld.GetValue(), yld.GetError(), yld.GetUnits()) /
+            (Variable(fSimp, 0.0, ""))) * Variable(uSimp, 0.0, "") +
+            Variable(yld.GetValue(), yld.GetError(), yld.GetUnits());
 
-    ErrorCalculator err;
-    double intYldErr = err.CalcIntegratedYldErr(yld.GetError(), fSimp, uSimp);
-    neutron.SetIntegratedYield(Variable(intYld, intYldErr, "counts"));
+    neutron.SetIntegratedYield(intYld);
 }
 
 ///This method implements Simpson's rule for integrating the neutron peak

@@ -68,13 +68,6 @@ double ErrorCalculator::CalcEnergyErr(Neutron &neutron) {
     return(err);
 }
 
-///This method calculates the integrated yield error
-double ErrorCalculator::CalcIntegratedYldErr(const double &fitYldErr, const double &fitSimp, const double &infSimp){
-    double xErr = (fitYldErr/fitSimp) * infSimp;
-    double err = sqrt(xErr*xErr+fitYldErr*fitYldErr);
-    return(err);
-}
-
 ///This method calculates the log(ft) error
 double ErrorCalculator::CalcLogftErr(const Variable &br, const Variable &halfLife) {
     double brPart = br.GetError() / br.GetValue() / log(10);
