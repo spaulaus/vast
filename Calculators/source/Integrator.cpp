@@ -25,10 +25,9 @@ Integrator::Integrator(Neutron &neutron,
     double fSimp = AdaptiveSimpsons(range.first, range.second, 1.e-20, 30);
     double uSimp = AdaptiveSimpsons(range.second, 1.e8, 1.e-20, 30);
 
-    //lhpart is used so vorrect units "counts" can be set to proceed with the
+    //lhpart is used so correct units "counts" can be set to proceed with the
     // addition
-    Variable lhpart = (Variable(yld.GetValue(), yld.GetError(), yld.GetUnits
-            ()) /
+    Variable lhpart = (Variable(yld.GetValue(), yld.GetError(), yld.GetUnits()) /
                        (Variable(fSimp, 0.0, ""))) * Variable(uSimp, 0.0, "");
     lhpart.SetUnits("counts");
     Variable intYld = lhpart + Variable(yld.GetValue(), yld.GetError(), yld.GetUnits());
